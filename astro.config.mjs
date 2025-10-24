@@ -66,6 +66,9 @@ export default defineConfig({
               // Other vendors
               return 'vendor';
             }
+            
+            // Default: no specific chunk
+            return undefined;
           },
         },
       },
