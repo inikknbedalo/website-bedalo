@@ -1,0 +1,198 @@
+/**
+ * Accessibility Styles
+ * WCAG 2.1 AA Compliant
+ */
+
+/* Focus Indicators - Visible focus for keyboard navigation */
+*:focus {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+*:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Skip to main content link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 0;
+  z-index: 9999;
+  padding: 0.75rem 1.5rem;
+  background-color: #1e40af;
+  color: white;
+  text-decoration: none;
+  font-weight: 600;
+  transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only content */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+  
+  a {
+    text-decoration: underline;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Ensure interactive elements are keyboard accessible */
+button,
+a,
+input,
+select,
+textarea {
+  cursor: pointer;
+}
+
+button:disabled,
+input:disabled,
+select:disabled,
+textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Ensure sufficient color contrast for text */
+.text-muted {
+  color: #6b7280; /* Gray-500 - WCAG AA compliant */
+}
+
+/* Link indicators */
+a:not(.button):not(.nav-link) {
+  text-decoration-skip-ink: auto;
+}
+
+a:not(.button):not(.nav-link):hover {
+  text-decoration: underline;
+}
+
+/* Form labels must be visible */
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Error messages should be clearly visible */
+.error-message,
+[role="alert"] {
+  color: #dc2626;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+/* Loading states should be announced */
+[aria-busy="true"] {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+/* Tooltips should be keyboard accessible */
+[data-tooltip]:focus::after,
+[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  z-index: 1000;
+  padding: 0.5rem;
+  background-color: #1f2937;
+  color: white;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Modal focus trap indicators */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 1001;
+}
+
+/* Tab panels should indicate active state */
+[role="tab"][aria-selected="true"] {
+  font-weight: 600;
+  border-bottom: 2px solid currentColor;
+}
+
+/* Expandable sections should indicate state */
+[aria-expanded="true"] .expand-icon {
+  transform: rotate(180deg);
+}
+
+/* Touch targets should be at least 44x44px (WCAG 2.1 AAA) */
+button,
+a,
+input[type="checkbox"],
+input[type="radio"] {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Exception for text links */
+a:not(.button) {
+  min-height: auto;
+  min-width: auto;
+  display: inline;
+}
