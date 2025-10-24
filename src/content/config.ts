@@ -1,40 +1,17 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { beritaSchema, potensiSchema, pariwisataSchema } from './schemas';
 
 // Collection 1: News articles
 const berita = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/berita' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    pubDate: z.coerce.date(),
-    updatedDate: z.coerce.date().optional(),
-    author: z.string(),
-    image: image(),
-    imageAlt: z.string(),
-    imageCaption: z.string().optional(),
-    category: z.string(),
-    tags: z.array(z.string()).optional(),
-    draft: z.boolean().default(false),
-  }),
+  schema: beritaSchema,
 });
 
 // Collection 2: Products/Potential (UMKM)
 const potensi = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/potensi' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    publishDate: z.coerce.date().optional(),
-    category: z.enum(['pertanian', 'kerajinan', 'kuliner', 'jasa', 'lainnya']),
-    owner: z.string(),
-    contact: z.string().optional(),
-    price: z.string().optional(),
-    image: image(),
-    imageAlt: z.string(),
-    featured: z.boolean().default(false),
-    draft: z.boolean().default(false),
-  }),
+  schema: potensiSchema,
 });
 
 // Collection 3: Tourism destinations
