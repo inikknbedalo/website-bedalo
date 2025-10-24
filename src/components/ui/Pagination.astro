@@ -74,9 +74,9 @@ const pageNumbers = getPageNumbers();
       </a>
     ))}
 
-    {pageNumbers[pageNumbers.length - 1] && pageNumbers[pageNumbers.length - 1] < totalPages && (
+    {pageNumbers.length > 0 && pageNumbers[pageNumbers.length - 1] && pageNumbers[pageNumbers.length - 1]! < totalPages && (
       <>
-        {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && <span class="px-2 text-gray-500">...</span>}
+        {pageNumbers[pageNumbers.length - 1]! < totalPages - 1 && <span class="px-2 text-gray-500">...</span>}
         <a
           href={getPageUrl(totalPages)}
           data-astro-prefetch
