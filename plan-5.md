@@ -1,1315 +1,563 @@
-# Migration Plan 5: Final Optimization, Testing & Deployment
+# Plan 5: Optimization, SEO & Deployment
 
-**Target:** Implement final optimizations, configure sitemap and robots.txt, perform comprehensive testing, optimize performance, and prepare for deployment to Cloudflare Pages.
-
----
-
-## Phase 5.1: SEO & Metadata Optimization
-
-### Task 5.1.1: Generate Dynamic Sitemap
-**Objective:** Create automatic sitemap generation for all pages and collections.
-
-**Actions:**
-1. Create `src/pages/sitemap.xml.ts`:
-   ```typescript
-   import { getCollection } from 'astro:content';
-   import type { APIRoute } from 'astro';
-   
-   export const GET: APIRoute = async ({ site }) => {
-     const siteUrl = site?.toString() || 'https://bedalo.pages.dev';
-     
-     // Get all collection entries
-     const berita = await getCollection('berita');
-     const potensi = await getCollection('potensi');
-     const pariwisata = await getCollection('pariwisata');
-     const akomodasi = await getCollection('akomodasi');
-     const warung = await getCollection('warung');
-     
-     // Static pages with priority and change frequency
-     const staticPages = [
-       { url: '', changefreq: 'daily', priority: 1.0 },
-       { url: 'profil', changefreq: 'monthly', priority: 0.8 },
-       { url: 'potensi', changefreq: 'weekly', priority: 0.9 },
-       { url: 'pariwisata', changefreq: 'weekly', priority: 0.9 },
-       { url: 'galeri', changefreq: 'weekly', priority: 0.7 },
-       { url: 'berita', changefreq: 'daily', priority: 0.8 },
-       { url: 'kontak', changefreq: 'monthly', priority: 0.7 },
-       { url: 'tentang-kkn', changefreq: 'yearly', priority: 0.5 },
-       { url: 'akomodasi', changefreq: 'weekly', priority: 0.7 },
-       { url: 'warung', changefreq: 'weekly', priority: 0.6 },
-       { url: 'peta-situs', changefreq: 'monthly', priority: 0.4 },
-       { url: 'kebijakan-privasi', changefreq: 'yearly', priority: 0.3 },
-     ];
-     
-     // Generate XML
-     const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
-     <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-       ${staticPages.map(page => `
-         <url>
-           <loc>${siteUrl}${page.url}</loc>
-           <changefreq>${page.changefreq}</changefreq>
-           <priority>${page.priority}</priority>
-           <lastmod>${new Date().toISOString()}</lastmod>
-         </url>
-       `).join('')}
-       
-       ${berita.filter(entry => !entry.data.draft).map(entry => `
-         <url>
-           <loc>${siteUrl}berita/${entry.id}</loc>
-           <changefreq>monthly</changefreq>
-           <priority>0.7</priority>
-           <lastmod>${entry.data.updatedDate?.toISOString() || entry.data.pubDate.toISOString()}</lastmod>
-         </url>
-       `).join('')}
-       
-       ${potensi.map(entry => `
-         <url>
-           <loc>${siteUrl}potensi/${entry.id}</loc>
-           <changefreq>monthly</changefreq>
-           <priority>0.8</priority>
-           <lastmod>${entry.data.publishDate.toISOString()}</lastmod>
-         </url>
-       `).join('')}
-       
-       ${pariwisata.map(entry => `
-         <url>
-           <loc>${siteUrl}pariwisata/${entry.id}</loc>
-           <changefreq>monthly</changefreq>
-           <priority>0.8</priority>
-           <lastmod>${entry.data.publishDate.toISOString()}</lastmod>
-         </url>
-       `).join('')}
-       
-       ${akomodasi.map(entry => `
-         <url>
-           <loc>${siteUrl}akomodasi/${entry.id}</loc>
-           <changefreq>weekly</changefreq>
-           <priority>0.6</priority>
-           <lastmod>${entry.data.publishDate.toISOString()}</lastmod>
-         </url>
-       `).join('')}
-       
-       ${warung.map(entry => `
-         <url>
-           <loc>${siteUrl}warung/${entry.id}</loc>
-           <changefreq>weekly</changefreq>
-           <priority>0.5</priority>
-           <lastmod>${entry.data.publishDate.toISOString()}</lastmod>
-         </url>
-       `).join('')}
-     </urlset>`.trim();
-     
-     return new Response(sitemap, {
-       headers: {
-         'Content-Type': 'application/xml',
-         'Cache-Control': 'public, max-age=3600',
-       },
-     });
-   };
-   ```
-2. Test sitemap generation: visit `/sitemap.xml`
-3. Verify all pages are included
-4. Validate XML format
-
-**Success Criteria:**
-- Sitemap generates without errors
-- All pages and collection entries included
-- Valid XML format
-- Proper lastmod dates
-- Appropriate priorities set
+**Goal:** Final optimizations, SEO configuration, performance tuning, comprehensive testing, and deployment to Cloudflare Pages. **Ensure zero hardcoded content remains.**
 
 ---
 
-### Task 5.1.2: Configure Robots.txt
-**Objective:** Set up robots.txt for search engine crawling.
+## Phase 1: SEO & Metadata
 
-**Actions:**
-1. Create `public/robots.txt`:
-   ```
-   # Robots.txt for Dusun Bedalo Website
-   User-agent: *
-   Allow: /
-   
-   # Sitemap
-   Sitemap: https://bedalo.pages.dev/sitemap.xml
-   
-   # Crawl delay (optional, be respectful)
-   Crawl-delay: 1
-   
-   # Disallow admin paths (if any in future)
-   # Disallow: /admin/
-   
-   # Allow all assets
-   Allow: /assets/
-   Allow: /*.css
-   Allow: /*.js
-   Allow: /*.webp
-   Allow: /*.jpg
-   Allow: /*.png
-   ```
-2. Test robots.txt: visit `/robots.txt`
-3. Validate with Google Search Console (after deployment)
+### Task 1.1: Generate Dynamic Sitemap
+File: `src/pages/sitemap.xml.ts`
+- Use Astro API route
+- Fetch all collections (berita, potensi, pariwisata, akomodasi, warung)
+- Include all static pages
+- Set priorities: homepage (1.0), main pages (0.8), detail pages (0.6-0.7)
+- Set changefreq appropriately
+- Add lastmod dates from collection entries
+- Return XML with proper headers
 
-**Success Criteria:**
-- Robots.txt is accessible
-- Sitemap URL is correct
-- No unnecessary paths are blocked
-- Format is valid
+**Reference:** Astro sitemap docs
+**Commit:** "feat(seo): generate dynamic XML sitemap"
 
----
+### Task 1.2: Configure Robots.txt
+File: `public/robots.txt`
+- Allow all user agents
+- Specify sitemap URL
+- Set crawl delay if needed
+- Disallow sensitive paths (if any)
 
-### Task 5.1.3: Add JSON-LD Structured Data
-**Objective:** Implement structured data for better SEO.
+**Commit:** "feat(seo): add robots.txt"
 
-**Actions:**
-1. Create `src/components/seo/StructuredData.astro`:
-   ```astro
-   ---
-   interface Props {
-     type: 'Organization' | 'Article' | 'Product' | 'Place' | 'LocalBusiness';
-     data: Record<string, any>;
-   }
-   
-   const { type, data } = Astro.props;
-   
-   const schemas = {
-     Organization: {
-       '@context': 'https://schema.org',
-       '@type': 'Organization',
-       name: 'Dusun Bedalo',
-       url: 'https://bedalo.pages.dev',
-       logo: 'https://bedalo.pages.dev/icon.svg',
-       description: 'Dusun Bedalo, Krambilsawit, Saptosari, Gunungkidul',
-       address: {
-         '@type': 'PostalAddress',
-         streetAddress: 'Dusun Bedalo',
-         addressLocality: 'Krambilsawit',
-         addressRegion: 'Gunungkidul',
-         postalCode: '55871',
-         addressCountry: 'ID',
-       },
-       contactPoint: {
-         '@type': 'ContactPoint',
-         telephone: '+62-831-0758-1144',
-         contactType: 'Customer Service',
-         email: 'inikknbedalo@gmail.com',
-       },
-       sameAs: [
-         'https://instagram.com/bedalo',
-         'https://youtube.com/@bedalo',
-         'https://tiktok.com/@bedalo',
-       ],
-       ...data,
-     },
-     Article: {
-       '@context': 'https://schema.org',
-       '@type': 'Article',
-       ...data,
-     },
-     Product: {
-       '@context': 'https://schema.org',
-       '@type': 'Product',
-       ...data,
-     },
-     Place: {
-       '@context': 'https://schema.org',
-       '@type': 'TouristAttraction',
-       ...data,
-     },
-     LocalBusiness: {
-       '@context': 'https://schema.org',
-       '@type': 'LocalBusiness',
-       ...data,
-     },
-   };
-   
-   const schema = schemas[type];
-   ---
-   
-   <script type="application/ld+json" set:html={JSON.stringify(schema)} />
-   ```
-2. Add to homepage in BaseLayout or MainLayout
-3. Add to article pages, product pages, and tourism pages
-4. Test with Google Rich Results Test
+### Task 1.3: Structured Data (JSON-LD)
+Create component: `src/components/seo/StructuredData.astro`
+- Organization schema for homepage
+- Article schema for berita pages
+- Product schema for potensi pages
+- Place schema for pariwisata pages
+- LocalBusiness schema for warung pages
+- Breadcrumb schema for navigation
 
-**Success Criteria:**
-- Structured data validates without errors
-- Organization schema on homepage
-- Article schema on news pages
-- Product schema on potensi pages
-- Place schema on tourism pages
+Add to appropriate pages
+**Commit:** "feat(seo): add JSON-LD structured data"
+
+### Task 1.4: Open Graph Images
+- Ensure all pages have OG images
+- Use featured images from collections
+- Fallback to default site image
+- Set proper dimensions (1200x630)
+- Test with Facebook/Twitter debuggers
+
+**Commit:** "feat(seo): configure Open Graph images"
+
+### Task 1.5: Meta Tags Verification
+Check all pages have:
+- Proper title (< 60 chars)
+- Description (150-160 chars)
+- Keywords (relevant, Indonesian)
+- Canonical URL
+- Language tag (lang="id")
+- Open Graph tags
+- Twitter Card tags
+- Author information
+
+**Commit:** "feat(seo): verify meta tags on all pages"
 
 ---
 
-### Task 5.1.4: Implement Open Graph Images
-**Objective:** Create dynamic OG images for social sharing.
+## Phase 2: Performance Optimization
 
-**Actions:**
-1. Create `src/utils/ogImage.ts`:
-   ```typescript
-   export function getOGImageUrl(params: {
-     title: string;
-     description?: string;
-     image?: string;
-   }): string {
-     const baseUrl = 'https://og-image-service.com/api';
-     const encodedTitle = encodeURIComponent(params.title);
-     const encodedDesc = params.description 
-       ? encodeURIComponent(params.description) 
-       : '';
-     
-     // Use a service like Vercel OG Image or create custom endpoint
-     return `${baseUrl}?title=${encodedTitle}&desc=${encodedDesc}`;
-   }
-   ```
-2. Update BaseLayout to use dynamic OG images
-3. Test social sharing on Facebook, Twitter, LinkedIn
-4. Validate with social media debuggers
+### Task 2.1: Image Optimization
+- Ensure all images use Astro Image component
+- Convert large images to WebP
+- Set proper sizes and srcset
+- Use lazy loading for below-fold images
+- Use eager loading for hero images only
+- Optimize image dimensions (max 1920px)
+- Compress images (quality 80-85)
 
-**Success Criteria:**
-- OG images display correctly on social platforms
-- Images are properly sized (1200x630)
-- Title and description are visible
-- Fallback image works
+**Commit:** "perf(images): optimize all images"
 
----
+### Task 2.2: Asset Preloading
+In BaseLayout:
+- Preload critical fonts (Poppins WOFF2)
+- Preconnect to CDN domains (fonts.googleapis.com, cdnjs.cloudflare.com)
+- Preload hero image on homepage
+- DNS prefetch for external domains
 
-## Phase 5.2: Performance Optimization
+**Commit:** "perf(assets): add resource hints"
 
-### Task 5.2.1: Optimize Images
-**Objective:** Ensure all images are optimized for web delivery.
+### Task 2.3: Code Splitting
+Configure in `astro.config.mjs`:
+- Enable code splitting for large dependencies
+- Separate lightgallery into its own chunk
+- Separate Chart.js for dashboard only
+- Optimize bundle size
+- Remove unused CSS
 
-**Actions:**
-1. Create image optimization script `scripts/optimize-images.js`:
-   ```javascript
-   import sharp from 'sharp';
-   import { readdir, stat } from 'fs/promises';
-   import { join } from 'path';
-   
-   async function optimizeImages(dir) {
-     const files = await readdir(dir);
-     
-     for (const file of files) {
-       const filePath = join(dir, file);
-       const stats = await stat(filePath);
-       
-       if (stats.isDirectory()) {
-         await optimizeImages(filePath);
-       } else if (/\.(jpg|jpeg|png)$/i.test(file)) {
-         // Convert to WebP
-         const outputPath = filePath.replace(/\.(jpg|jpeg|png)$/i, '.webp');
-         
-         await sharp(filePath)
-           .webp({ quality: 80 })
-           .resize(1920, null, { withoutEnlargement: true })
-           .toFile(outputPath);
-         
-         console.log(`Optimized: ${file} -> ${outputPath}`);
-       }
-     }
-   }
-   
-   optimizeImages('./public/assets/images');
-   ```
-2. Install sharp: `npm install -D sharp`
-3. Add script to package.json: `"optimize:images": "node scripts/optimize-images.js"`
-4. Run optimization on all images
-5. Update image references to use .webp
+**Commit:** "perf(build): optimize code splitting"
 
-**Success Criteria:**
-- All images converted to WebP
-- Images compressed to <200KB
-- No quality loss visible
-- Load times improved
+### Task 2.4: Caching Headers
+File: `public/_headers`
+- Cache static assets (images, CSS, JS) for 1 year
+- Cache HTML for shorter period (1 hour)
+- Set proper MIME types
+- Add security headers (X-Frame-Options, X-Content-Type-Options, etc.)
+- Configure CORS if needed
+
+**Commit:** "perf(cache): configure caching headers"
+
+### Task 2.5: Font Loading Optimization
+- Ensure fonts use font-display: swap
+- Subset fonts if possible (via CDN parameters)
+- Preload critical font files
+- Avoid FOIT (Flash of Invisible Text)
+
+**Commit:** "perf(fonts): optimize font loading"
 
 ---
 
-### Task 5.2.2: Implement Asset Preloading
-**Objective:** Preload critical assets for faster page loads.
+## Phase 3: Accessibility Enhancements
 
-**Actions:**
-1. Update BaseLayout.astro with preload hints:
-   ```astro
-   <head>
-     <!-- ... existing meta tags ... -->
-     
-     <!-- Preload critical assets -->
-     <link rel="preload" as="font" href="/fonts/poppins-v20-latin-regular.woff2" type="font/woff2" crossorigin />
-     <link rel="preload" as="style" href="/styles/global.css" />
-     
-     <!-- Preload hero image on homepage -->
-     {Astro.url.pathname === '/' && (
-       <link rel="preload" as="image" href="/assets/images/ngedan.webp" />
-     )}
-     
-     <!-- DNS prefetch for external domains -->
-     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
-     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com" />
-     
-     <!-- Preconnect for critical domains -->
-     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-   </head>
-   ```
-2. Test with Lighthouse
-3. Verify performance improvements
+### Task 3.1: ARIA Labels Audit
+Check and add ARIA labels for:
+- Navigation landmarks
+- Form inputs
+- Buttons without text
+- Icon-only buttons
+- Modal dialogs
+- Alerts and messages
+- Loading states
 
-**Success Criteria:**
-- Critical assets preloaded
-- DNS prefetch configured
-- First Contentful Paint improved
-- No render-blocking resources
+**Commit:** "a11y(aria): add comprehensive ARIA labels"
 
----
+### Task 3.2: Keyboard Navigation
+Test and fix:
+- Tab order logical
+- Focus indicators visible
+- Skip to content link works
+- Modals trap focus
+- Escape key closes modals
+- Arrow keys navigate menus (if applicable)
 
-### Task 5.2.3: Enable Caching Headers
-**Objective:** Configure proper caching for static assets.
+**Commit:** "a11y(keyboard): ensure keyboard navigation"
 
-**Actions:**
-1. Create `public/_headers`:
-   ```
-   # Cache static assets for 1 year
-   /assets/*
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.css
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.js
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.woff2
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.webp
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.jpg
-     Cache-Control: public, max-age=31536000, immutable
-   
-   /*.png
-     Cache-Control: public, max-age=31536000, immutable
-   
-   # Cache HTML for 1 hour
-   /*.html
-     Cache-Control: public, max-age=3600, must-revalidate
-   
-   # Security headers
-   /*
-     X-Frame-Options: DENY
-     X-Content-Type-Options: nosniff
-     X-XSS-Protection: 1; mode=block
-     Referrer-Policy: strict-origin-when-cross-origin
-     Permissions-Policy: geolocation=(), microphone=(), camera=()
-   ```
-2. Test headers with curl or browser DevTools
-3. Verify caching works correctly
+### Task 3.3: Color Contrast
+- Test all text colors against backgrounds
+- Ensure 4.5:1 ratio for normal text
+- Ensure 3:1 ratio for large text
+- Fix any contrast issues in light and dark mode
+- Use WebAIM contrast checker
 
-**Success Criteria:**
-- Assets cached for 1 year
-- HTML cached appropriately
-- Security headers present
-- No caching issues on updates
+**Commit:** "a11y(color): ensure proper contrast ratios"
+
+### Task 3.4: Alt Text Verification
+- Verify all images have alt text
+- Alt text in Indonesian
+- Descriptive, not generic
+- Empty alt for decorative images
+- Context-appropriate descriptions
+
+**Commit:** "a11y(images): verify alt text completeness"
+
+### Task 3.5: Form Accessibility
+- Labels associated with inputs
+- Error messages clear and linked
+- Required fields indicated
+- Autocomplete attributes where appropriate
+- Error summary at top of form
+
+**Commit:** "a11y(forms): enhance form accessibility"
 
 ---
 
-### Task 5.2.4: Code Splitting & Bundle Optimization
-**Objective:** Optimize JavaScript bundles for faster loading.
+## Phase 4: Final Content Verification
 
-**Actions:**
-1. Update `astro.config.mjs`:
-   ```javascript
-   export default defineConfig({
-     // ... existing config ...
-     vite: {
-       build: {
-         cssMinify: true,
-         minify: 'terser',
-         rollupOptions: {
-           output: {
-             manualChunks: {
-               'lightgallery': ['lightgallery'],
-               'aos': ['aos'],
-             },
-           },
-         },
-       },
-     },
-   });
-   ```
-2. Analyze bundle size: `npm run build && npx vite-bundle-visualizer`
-3. Identify and lazy-load heavy dependencies
-4. Test that bundles load correctly
+### Task 4.1: Zero Hardcoded Content Check
+Scan all `.astro` and `.ts` files:
+- No hardcoded strings (except UI framework text)
+- No hardcoded arrays or objects (data must come from collections)
+- No hardcoded numbers (except styling values)
+- All content fetched from collections
+- All configuration from config collection
 
-**Success Criteria:**
-- JavaScript bundles < 100KB each
-- Third-party libraries in separate chunks
-- No duplicate dependencies
-- Lazy loading works correctly
+**Reference:** Use grep to find hardcoded Indonesian text
+**Commit:** "fix(content): remove any remaining hardcoded content"
 
----
+### Task 4.2: Cross-Reference with Original
+For final verification:
+- Homepage: match static-site/index.html section by section
+- Profile: verify government data, vision/mission
+- All collection pages: verify count and content
+- Dashboard: verify charts and data
+- Survey: verify all questions present
+- Forms: verify all fields and labels
 
-## Phase 5.3: Accessibility & Quality Assurance
+Create checklist document with findings
+**Commit:** "test(content): verify against original site"
 
-### Task 5.3.1: Accessibility Audit
-**Objective:** Ensure WCAG 2.1 AA compliance across all pages.
+### Task 4.3: Link Verification
+- Check all internal links work
+- Check all external links valid
+- Verify: social media links correct
+- Test: email and phone links (mailto:, tel:)
+- Ensure: no broken links
 
-**Actions:**
-1. Install accessibility testing tools:
-   ```bash
-   npm install -D @axe-core/cli
-   ```
-2. Run accessibility checks on all pages:
-   ```bash
-   npx @axe-core/cli http://localhost:4321 --rules
-   ```
-3. Fix identified issues:
-   - Add missing alt text
-   - Ensure proper heading hierarchy
-   - Fix color contrast issues
-   - Add ARIA labels where needed
-   - Ensure keyboard navigation works
-4. Test with screen reader (NVDA/JAWS)
-5. Verify focus indicators are visible
-
-**Success Criteria:**
-- Zero critical accessibility issues
-- Color contrast ratio ≥ 4.5:1
-- All images have alt text
-- Keyboard navigation functional
-- Screen reader compatible
-- ARIA labels correct
+**Commit:** "test(links): verify all links functional"
 
 ---
 
-### Task 5.3.2: Cross-Browser Testing
-**Objective:** Verify compatibility across major browsers.
+## Phase 5: Cross-Browser Testing
 
-**Actions:**
-1. Test on multiple browsers:
-   - Chrome (latest)
-   - Firefox (latest)
-   - Safari (latest)
-   - Edge (latest)
-   - Mobile browsers (iOS Safari, Chrome Android)
-2. Check for:
-   - Layout consistency
-   - JavaScript functionality
-   - CSS rendering
-   - Font loading
-   - Image display
-   - Forms submission
-   - Animations
-3. Fix browser-specific issues
-4. Add vendor prefixes if needed
+### Task 5.1: Desktop Browsers
+Test on:
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest) - if available
+- Edge (latest)
 
-**Success Criteria:**
-- Consistent appearance across browsers
-- All features work on all browsers
-- No console errors
-- Mobile browsers work correctly
-- Graceful degradation for older browsers
+Check:
+- Layout consistency
+- JavaScript functionality
+- CSS rendering
+- Fonts display
+- Images load
+- Forms submit
 
----
+### Task 5.2: Mobile Browsers
+Test on:
+- iOS Safari (if available)
+- Chrome Android
+- Samsung Internet
 
-### Task 5.3.3: Performance Testing
-**Objective:** Achieve Lighthouse score ≥95 on all metrics.
+Check:
+- Touch interactions
+- Mobile menu
+- Form inputs
+- Responsive layout
+- Performance
 
-**Actions:**
-1. Run Lighthouse audits on key pages:
-   ```bash
-   npx lighthouse http://localhost:4321 --view
-   npx lighthouse http://localhost:4321/profil --view
-   npx lighthouse http://localhost:4321/berita --view
-   ```
-2. Address performance issues:
-   - Optimize images further if needed
-   - Reduce unused CSS/JS
-   - Implement lazy loading
-   - Minimize layout shifts
-3. Test on slow 3G network
-4. Verify Core Web Vitals:
-   - LCP < 2.5s
-   - FID < 100ms
-   - CLS < 0.1
+### Task 5.3: Fix Browser Issues
+- Document any browser-specific issues
+- Add vendor prefixes if needed
+- Test fallbacks for unsupported features
+- Ensure graceful degradation
 
-**Success Criteria:**
-- Lighthouse Performance ≥ 95
-- Lighthouse Accessibility ≥ 95
-- Lighthouse Best Practices ≥ 95
-- Lighthouse SEO = 100
-- Core Web Vitals pass
+**Commit:** "fix(browsers): resolve cross-browser issues"
 
 ---
 
-### Task 5.3.4: Form Testing
-**Objective:** Ensure all forms work correctly and handle errors.
+## Phase 6: Lighthouse Audits
 
-**Actions:**
-1. Test contact form:
-   - Valid submission
-   - Invalid email validation
-   - Required field validation
-   - Success/error messages
-   - Form reset after submission
-2. Test survey form:
-   - Multi-step navigation
-   - Data persistence between steps
-   - Validation on each step
-   - Final submission
-3. Test with various inputs:
-   - Special characters
-   - Very long text
-   - Empty fields
-   - SQL injection attempts (security)
-4. Verify CSRF protection (if applicable)
+### Task 6.1: Performance Audit
+Run Lighthouse performance:
+- Target: 95+ score
+- Check: LCP < 2.5s
+- Check: FID < 100ms
+- Check: CLS < 0.1
+- Fix issues identified
 
-**Success Criteria:**
-- All forms validate correctly
-- Error messages are clear
-- Success messages display
-- No data loss
-- Forms are secure
+**Commit:** "perf: achieve Lighthouse 95+ performance"
 
----
+### Task 6.2: Accessibility Audit
+Run Lighthouse accessibility:
+- Target: 95+ score
+- Fix all critical issues
+- Fix most medium issues
+- Document any false positives
 
-## Phase 5.4: Documentation & Deployment Preparation
+**Commit:** "a11y: achieve Lighthouse 95+ accessibility"
 
-### Task 5.4.1: Create Deployment Documentation
-**Objective:** Document deployment process for future reference.
+### Task 6.3: Best Practices Audit
+Run Lighthouse best practices:
+- Target: 95+ score
+- Fix security issues
+- Update any deprecated code
+- Remove console.log statements
 
-**Actions:**
-1. Create `docs/DEPLOYMENT.md`:
-   ```markdown
-   # Deployment Guide
-   
-   ## Prerequisites
-   
-   - Node.js 18+ installed
-   - npm or pnpm package manager
-   - Cloudflare account (for Cloudflare Pages)
-   
-   ## Build Process
-   
-   ```bash
-   # Install dependencies
-   npm install
-   
-   # Build for production
-   npm run build
-   
-   # Preview build locally
-   npm run preview
-   ```
-   
-   ## Deploying to Cloudflare Pages
-   
-   ### Via CLI
-   
-   ```bash
-   # Install Wrangler
-   npm install -g wrangler
-   
-   # Login to Cloudflare
-   wrangler login
-   
-   # Deploy
-   wrangler pages publish dist --project-name=dusun-bedalo
-   ```
-   
-   ### Via Dashboard
-   
-   1. Go to Cloudflare Pages dashboard
-   2. Click "Create a project"
-   3. Connect your GitHub repository
-   4. Configure build settings:
-      - Build command: `npm run build`
-      - Build output directory: `dist`
-      - Node version: 18
-   5. Click "Save and Deploy"
-   
-   ### Environment Variables
-   
-   No environment variables required for static build.
-   
-   ## Custom Domain Setup
-   
-   1. In Cloudflare Pages project settings
-   2. Go to "Custom domains"
-   3. Add your domain (e.g., bedalo.pages.dev)
-   4. Update DNS records as instructed
-   5. Wait for SSL certificate provisioning
-   
-   ## Post-Deployment Checks
-   
-   - [ ] Verify all pages load correctly
-   - [ ] Check sitemap.xml accessibility
-   - [ ] Test forms submission
-   - [ ] Verify images load
-   - [ ] Check analytics integration
-   - [ ] Test on mobile devices
-   - [ ] Submit sitemap to Google Search Console
-   
-   ## Rollback Procedure
-   
-   1. Go to Cloudflare Pages deployment history
-   2. Find previous working deployment
-   3. Click "Rollback to this deployment"
-   4. Verify site functionality
-   
-   ## Monitoring
-   
-   - Check Cloudflare Analytics for traffic
-   - Monitor Core Web Vitals in Search Console
-   - Review error logs in Cloudflare dashboard
-   ```
-2. Create `.nvmrc` for Node version:
-   ```
-   18.17.0
-   ```
-3. Update main README with deployment badge
+**Commit:** "fix(quality): achieve Lighthouse 95+ best practices"
 
-**Success Criteria:**
-- Deployment documentation is complete
-- All steps are tested
-- Environment requirements documented
-- Rollback procedure documented
+### Task 6.4: SEO Audit
+Run Lighthouse SEO:
+- Target: 100 score
+- Fix meta tag issues
+- Ensure crawlability
+- Verify structured data
+
+**Commit:** "feat(seo): achieve Lighthouse 100 SEO score"
 
 ---
 
-### Task 5.4.2: Final Code Review & Cleanup
-**Objective:** Clean up code and ensure quality before deployment.
+## Phase 7: Documentation
 
-**Actions:**
-1. Remove unused files and dependencies:
-   ```bash
-   npm prune
-   npx depcheck
-   ```
-2. Remove console.log statements from production code
-3. Remove commented-out code
-4. Verify no TODO comments remain unresolved
-5. Check for hardcoded values that should be in config
-6. Format all code with Prettier:
-   ```bash
-   npm run format
-   ```
-7. Run TypeScript check:
-   ```bash
-   npm run check
-   ```
-8. Fix any TypeScript errors or warnings
+### Task 7.1: README Update
+File: `README.md`
+- Project description
+- Tech stack (Astro 5, TypeScript, Tailwind, lightgallery, CountUp.js, Chart.js)
+- Installation instructions
+- Development commands
+- Build and deployment
+- Content management guide (link to docs)
+- Credits
 
-**Success Criteria:**
-- No unused dependencies
-- No console statements in production
-- Code is formatted consistently
-- TypeScript checks pass
-- No unresolved TODOs
+### Task 7.2: Deployment Guide
+File: `docs/DEPLOYMENT.md`
+- Prerequisites
+- Build process
+- Cloudflare Pages setup
+- Environment variables (if any)
+- Domain configuration
+- Post-deployment checklist
+- Rollback procedure
 
----
+### Task 7.3: Maintenance Guide
+File: `docs/MAINTENANCE.md`
+- How to add content (news, products, etc.)
+- How to update pages
+- How to modify components
+- Common troubleshooting
+- Backup procedures
 
-### Task 5.4.3: Create Maintenance Documentation
-**Objective:** Document how to maintain and update the site.
-
-**Actions:**
-1. Create `docs/MAINTENANCE.md`:
-   ```markdown
-   # Maintenance Guide
-   
-   ## Adding New Content
-   
-   ### Adding a News Article
-   
-   1. Create new file in `src/content/berita/`
-   2. Use format: `YYYY-MM-DD-slug.md`
-   3. Add frontmatter with required fields
-   4. Write content in markdown
-   5. Run `npm run sync` to update types
-   6. Build and deploy
-   
-   ### Adding a Product
-   
-   1. Create file in `src/content/potensi/`
-   2. Add required frontmatter
-   3. Add product images to `/public/assets/images/products/`
-   4. Include all product details
-   5. Deploy
-   
-   ### Adding a Tourism Destination
-   
-   Similar to products, in `src/content/pariwisata/`
-   
-   ## Updating Content
-   
-   1. Edit the relevant markdown file
-   2. Update `updatedDate` in frontmatter
-   3. Rebuild and deploy
-   
-   ## Updating Components
-   
-   1. Edit component file in `src/components/`
-   2. Test locally with `npm run dev`
-   3. Check for TypeScript errors
-   4. Test on multiple devices
-   5. Deploy
-   
-   ## Updating Styles
-   
-   1. Edit `src/styles/global.css` or component styles
-   2. Test in light and dark mode
-   3. Verify responsive behavior
-   4. Deploy
-   
-   ## Troubleshooting
-   
-   ### Build Fails
-   
-   - Check TypeScript errors: `npm run check`
-   - Verify all dependencies installed: `npm install`
-   - Check Node version matches `.nvmrc`
-   
-   ### Images Not Loading
-   
-   - Verify image paths start with `/`
-   - Check images exist in `/public/`
-   - Verify image extensions are correct
-   
-   ### Content Not Displaying
-   
-   - Run `npm run sync` to regenerate types
-   - Check frontmatter matches schema
-   - Verify file is not marked as `draft: true`
-   
-   ## Regular Maintenance Tasks
-   
-   ### Weekly
-   - Check for broken links
-   - Review analytics
-   - Update news if needed
-   
-   ### Monthly
-   - Update dependencies: `npm update`
-   - Review and respond to form submissions
-   - Check for security updates
-   
-   ### Quarterly
-   - Performance audit with Lighthouse
-   - Accessibility audit
-   - Content review and updates
-   - Backup content files
-   ```
-
-**Success Criteria:**
-- Maintenance documentation is complete
-- Common tasks are documented
-- Troubleshooting section helpful
-- Regular tasks are scheduled
+**Commit:** "docs: add comprehensive documentation"
 
 ---
 
-## Phase 5.5: Final Testing & Deployment
+## Phase 8: Pre-Deployment Preparation
 
-### Task 5.5.1: Pre-Deployment Checklist
-**Objective:** Complete final checks before production deployment.
+### Task 8.1: Environment Configuration
+File: `astro.config.mjs`
+- Set site URL: `site: 'https://bedalo.pages.dev'`
+- Configure base path if needed
+- Set build options
+- Configure integrations
 
-**Actions:**
-1. Run complete test suite:
-   ```bash
-   npm run check        # TypeScript
-   npm run build        # Production build
-   npm run preview      # Preview build
-   ```
-2. Verify checklist:
-   - [ ] All pages accessible
-   - [ ] All links working
-   - [ ] Forms functional
-   - [ ] Images loading
-   - [ ] SEO meta tags correct
-   - [ ] Sitemap generated
-   - [ ] Robots.txt configured
-   - [ ] Performance optimized
-   - [ ] Accessibility compliant
-   - [ ] Cross-browser tested
-   - [ ] Mobile responsive
-   - [ ] Dark mode working
-   - [ ] Analytics configured (if applicable)
-   - [ ] Error pages working (404)
-3. Test critical user flows:
-   - Homepage → Product → Contact
-   - Homepage → Tourism → Accommodation
-   - Homepage → News → Article
-4. Document any known issues
+### Task 8.2: Build Verification
+- Run: `npm run build`
+- Verify: No errors
+- Check: dist/ directory
+- Run: `npm run preview`
+- Test: Production build locally
+- Verify: All pages accessible
 
-**Success Criteria:**
-- All checklist items completed
-- Build succeeds without errors
-- Preview works correctly
-- Critical flows tested
-- No blocking issues
+**Commit:** "chore(build): verify production build"
+
+### Task 8.3: Clean Up
+- Remove: test pages, debug code
+- Remove: console.log statements
+- Remove: commented code
+- Remove: unused dependencies
+- Format: all code with Prettier
+
+**Commit:** "chore: clean up code for production"
+
+### Task 8.4: Final Git Commit
+- Stage all changes
+- Create comprehensive commit message
+- Tag release: `v1.0.0`
+- Push to repository
+
+**Commit:** "release: v1.0.0 - complete Astro 5 migration"
 
 ---
 
-### Task 5.5.2: Deploy to Production
-**Objective:** Deploy the site to Cloudflare Pages.
+## Phase 9: Deployment to Cloudflare Pages
 
-**Actions:**
-1. Commit all changes:
-   ```bash
-   git add .
-   git commit -m "chore: prepare for production deployment
-   
-   - All pages migrated and tested
-   - Performance optimized (Lighthouse 95+)
-   - Accessibility compliant (WCAG 2.1 AA)
-   - SEO configured with sitemap and structured data
-   - Cross-browser tested
-   - Documentation complete
-   
-   Ready for production deployment."
-   ```
-2. Push to main branch:
-   ```bash
-   git push origin feature/astro-migration
-   ```
-3. Create pull request and merge to main
-4. Deploy via Cloudflare Pages:
-   - Automatic deployment triggers on push to main
-   - OR manual deploy via Wrangler CLI
-5. Monitor deployment logs
-6. Verify deployment success
+### Task 9.1: Cloudflare Pages Setup
+- Create Cloudflare account (if needed)
+- Create new Pages project
+- Connect GitHub repository
+- Configure build settings:
+  - Build command: `npm run build`
+  - Build output directory: `dist`
+  - Root directory: `/`
+  - Node version: 18 or 20
 
-**Success Criteria:**
-- Code pushed to repository
-- Deployment completes successfully
-- Site is live at production URL
-- No deployment errors
-- DNS resolves correctly
+### Task 9.2: Deploy to Production
+- Trigger deployment
+- Monitor build logs
+- Verify: Build succeeds
+- Check: Deployment URL
+- Test: Live site
 
----
+### Task 9.3: Custom Domain (if applicable)
+- Add custom domain in Cloudflare
+- Configure DNS records
+- Wait for SSL certificate
+- Verify: Domain works with HTTPS
 
-### Task 5.5.3: Post-Deployment Verification
-**Objective:** Verify everything works correctly in production.
+### Task 9.4: Cloudflare Configuration
+Configure in Cloudflare dashboard:
+- Enable Auto Minify (HTML, CSS, JS)
+- Enable Brotli compression
+- Configure cache settings
+- Set up redirects if needed
+- Configure security headers
 
-**Actions:**
-1. Test live site:
-   - Visit https://bedalo.pages.dev
-   - Test all main pages
-   - Verify forms work
-   - Check images load
-   - Test on mobile device
-2. Verify SEO:
-   - Check sitemap.xml accessibility
-   - Verify robots.txt
-   - Test Open Graph tags (social sharing)
-   - Validate structured data
-3. Performance check:
-   - Run Lighthouse on production URL
-   - Verify Core Web Vitals
-   - Check loading speed from different locations
-4. Submit to search engines:
-   - Submit sitemap to Google Search Console
-   - Submit to Bing Webmaster Tools
-   - Verify indexing begins
-
-**Success Criteria:**
-- All pages work in production
-- Forms submit successfully
-- SEO elements accessible
-- Performance metrics meet targets
-- Search engines can access site
+**Commit:** "deploy: configure Cloudflare Pages"
 
 ---
 
-### Task 5.5.4: Setup Monitoring & Analytics
-**Objective:** Configure monitoring for ongoing site health.
+## Phase 10: Post-Deployment Verification
 
-**Actions:**
-1. Configure Cloudflare Web Analytics (built-in):
-   - Enable in Cloudflare dashboard
-   - Verify beacon loads
-2. Set up Google Search Console:
-   - Add property for bedalo.pages.dev
-   - Verify ownership via DNS
-   - Submit sitemap
-   - Monitor coverage
-3. Optional: Configure Google Analytics 4:
-   - Create GA4 property
-   - Add tracking script to BaseLayout
-   - Test tracking works
-4. Set up uptime monitoring:
-   - Use Cloudflare Health Checks
-   - Or use UptimeRobot (free tier)
-   - Configure alerts
-5. Document monitoring setup
+### Task 10.1: Production Testing
+Test live site:
+- Visit all pages
+- Check: content displays correctly
+- Test: forms submit
+- Verify: images load
+- Check: dark mode works
+- Test: mobile responsive
+- Verify: performance (PageSpeed Insights)
 
-**Success Criteria:**
-- Analytics tracking works
-- Search Console verified
-- Uptime monitoring active
-- Alerts configured
-- Dashboard accessible
+### Task 10.2: SEO Tools Setup
+- Submit sitemap to Google Search Console
+- Verify ownership
+- Submit to Bing Webmaster Tools
+- Set up Google Analytics (optional)
+- Configure Cloudflare Web Analytics
+
+### Task 10.3: Monitoring Setup
+- Set up uptime monitoring (UptimeRobot or similar)
+- Configure alerts
+- Set up error tracking (if needed)
+- Monitor Core Web Vitals in Search Console
 
 ---
 
-## Phase 5.6: Final Documentation & Handoff
+## Phase 11: Final Checks
 
-### Task 5.6.1: Create User Guide
-**Objective:** Create guide for non-technical content editors.
+### Task 11.1: Content Audit
+Final verification checklist:
+- [ ] All 26+ pages live and working
+- [ ] All content from collections (zero hardcoded)
+- [ ] Government structure displays correctly
+- [ ] Statistics animate with CountUp.js
+- [ ] Gallery works with lightgallery (images + videos)
+- [ ] Dashboard loads with Chart.js
+- [ ] Survey form functional
+- [ ] Contact form works
+- [ ] All images optimized with Astro Image
+- [ ] Dark mode works site-wide
+- [ ] Navigation active states correct
+- [ ] Breadcrumbs functional
+- [ ] Social links correct
+- [ ] Phone/email links work
 
-**Actions:**
-1. Create `docs/USER-GUIDE.md`:
-   ```markdown
-   # User Guide for Content Editors
-   
-   ## Introduction
-   
-   This guide explains how to add and update content on the Dusun Bedalo website
-   without technical knowledge.
-   
-   ## Adding a News Article
-   
-   ### Step 1: Create the File
-   
-   1. Go to `src/content/berita/` folder
-   2. Create a new file named: `YYYY-MM-DD-judul-artikel.md`
-      - Example: `2024-03-15-festival-dusun-bedalo.md`
-   
-   ### Step 2: Add Information (Frontmatter)
-   
-   At the top of the file, add:
-   
-   ```markdown
-   ---
-   title: "Judul Artikel Anda"
-   description: "Ringkasan singkat artikel"
-   pubDate: 2024-03-15
-   author: "Nama Penulis"
-   image:
-     src: "/assets/images/news/foto-artikel.webp"
-     alt: "Deskripsi foto"
-   category: "kegiatan"
-   tags: ["tag1", "tag2"]
-   featured: true
-   ---
-   ```
-   
-   ### Step 3: Write Content
-   
-   Below the `---`, write your article:
-   
-   ```markdown
-   # Judul Artikel
-   
-   Paragraf pertama artikel...
-   
-   ## Sub-judul
-   
-   Paragraf berikutnya...
-   ```
-   
-   ### Step 4: Publish
-   
-   1. Save the file
-   2. Ask developer to rebuild and deploy
-   3. Article will appear on website
-   
-   ## Categories Available
-   
-   - `pembangunan` - Infrastructure and development
-   - `kegiatan` - Events and activities
-   - `umkm` - Local businesses
-   - `wisata` - Tourism
-   - `budaya` - Culture
-   - `kesehatan` - Health
-   - `pendidikan` - Education
-   - `pengumuman` - Announcements
-   
-   ## Adding Images
-   
-   1. Put images in `/public/assets/images/news/`
-   2. Use WebP format for best performance
-   3. Resize to max 1920px width
-   4. Reference in frontmatter with: `/assets/images/news/filename.webp`
-   
-   ## Formatting Text
-   
-   - **Bold**: `**text**`
-   - *Italic*: `*text*`
-   - [Link]: `[text](url)`
-   - List: Start line with `-`
-   - Heading: Start line with `##`
-   
-   ## Need Help?
-   
-   Contact: inikknbedalo@gmail.com
-   ```
-2. Create video tutorial (optional)
-3. Hold training session with content team
+### Task 11.2: Technical Verification
+- [ ] Lighthouse scores: P:95+, A:95+, BP:95+, SEO:100
+- [ ] TypeScript strict mode enabled
+- [ ] No TypeScript errors
+- [ ] Build succeeds without warnings
+- [ ] Sitemap generates correctly
+- [ ] Robots.txt accessible
+- [ ] Structured data validates
+- [ ] All meta tags present
+- [ ] Images lazy load
+- [ ] Fonts load efficiently
+- [ ] No console errors
+- [ ] Cross-browser compatible
 
-**Success Criteria:**
-- User guide is clear and comprehensive
-- Non-technical users can add content
-- Examples are helpful
-- Contact information provided
+### Task 11.3: Comparison with Original
+- [ ] Design matches static-site/ aesthetic
+- [ ] All original content preserved
+- [ ] Functionality enhanced (not removed)
+- [ ] Performance improved
+- [ ] Accessibility improved
+- [ ] SEO improved
+- [ ] Maintainability improved
 
 ---
 
-### Task 5.6.2: Final Project Documentation
-**Objective:** Complete all project documentation.
+## Phase 12: Handoff & Training (Optional)
 
-**Actions:**
-1. Update main `README.md` with final information
-2. Create `CHANGELOG.md`:
-   ```markdown
-   # Changelog
-   
-   ## [1.0.0] - 2024-11-24
-   
-   ### Added
-   - Complete migration to Astro 5
-   - Content Collections for all structured content
-   - Dark mode support with localStorage persistence
-   - Responsive design for all devices
-   - SEO optimization with sitemap and structured data
-   - Performance optimization (Lighthouse 95+)
-   - Accessibility compliance (WCAG 2.1 AA)
-   - Gallery with lightgallery integration
-   - Dashboard with Chart.js visualizations
-   - Multi-step survey form
-   - Contact form with validation
-   
-   ### Changed
-   - Replaced GLightbox with lightgallery
-   - Replaced CountUp.js with custom implementation
-   - Migrated from static HTML to Astro components
-   - Improved mobile navigation
-   
-   ### Removed
-   - Inline scripts from HTML files
-   - Hardcoded content from templates
-   ```
-3. Create `LICENSE` file (MIT)
-4. Ensure all documentation is up to date
-5. Create project summary document
+### Task 12.1: Create User Guide
+Simple guide for content editors:
+- How to add news article
+- How to add product
+- How to update page content
+- Where files are located
+- Markdown basics
 
-**Success Criteria:**
-- All documentation files created
-- README is comprehensive
-- Changelog documents all changes
-- License file present
-- Documentation is accurate
+### Task 12.2: Video Tutorial (Optional)
+- Record: adding content walkthrough
+- Show: editing existing content
+- Demonstrate: preview and publish
+- Upload to YouTube or host on site
+
+### Task 12.3: Support Documentation
+- FAQ for common tasks
+- Troubleshooting guide
+- Contact information for support
+- Link to technical documentation
 
 ---
 
-### Task 5.6.3: Handoff & Training
-**Objective:** Transfer knowledge to site maintainers.
+## Completion Checklist
 
-**Actions:**
-1. Prepare handoff materials:
-   - Code repository access
-   - Cloudflare account access
-   - Documentation links
-   - Support contacts
-2. Conduct training session covering:
-   - Content management
-   - Basic troubleshooting
-   - Deployment process
-   - Where to find help
-3. Create support plan:
-   - Define support period
-   - Set communication channels
-   - Document escalation process
-4. Collect feedback on documentation
-5. Make final documentation improvements
+Migration is complete when:
+- [x] All 26+ pages migrated and verified
+- [x] 9 content collections populated
+- [x] Zero hardcoded content in codebase
+- [x] All components built and documented
+- [x] CountUp.js animating statistics
+- [x] Lightgallery working (images + videos)
+- [x] Chart.js dashboard functional
+- [x] Dark mode works site-wide
+- [x] Astro Image optimization everywhere
+- [x] Lighthouse scores: 95+/95+/95+/100
+- [x] SEO fully configured (sitemap, meta, schema)
+- [x] Accessibility WCAG 2.1 AA compliant
+- [x] Performance optimized (LCP, FID, CLS)
+- [x] Cross-browser tested
+- [x] Deployed to Cloudflare Pages
+- [x] Custom domain configured (if applicable)
+- [x] Search Console setup
+- [x] Monitoring active
+- [x] Documentation complete
+- [x] Content verified against static-site/
+- [x] All commits atomic and clear
+- [x] Repository clean and organized
 
-**Success Criteria:**
-- Maintainers have all necessary access
-- Training completed successfully
-- Support plan documented
-- Feedback incorporated
-- Handoff is smooth
-
----
-
-## Phase 5.7: Final Commit & Celebration
-
-### Task 5.7.1: Final Migration Commit
-**Objective:** Commit completion of migration project.
-
-**Actions:**
-1. Final code review
-2. Stage all changes: `git add .`
-3. Create final commit:
-   ```bash
-   git commit -m "feat: complete Astro 5 migration - v1.0.0
-   
-   Migration Summary:
-   - 26 HTML pages migrated to Astro routes
-   - 5 content collections with Zod schemas
-   - 15+ reusable components created
-   - Dark mode with theme persistence
-   - lightgallery for media galleries
-   - Performance: Lighthouse 95+ on all pages
-   - Accessibility: WCAG 2.1 AA compliant
-   - SEO: Complete with sitemap and structured data
-   - Mobile-first responsive design
-   - TypeScript strict mode throughout
-   
-   Original Design Preserved:
-   - UI/UX matches original static site
-   - All functionality maintained
-   - Enhanced with modern features
-   
-   Documentation:
-   - Comprehensive developer docs
-   - User guide for content editors
-   - Deployment and maintenance guides
-   
-   The site is now production-ready and fully migrated to Astro 5.
-   
-   Live URL: https://bedalo.pages.dev
-   
-   Made with ❤️ by KKN 117 UIN Sunan Kalijaga
-   For Dusun Bedalo, Gunungkidul, DIY"
-   ```
-4. Push to repository
-5. Tag release: `git tag -a v1.0.0 -m "Version 1.0.0 - Astro 5 Migration Complete"`
-6. Push tags: `git push --tags`
-
-**Success Criteria:**
-- Final commit is comprehensive
-- Repository is clean
-- Release is tagged
-- All changes pushed
-- Git history is clear
-
----
-
-### Task 5.7.2: Project Completion Documentation
-**Objective:** Document lessons learned and project success.
-
-**Actions:**
-1. Create `docs/PROJECT-SUMMARY.md`:
-   ```markdown
-   # Astro 5 Migration Project Summary
-   
-   ## Project Overview
-   
-   Successfully migrated Website Dusun Bedalo from static HTML to Astro 5 framework.
-   
-   ## Key Achievements
-   
-   - **Pages Migrated:** 26 (including dynamic routes)
-   - **Content Collections:** 5 (berita, potensi, pariwisata, akomodasi, warung)
-   - **Components Created:** 15+
-   - **Performance:** Lighthouse 95+ (avg 97)
-   - **Accessibility:** WCAG 2.1 AA compliant
-   - **Development Time:** ~25-30 hours
-   
-   ## Technical Highlights
-   
-   - TypeScript strict mode
-   - Content Collections with Zod validation
-   - Server-side rendering (SSG)
-   - Dark mode support
-   - Responsive design
-   - SEO optimization
-   - Performance optimization
-   
-   ## Challenges Overcome
-   
-   - Migrating complex layouts to components
-   - Implementing lightgallery with Astro
-   - Content schema design for flexibility
-   - Dark mode state persistence
-   - Performance optimization for images
-   
-   ## Lessons Learned
-   
-   - Content Collections are powerful for structured content
-   - TypeScript strict mode catches errors early
-   - Component reusability saves development time
-   - Performance testing should be continuous
-   - Documentation is crucial for handoff
-   
-   ## Future Recommendations
-   
-   - Consider adding search functionality
-   - Implement content preview system
-   - Add automated testing
-   - Set up CI/CD pipeline
-   - Consider PWA features
-   
-   ## Acknowledgments
-   
-   - Original design team
-   - Dusun Bedalo community
-   - KKN 117 UIN Sunan Kalijaga
-   ```
-2. Document metrics comparison (before vs after)
-3. Create before/after screenshot comparison
-4. Celebrate the successful migration! 🎉
-
-**Success Criteria:**
-- Project summary complete
-- Metrics documented
-- Lessons learned captured
-- Success celebrated
-
----
-
-## Completion Checklist for Plan 5
-
-Before considering migration complete, verify:
-
-- [x] Dynamic sitemap generated
-- [x] Robots.txt configured
-- [x] Structured data implemented
-- [x] Images optimized (WebP)
-- [x] Asset preloading configured
-- [x] Caching headers set
-- [x] Code splitting implemented
-- [x] Accessibility audit passed (WCAG 2.1 AA)
-- [x] Cross-browser testing completed
-- [x] Performance targets met (Lighthouse 95+)
-- [x] Forms tested and working
-- [x] Deployment documentation created
-- [x] Code cleanup completed
-- [x] Maintenance guide created
-- [x] Pre-deployment checklist completed
-- [x] Deployed to production
-- [x] Post-deployment verification done
-- [x] Monitoring and analytics configured
-- [x] User guide created
-- [x] Final documentation complete
-- [x] Handoff and training completed
-- [x] Final commit and tag created
-- [x] Project summary documented
-
-**Estimated Time:** 6-7 hours
+**Estimated Time:** 6-8 hours
 
 ---
 
 ## 🎉 Migration Complete!
 
-The Website Dusun Bedalo has been successfully migrated to Astro 5!
-
-### Final Stats:
-- **Total Time:** ~25-30 hours (across 5 plans)
-- **Pages:** 26 pages migrated
-- **Components:** 15+ reusable components
-- **Collections:** 5 content collections
+**Final Stats:**
+- **Total Time:** ~25-30 hours across 5 plans
+- **Pages Migrated:** 26+ pages
+- **Collections:** 9 (5 content + 4 data)
+- **Components:** 40+ reusable components
 - **Performance:** Lighthouse 95+ average
 - **Accessibility:** WCAG 2.1 AA compliant
 - **SEO:** Fully optimized
-
-### What's Next:
-1. Monitor site performance in production
-2. Gather user feedback
-3. Plan future enhancements
-4. Keep content updated
-5. Regular maintenance
+- **Content:** 100% from collections
 
 **Live Site:** https://bedalo.pages.dev
 
-**Made with ❤️ for Dusun Bedalo**
+**Made with ❤️ for Dusun Bedalo by KKN 117 UIN Sunan Kalijaga**
+
+---
+
+**Key Achievements:**
+- ✅ Modern Astro 5 architecture
+- ✅ TypeScript strict mode throughout
+- ✅ Content-driven (no hardcoded data)
+- ✅ Dark mode support
+- ✅ Performance optimized
+- ✅ Accessibility compliant
+- ✅ SEO ready
+- ✅ Maintainable and scalable
+- ✅ Original design preserved
+- ✅ Enhanced functionality
+
+**What's Next:**
+1. Monitor site performance
+2. Gather user feedback
+3. Regular content updates
+4. Continuous improvements
+5. Community engagement
+
+---
+
+**Note:** This migration maintains the exact content and design from the original static site while modernizing the architecture, improving performance, enhancing accessibility, and making content management significantly easier through Astro Content Collections.

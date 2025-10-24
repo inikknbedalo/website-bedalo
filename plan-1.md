@@ -1,881 +1,338 @@
-# Migration Plan 1: Project Setup & Foundation Architecture
+# Plan 1: Foundation & Content Collections Setup
 
-**Target:** Establish Astro 5 project foundation with TypeScript strict mode, configure base structure, and set up development environment.
-
----
-
-## Phase 1.1: Initialize Astro 5 Project with TypeScript
-
-### Task 1.1.1: Create New Astro 5 Project
-**Objective:** Bootstrap a fresh Astro 5 project with TypeScript strict mode enabled.
-
-**Actions:**
-1. Run Astro CLI to create new project:
-   ```bash
-   npm create astro@latest astro-bedalo -- --template minimal --typescript strict --git
-   ```
-2. Navigate into the project directory
-3. Verify `astro.config.mjs` exists with Astro 5 configuration
-4. Confirm `tsconfig.json` has `"strict": true` enabled
-5. Install dependencies: `npm install`
-
-**Success Criteria:**
-- Project initializes without errors
-- `package.json` shows Astro version 5.x
-- TypeScript strict mode is active
-- Dev server runs successfully: `npm run dev`
-
-**Context7 Reference:**
-```typescript
-// Expected tsconfig.json structure
-{
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "strictNullChecks": true,
-    "allowJs": true
-  }
-}
-```
+**Goal:** Initialize Astro 5 project, configure TypeScript strict mode, set up 9 content collections, and establish base architecture. **Zero hardcoded content allowed.**
 
 ---
 
-### Task 1.1.2: Configure Git and Migration Branch
-**Objective:** Set up version control and create a dedicated migration branch.
+## Phase 0: Backup & Branch
 
-**Actions:**
-1. Initialize git if not already done: `git init`
-2. Create `.gitignore` with Astro-specific patterns:
-   ```
-   # build output
-   dist/
-   .astro/
-   
-   # dependencies
-   node_modules/
-   
-   # environment
-   .env
-   .env.production
-   
-   # macOS
-   .DS_Store
-   ```
-3. Create migration branch: `git checkout -b feature/astro-migration`
-4. Initial commit: `git add . && git commit -m "chore: initialize Astro 5 project with TypeScript strict mode"`
-
-**Success Criteria:**
-- Git repository is properly initialized
-- `.gitignore` excludes unnecessary files
-- Migration branch is active
+### Task 0.1: Create Branch & Backup
+- Create branch: `feature/astro-5-migration`
+- Create `static-site/` directory
+- Copy all files using rsync (exclude .git, node_modules, plan-*.md)
+- Verify backup has all 26+ HTML files
+- Commit backup with atomic message
+- **Reference:** Use `static-site/` for all content verification throughout migration
 
 ---
 
-### Task 1.1.3: Install Essential Dependencies
-**Objective:** Add core dependencies required for the project.
+## Phase 1: Astro 5 Initialization
 
-**Actions:**
-1. Install Astro integrations and tools:
-   ```bash
-   npm install @astrojs/tailwind tailwindcss
-   npm install -D @types/node
-   ```
-2. Install lightgallery (replacing GLightbox):
-   ```bash
-   npm install lightgallery
-   ```
-3. Verify all dependencies resolve correctly: `npm list`
+### Task 1.1: Bootstrap Astro Project
+- Run: `npm create astro@latest .` (in root, not subdirectory)
+- Select: Empty template
+- Enable: TypeScript (strict)
+- Install dependencies
+- Verify: `npm run dev` starts successfully
+- **Commit:** "feat(init): bootstrap Astro 5 with TypeScript strict"
 
-**Success Criteria:**
-- All packages install without peer dependency warnings
-- `package.json` lists all required dependencies
-- No security vulnerabilities: `npm audit`
+### Task 1.2: Configure TypeScript Strict
+- Update `tsconfig.json`:
+  - Extend: `"astro/tsconfigs/strictest"`
+  - Enable: `strictNullChecks`, `noUncheckedIndexedAccess`
+- Create `src/env.d.ts` with Astro types
+- Run: `npm run check` - should pass
+- **Commit:** "chore(ts): configure TypeScript strict mode"
 
----
-
-## Phase 1.2: Configure Astro Project Structure
-
-### Task 1.2.1: Configure astro.config.mjs
-**Objective:** Set up Astro configuration with Tailwind integration and proper build settings.
-
-**Actions:**
-1. Update `astro.config.mjs`:
-   ```typescript
-   import { defineConfig } from 'astro/config';
-   import tailwind from '@astrojs/tailwind';
-   
-   export default defineConfig({
-     site: 'https://bedalo.pages.dev',
-     integrations: [
-       tailwind({
-         applyBaseStyles: false, // We'll use custom styles
-       }),
-     ],
-     output: 'static', // Static site generation
-     build: {
-       assets: 'assets',
-       inlineStylesheets: 'auto',
-     },
-     vite: {
-       build: {
-         cssMinify: true,
-         minify: 'terser',
-       },
-     },
-     compressHTML: true,
-   });
-   ```
-2. Verify configuration by running dev server
-3. Test Tailwind is working with a test component
-
-**Success Criteria:**
-- Dev server starts without errors
-- Tailwind CSS is properly integrated
-- Site configuration matches production URL
+### Task 1.3: Add Tailwind CSS
+- Run: `npx astro add tailwind`
+- Accept all prompts (auto-install)
+- Keep CDN scripts in HTML (migration reference)
+- Update `tailwind.config.mjs`: add content paths
+- Copy `static-site/css/tailwind-custom.css` to `src/styles/global.css`
+- Import global CSS in BaseLayout
+- **Commit:** "feat(tailwind): add Tailwind CSS integration"
 
 ---
 
-### Task 1.2.2: Create Core Directory Structure
-**Objective:** Establish the src/ directory structure following Astro 5 best practices.
+## Phase 2: Content Collections Architecture
 
-**Actions:**
-1. Create the following directory structure:
-   ```
-   src/
-   ├── assets/
-   │   └── images/
-   ├── components/
-   │   ├── ui/
-   │   ├── layout/
-   │   └── islands/
-   ├── content/
-   │   ├── berita/
-   │   ├── potensi/
-   │   ├── pariwisata/
-   │   ├── akomodasi/
-   │   └── warung/
-   ├── layouts/
-   ├── pages/
-   ├── styles/
-   ├── types/
-   └── utils/
-   ```
-2. Create `.gitkeep` files in empty directories to preserve structure
-3. Add README.md in key directories explaining their purpose
+### Task 2.1: Define Collection Schemas
+Create `src/content/config.ts` with 9 collections:
 
-**Success Criteria:**
-- All directories are created
-- Structure follows Astro 5 conventions
-- Each directory has a clear purpose documented
+**Collection 1-5 (Original):**
+1. `berita` - News articles (markdown)
+2. `potensi` - Products/potential (markdown) 
+3. `pariwisata` - Tourism destinations (markdown)
+4. `akomodasi` - Accommodations (markdown)
+5. `warung` - Local stores/restaurants (markdown)
 
----
+**Collection 6-9 (New - for dynamic content):**
+6. `config` - Site settings (JSON, type: 'data')
+   - Site metadata, contact info, social links, navigation
+7. `pages` - Page-specific content (JSON, type: 'data')
+   - Hero sections, welcome text, section content per page
+8. `government` - Officials (JSON, type: 'data')
+   - Kepala Dusun, Ketua RW, RT leaders with photos
+9. `statistics` - Stats/numbers (JSON, type: 'data')
+   - 450 warga, 120 KK, 15+ UMKM, 2 pantai, etc.
 
-### Task 1.2.3: Configure TypeScript Path Aliases
-**Objective:** Set up import aliases for cleaner imports.
+Define Zod schemas for each with proper validation
+- **Commit:** "feat(collections): define 9 content collection schemas"
 
-**Actions:**
-1. Update `tsconfig.json` with path mappings:
-   ```json
-   {
-     "extends": "astro/tsconfigs/strict",
-     "compilerOptions": {
-       "strictNullChecks": true,
-       "allowJs": true,
-       "baseUrl": ".",
-       "paths": {
-         "@/*": ["src/*"],
-         "@components/*": ["src/components/*"],
-         "@layouts/*": ["src/layouts/*"],
-         "@assets/*": ["src/assets/*"],
-         "@content/*": ["src/content/*"],
-         "@utils/*": ["src/utils/*"],
-         "@types/*": ["src/types/*"],
-         "@styles/*": ["src/styles/*"]
-       }
-     }
-   }
-   ```
-2. Test imports work correctly with a sample component
-3. Verify VS Code IntelliSense recognizes the aliases
+### Task 2.2: Create Config Collection
+Create `src/content/config/site.json`:
+- Extract from `static-site/index.html`:
+  - Site title: "Dusun Bedalo"
+  - Description from meta tags
+  - Contact: phone (+6283107581144), email (inikknbedalo@gmail.com)
+  - Address: full address from footer
+  - Social: Instagram, YouTube, TikTok, Facebook, Twitter URLs
+  - Navigation: all 7 nav links (Beranda, Profil, Potensi, etc.)
+- **Commit:** "feat(config): add site configuration from original"
 
-**Success Criteria:**
-- Path aliases resolve correctly
-- TypeScript compilation succeeds
-- IntelliSense provides autocompletion for aliased paths
+### Task 2.3: Create Pages Collection
+Extract all page-specific content from `static-site/`:
 
----
+**home.json** (from `static-site/index.html`):
+- Hero: title, subtitle, background image, CTA text
+- Welcome section: full "Sambutan Hangat" text (2 paragraphs)
+- Potensi section: heading, description
+- Pariwisata section: heading, description
+- All section titles and descriptions
 
-## Phase 1.3: Configure Styling System
+**profile.json** (from `static-site/profil.html`):
+- Hero banner content
+- History text (3 paragraphs about Bedalo name origin)
+- Vision statement (full text)
+- Mission items (5 points)
+- Demographics intro text
+- Map section text
 
-### Task 1.3.1: Set Up Tailwind CSS Configuration
-**Objective:** Configure Tailwind with custom theme matching original design.
+Create JSON files for all pages
+- **Commit:** "feat(pages): extract all page content from HTML"
 
-**Actions:**
-1. Create `tailwind.config.mjs`:
-   ```javascript
-   /** @type {import('tailwindcss').Config} */
-   export default {
-     content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-     darkMode: 'class',
-     theme: {
-       extend: {
-         fontFamily: {
-           sans: ['Poppins', 'system-ui', 'sans-serif'],
-         },
-         colors: {
-           primary: {
-             50: '#eff6ff',
-             100: '#dbeafe',
-             200: '#bfdbfe',
-             300: '#93c5fd',
-             400: '#60a5fa',
-             500: '#3b82f6',
-             600: '#2563eb', // Main primary color
-             700: '#1d4ed8',
-             800: '#1e40af',
-             900: '#1e3a8a',
-           },
-         },
-       },
-     },
-     plugins: [
-       require('@tailwindcss/typography'),
-       require('@tailwindcss/forms'),
-     ],
-   };
-   ```
-2. Install Tailwind plugins:
-   ```bash
-   npm install @tailwindcss/typography @tailwindcss/forms
-   ```
-3. Test Tailwind classes render correctly
+### Task 2.4: Create Government Collection
+Extract from `static-site/profil.html` structure section:
 
-**Success Criteria:**
-- Tailwind configuration matches original color scheme
-- Poppins font is properly configured
-- Dark mode class strategy is set
-- Plugins are functional
+**kepala-dusun.json:**
+- name: "Sumindar"
+- position: "Kepala Dusun"
+- role: "kepala-dusun"
+- photo: "/assets/images/cat.jpg"
+- order: 1
+
+**ketua-rw.json:**
+- name: "Walyono"  
+- position: "Ketua RW 10"
+- role: "ketua-rw"
+- photo: "/assets/images/profil.jpg"
+- order: 2
+
+**ketua-rt-01.json, 02.json, 03.json:**
+- Extract names: Sukarman, Tugiman, Sugiyanto
+- Create JSON for each RT leader
+
+- **Commit:** "feat(government): add officials from profile page"
+
+### Task 2.5: Create Statistics Collection
+Extract numbers from `static-site/index.html`:
+
+**total-warga.json:**
+- key: "total-warga"
+- value: 450
+- label: "Jumlah Warga"
+- icon: "users"
+- color: "blue"
+- order: 1
+
+**total-kk.json:**
+- value: 120
+- label: "Kepala Keluarga"
+- icon: "home"
+- color: "green"
+- order: 2
+
+**total-umkm.json:**
+- value: 15
+- label: "UMKM Aktif"
+- suffix: "+"
+- icon: "store"
+- color: "purple"
+- order: 3
+
+**total-pantai.json:**
+- value: 2
+- label: "Destinasi Pantai"
+- icon: "umbrella-beach"
+- color: "orange"
+- order: 4
+
+Also create: laki-laki (230), perempuan (220)
+- **Commit:** "feat(statistics): add dynamic statistics data"
 
 ---
 
-### Task 1.3.2: Create Global Styles
-**Objective:** Port existing custom CSS to Astro-compatible global styles.
+## Phase 3: Base Layouts & Components
 
-**Actions:**
-1. Create `src/styles/global.css`:
-   ```css
-   @tailwind base;
-   @tailwind components;
-   @tailwind utilities;
-   
-   @layer base {
-     html {
-       @apply scroll-smooth;
-     }
-     
-     body {
-       @apply font-sans bg-gray-50 text-gray-900 antialiased;
-     }
-     
-     /* Dark mode overrides */
-     .dark body {
-       @apply bg-gray-900 text-gray-100;
-     }
-   }
-   
-   @layer components {
-     .btn-primary {
-       @apply inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200;
-     }
-     
-     .card {
-       @apply bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-200;
-     }
-     
-     .dark .card {
-       @apply bg-gray-800;
-     }
-   }
-   
-   @layer utilities {
-     .text-balance {
-       text-wrap: balance;
-     }
-   }
-   ```
-2. Review original `css/tailwind-custom.css` for additional patterns
-3. Port relevant custom component classes
-4. Document any CSS that will be replaced by Tailwind utilities
+### Task 3.1: Create BaseLayout
+File: `src/layouts/BaseLayout.astro`
+- Fetch site config from collection
+- HTML structure with proper meta tags
+- SEO: title, description, Open Graph, Twitter cards
+- Preconnect: Google Fonts, CDN links
+- Load: Poppins font (400, 500, 600, 700) from CDN
+- Load: Font Awesome 6.7.1 from CDN
+- Global CSS import
+- Dark mode <html class="dark"> support
+- Skip to content link (a11y)
+- **Commit:** "feat(layout): create BaseLayout with SEO and dark mode"
 
-**Success Criteria:**
-- Global styles compile without errors
-- Original design patterns are preserved
-- Dark mode styles are properly configured
-- Custom component classes are available globally
+### Task 3.2: Create Navbar Component
+File: `src/components/layout/Navbar.astro`
+- Fetch navigation from config collection
+- Logo/title from config
+- Desktop menu: map over nav items from collection
+- Mobile menu: hamburger + slide-out
+- Active page highlighting
+- Theme toggle slot
+- Accessible: ARIA labels, keyboard nav
+- **Commit:** "feat(navbar): create responsive navbar from config"
+
+### Task 3.3: Create Footer Component  
+File: `src/components/layout/Footer.astro`
+- Fetch from config collection:
+  - Quick links (nav items)
+  - Contact info (phone, email, address)
+  - Social media links (with icons)
+- About section text from config
+- 4-column grid (lg), responsive
+- Current year dynamic
+- **Commit:** "feat(footer): create footer from config collection"
+
+### Task 3.4: Create MainLayout
+File: `src/layouts/MainLayout.astro`
+- Extend BaseLayout
+- Include Navbar
+- Main content slot
+- Include Footer
+- Dark mode support throughout
+- **Commit:** "feat(layout): create MainLayout wrapper"
 
 ---
 
-### Task 1.3.3: Configure Lightgallery Styles
-**Objective:** Set up lightgallery CSS imports for gallery functionality.
+## Phase 4: Utility Functions & Helpers
 
-**Actions:**
-1. Create `src/styles/lightgallery.css`:
-   ```css
-   /* Import lightgallery core styles */
-   @import 'lightgallery/css/lightgallery.css';
-   @import 'lightgallery/css/lg-zoom.css';
-   @import 'lightgallery/css/lg-thumbnail.css';
-   @import 'lightgallery/css/lg-video.css';
-   
-   /* Custom theme overrides */
-   .lg-backdrop {
-     @apply bg-black/90;
-   }
-   
-   .lg-toolbar {
-     @apply bg-black/50;
-   }
-   
-   /* Dark mode adjustments */
-   .dark .lg-toolbar {
-     @apply bg-gray-900/50;
-   }
-   ```
-2. Install lightgallery plugins:
-   ```bash
-   npm install lightgallery lg-zoom lg-thumbnail lg-video
-   ```
-3. Test import paths resolve correctly
+### Task 4.1: Date Formatting
+File: `src/utils/dateFormat.ts`
+- Function: `formatDate(date: Date): string`
+- Format: Indonesian locale (e.g., "15 Maret 2024")
+- Handle: pubDate, updatedDate
+- **Commit:** "feat(utils): add Indonesian date formatter"
 
-**Success Criteria:**
-- Lightgallery styles are imported correctly
-- Plugins are installed and accessible
-- Custom theme overrides apply properly
+### Task 4.2: Collection Helpers
+File: `src/utils/collections.ts`
+- `getFeaturedEntries(collection, limit)` - get featured items
+- `sortByDate(entries, order)` - sort by pubDate/publishDate
+- `filterDraft(entries)` - exclude draft: true
+- **Commit:** "feat(utils): add collection helper functions"
+
+### Task 4.3: SEO Helpers
+File: `src/utils/seo.ts`
+- `generateMetaTags(page)` - create meta object
+- `getCanonicalURL(path)` - construct canonical
+- `getOGImageURL(params)` - OG image URL
+- **Commit:** "feat(utils): add SEO helper utilities"
 
 ---
 
-## Phase 1.4: Create Base Layout Components
+## Phase 5: Dark Mode System
 
-### Task 1.4.1: Create Base HTML Layout
-**Objective:** Build the foundational HTML structure with SEO metadata.
+### Task 5.1: Theme Script
+File: `src/scripts/theme.ts`
+- Detect: system preference
+- Get: localStorage `theme` value
+- Set: <html class="dark"> toggle
+- Export: `initTheme()`, `toggleTheme()`
+- **Commit:** "feat(theme): add dark mode detection and toggle"
 
-**Actions:**
-1. Create `src/layouts/BaseLayout.astro`:
-   ```astro
-   ---
-   import '@styles/global.css';
-   import '@styles/lightgallery.css';
-   
-   interface Props {
-     title: string;
-     description: string;
-     image?: string;
-     canonicalURL?: string;
-   }
-   
-   const {
-     title,
-     description,
-     image = '/assets/images/ngedan.webp',
-     canonicalURL = new URL(Astro.url.pathname, Astro.site),
-   } = Astro.props;
-   
-   const siteTitle = `${title} | Dusun Bedalo`;
-   const ogImage = new URL(image, Astro.site);
-   ---
-   
-   <!doctype html>
-   <html lang="id" class="scroll-smooth">
-     <head>
-       <meta charset="UTF-8" />
-       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-       <meta name="theme-color" content="#2563eb" />
-       
-       <!-- SEO Meta Tags -->
-       <title>{siteTitle}</title>
-       <meta name="description" content={description} />
-       <link rel="canonical" href={canonicalURL} />
-       
-       <!-- Open Graph / Facebook -->
-       <meta property="og:type" content="website" />
-       <meta property="og:url" content={canonicalURL} />
-       <meta property="og:title" content={siteTitle} />
-       <meta property="og:description" content={description} />
-       <meta property="og:image" content={ogImage} />
-       <meta property="og:locale" content="id_ID" />
-       <meta property="og:site_name" content="Dusun Bedalo" />
-       
-       <!-- Twitter Card -->
-       <meta name="twitter:card" content="summary_large_image" />
-       <meta name="twitter:url" content={canonicalURL} />
-       <meta name="twitter:title" content={siteTitle} />
-       <meta name="twitter:description" content={description} />
-       <meta name="twitter:image" content={ogImage} />
-       
-       <!-- Favicons -->
-       <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-       <link rel="apple-touch-icon" href="/icon.svg" />
-       <link rel="manifest" href="/site.webmanifest" />
-       
-       <!-- Preconnect for Performance -->
-       <link rel="preconnect" href="https://fonts.googleapis.com" />
-       <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-       
-       <!-- Google Fonts -->
-       <link
-         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-         rel="stylesheet"
-       />
-       
-       <!-- Font Awesome CDN -->
-       <link
-         rel="stylesheet"
-         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-         integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-         crossorigin="anonymous"
-         referrerpolicy="no-referrer"
-       />
-     </head>
-     
-     <body>
-       <!-- Skip to main content link for accessibility -->
-       <a
-         href="#main-content"
-         class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded"
-       >
-         Lompat ke konten utama
-       </a>
-       
-       <slot />
-     </body>
-   </html>
-   ```
-2. Verify the layout compiles without errors
-3. Test that SEO meta tags populate correctly
+### Task 5.2: ThemeToggle Component
+File: `src/components/islands/ThemeToggle.astro`
+- Button with sun/moon icons
+- Click handler: calls `toggleTheme()`
+- Persist to localStorage
+- ARIA label
+- Place in Navbar
+- **Commit:** "feat(theme): create theme toggle button"
 
-**Success Criteria:**
-- Layout renders HTML5 semantic structure
-- SEO metadata is dynamic and correct
-- Accessibility skip link is present
-- Fonts and icons load from CDN
+### Task 5.3: Dark Mode CSS
+Update `src/styles/global.css`:
+- Add dark mode color variables
+- Tailwind dark: class overrides
+- Smooth transitions
+- Test: all components support dark mode
+- **Commit:** "style(theme): add dark mode styles"
 
 ---
 
-### Task 1.4.2: Create Type Definitions
-**Objective:** Define reusable TypeScript interfaces for common data structures.
+## Phase 6: Image Optimization Setup
 
-**Actions:**
-1. Create `src/types/common.ts`:
-   ```typescript
-   export interface SEOProps {
-     title: string;
-     description: string;
-     image?: string;
-     canonicalURL?: string | URL;
-     keywords?: string[];
-   }
-   
-   export interface NavigationLink {
-     label: string;
-     href: string;
-     icon?: string;
-   }
-   
-   export interface SocialLink {
-     platform: string;
-     url: string;
-     icon: string;
-     label: string;
-   }
-   
-   export interface ContactInfo {
-     name: string;
-     position: string;
-     phone?: string;
-     email?: string;
-     photo?: string;
-   }
-   ```
-2. Create `src/types/content.ts`:
-   ```typescript
-   import type { CollectionEntry } from 'astro:content';
-   
-   // Re-export collection entry types for convenience
-   export type BeritaEntry = CollectionEntry<'berita'>;
-   export type PotensiEntry = CollectionEntry<'potensi'>;
-   export type PariwisataEntry = CollectionEntry<'pariwisata'>;
-   export type AkomodasiEntry = CollectionEntry<'akomodasi'>;
-   export type WarungEntry = CollectionEntry<'warung'>;
-   
-   export interface GalleryImage {
-     src: string;
-     alt: string;
-     caption?: string;
-     thumbnail?: string;
-   }
-   
-   export interface GalleryVideo {
-     src: string;
-     poster?: string;
-     title: string;
-     description?: string;
-   }
-   ```
-3. Verify TypeScript can import and use these types
+### Task 6.1: Move Images to src/assets
+- Copy images from `public/assets/images/` to `src/assets/images/`
+- Keep structure: /gallery, /news, /products, etc.
+- Update imports to use Astro Image component
+- **Commit:** "chore(assets): organize images for optimization"
 
-**Success Criteria:**
-- All type definitions are valid TypeScript
-- Types are reusable across the project
-- IntelliSense provides type hints
+### Task 6.2: Create Image Component
+File: `src/components/ui/OptimizedImage.astro`
+- Props: src, alt, width, height, loading, quality
+- Use: `import { Image } from 'astro:assets'`
+- Handle: local images (optimized) and external URLs
+- Lazy loading by default
+- **Commit:** "feat(image): create optimized image wrapper"
 
 ---
 
-## Phase 1.5: Create Utility Functions
+## Phase 7: Testing & Verification
 
-### Task 1.5.1: Create Date Formatting Utilities
-**Objective:** Build helper functions for consistent date formatting in Indonesian.
+### Task 7.1: Test Development Server
+- Run: `npm run dev`
+- Verify: No errors
+- Check: Collections loaded correctly
+- Test: Theme toggle works
+- **Commit:** "test(dev): verify development environment"
 
-**Actions:**
-1. Create `src/utils/dateFormat.ts`:
-   ```typescript
-   export function formatDate(date: Date | string): string {
-     const d = typeof date === 'string' ? new Date(date) : date;
-     
-     const months = [
-       'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-       'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-     ];
-     
-     const day = d.getDate();
-     const month = months[d.getMonth()];
-     const year = d.getFullYear();
-     
-     return `${day} ${month} ${year}`;
-   }
-   
-   export function formatDateShort(date: Date | string): string {
-     const d = typeof date === 'string' ? new Date(date) : date;
-     return d.toLocaleDateString('id-ID', {
-       year: 'numeric',
-       month: 'short',
-       day: 'numeric',
-     });
-   }
-   
-   export function getReadingTime(content: string): number {
-     const wordsPerMinute = 200;
-     const wordCount = content.trim().split(/\s+/).length;
-     return Math.ceil(wordCount / wordsPerMinute);
-   }
-   ```
-2. Add unit tests for date utilities (optional but recommended)
-3. Test functions with various date formats
+### Task 7.2: Type Check
+- Run: `npm run check`
+- Fix: All TypeScript errors
+- Ensure: Strict mode compliance
+- **Commit:** "fix(types): resolve TypeScript errors"
 
-**Success Criteria:**
-- Date functions return properly formatted Indonesian dates
-- Reading time calculation is accurate
-- Functions handle edge cases (invalid dates, empty strings)
+### Task 7.3: Build Test
+- Run: `npm run build`
+- Verify: Successful build
+- Check: dist/ output
+- Preview: `npm run preview`
+- **Commit:** "test(build): verify production build"
 
 ---
 
-### Task 1.5.2: Create Slug Utilities
-**Objective:** Build functions for URL-safe slug generation and validation.
+## Completion Checklist
 
-**Actions:**
-1. Create `src/utils/slug.ts`:
-   ```typescript
-   export function slugify(text: string): string {
-     return text
-       .toString()
-       .toLowerCase()
-       .normalize('NFD')
-       .replace(/[\u0300-\u036f]/g, '') // Remove accents
-       .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
-       .trim()
-       .replace(/\s+/g, '-') // Replace spaces with hyphens
-       .replace(/-+/g, '-'); // Remove consecutive hyphens
-   }
-   
-   export function getIdFromFilename(filename: string): string {
-     return filename.replace(/\.(md|mdx|json)$/, '');
-   }
-   
-   export function extractSlugFromPath(path: string): string {
-     const parts = path.split('/');
-     const filename = parts[parts.length - 1];
-     return getIdFromFilename(filename);
-   }
-   ```
-2. Test slug generation with Indonesian characters
-3. Verify slugs are URL-safe
-
-**Success Criteria:**
-- Slugs are properly sanitized
-- Indonesian characters are handled correctly
-- Slugs are URL-safe and SEO-friendly
-
----
-
-### Task 1.5.3: Create Image Optimization Helpers
-**Objective:** Build utilities for responsive image handling.
-
-**Actions:**
-1. Create `src/utils/images.ts`:
-   ```typescript
-   export interface ImageMetadata {
-     src: string;
-     width: number;
-     height: number;
-     format: string;
-   }
-   
-   export function getImagePath(filename: string): string {
-     return `/assets/images/${filename}`;
-   }
-   
-   export function generateSrcSet(
-     basePath: string,
-     widths: number[] = [320, 640, 960, 1280, 1920]
-   ): string {
-     return widths
-       .map((width) => `${basePath}?w=${width} ${width}w`)
-       .join(', ');
-   }
-   
-   export function getImageAlt(
-     filename: string,
-     fallback: string = 'Gambar Dusun Bedalo'
-   ): string {
-     const name = filename.replace(/\.(jpg|jpeg|png|webp|svg)$/i, '');
-     return name.replace(/[-_]/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase()) || fallback;
-   }
-   ```
-2. Test image path generation
-3. Verify srcset generation for responsive images
-
-**Success Criteria:**
-- Image paths resolve correctly
-- Srcset generates multiple widths
-- Alt text extraction works properly
-
----
-
-## Phase 1.6: Migration Documentation & Testing
-
-### Task 1.6.1: Document Project Structure
-**Objective:** Create comprehensive documentation for the new structure.
-
-**Actions:**
-1. Update root `README.md` with Astro-specific information:
-   ```markdown
-   # Website Dusun Bedalo - Astro 5
-   
-   ## Project Structure
-   
-   ```
-   astro-bedalo/
-   ├── src/
-   │   ├── assets/       # Static assets (images, etc.)
-   │   ├── components/   # Reusable Astro components
-   │   ├── content/      # Content collections (markdown, JSON)
-   │   ├── layouts/      # Page layouts
-   │   ├── pages/        # File-based routing
-   │   ├── styles/       # Global styles
-   │   ├── types/        # TypeScript type definitions
-   │   └── utils/        # Utility functions
-   ├── public/           # Static files (served as-is)
-   └── astro.config.mjs  # Astro configuration
-   ```
-   
-   ## Development
-   
-   ```bash
-   npm run dev          # Start dev server
-   npm run build        # Build for production
-   npm run preview      # Preview production build
-   npm run astro        # Run Astro CLI
-   ```
-   
-   ## Tech Stack
-   
-   - **Framework:** Astro 5
-   - **Language:** TypeScript (strict mode)
-   - **Styling:** Tailwind CSS 3.x
-   - **Gallery:** lightgallery
-   - **Fonts:** Google Fonts (Poppins) via CDN
-   - **Icons:** Font Awesome 6.7.1 via CDN
-   ```
-2. Create `MIGRATION.md` tracking migration progress
-3. Document any deviations from original implementation
-
-**Success Criteria:**
-- Documentation is clear and comprehensive
-- README includes all necessary commands
-- Migration status is tracked
-
----
-
-### Task 1.6.2: Set Up Development Scripts
-**Objective:** Configure package.json with helpful development scripts.
-
-**Actions:**
-1. Update `package.json` scripts:
-   ```json
-   {
-     "scripts": {
-       "dev": "astro dev",
-       "build": "astro check && astro build",
-       "preview": "astro preview",
-       "astro": "astro",
-       "check": "astro check",
-       "sync": "astro sync",
-       "format": "prettier --write .",
-       "lint": "prettier --check ."
-     }
-   }
-   ```
-2. Install Prettier for code formatting:
-   ```bash
-   npm install -D prettier prettier-plugin-astro
-   ```
-3. Create `.prettierrc`:
-   ```json
-   {
-     "semi": true,
-     "singleQuote": true,
-     "tabWidth": 2,
-     "trailingComma": "es5",
-     "printWidth": 100,
-     "plugins": ["prettier-plugin-astro"],
-     "overrides": [
-       {
-         "files": "*.astro",
-         "options": {
-           "parser": "astro"
-         }
-       }
-     ]
-   }
-   ```
-
-**Success Criteria:**
-- All scripts run without errors
-- Prettier formats code consistently
-- Astro check validates TypeScript
-
----
-
-### Task 1.6.3: Verify Foundation Setup
-**Objective:** Test that all foundation components work together.
-
-**Actions:**
-1. Create a test page `src/pages/test.astro`:
-   ```astro
-   ---
-   import BaseLayout from '@layouts/BaseLayout.astro';
-   import { formatDate } from '@utils/dateFormat';
-   
-   const testDate = new Date();
-   ---
-   
-   <BaseLayout
-     title="Test Page"
-     description="Testing Astro 5 setup"
-   >
-     <main id="main-content" class="container mx-auto px-6 py-12">
-       <h1 class="text-4xl font-bold text-blue-600 mb-4">
-         Astro 5 Setup Test
-       </h1>
-       <p class="text-lg mb-4">
-         If you can see this page with proper styling, the foundation is working!
-       </p>
-       <p class="mb-4">
-         Current date: {formatDate(testDate)}
-       </p>
-       <button class="btn-primary">
-         <i class="fas fa-check mr-2"></i>
-         Test Button
-       </button>
-       <div class="card mt-6 p-6">
-         <h2 class="text-2xl font-semibold mb-2">Card Component</h2>
-         <p>This card uses Tailwind utility classes.</p>
-       </div>
-     </main>
-   </BaseLayout>
-   ```
-2. Run dev server and visit `/test`
-3. Verify:
-   - Page renders correctly
-   - Tailwind styles apply
-   - Font Awesome icons display
-   - Poppins font is used
-   - Date formatting works
-   - Path aliases resolve
-4. Test dark mode toggle (prepare for next phase)
-
-**Success Criteria:**
-- Test page renders without errors
-- All styles and fonts load correctly
-- TypeScript path aliases work
-- Utility functions execute properly
-- No console errors in browser
-
----
-
-## Phase 1.7: Commit Foundation Work
-
-### Task 1.7.1: Final Foundation Commit
-**Objective:** Commit all foundation work with clear documentation.
-
-**Actions:**
-1. Stage all changes: `git add .`
-2. Review changes: `git status`
-3. Commit with descriptive message:
-   ```bash
-   git commit -m "feat: establish Astro 5 foundation with TypeScript strict mode
-   
-   - Initialize Astro 5 project with strict TypeScript
-   - Configure Tailwind CSS with custom theme
-   - Set up lightgallery for media galleries
-   - Create base layout with SEO metadata
-   - Define TypeScript interfaces for common data
-   - Implement utility functions (dates, slugs, images)
-   - Configure path aliases for clean imports
-   - Add development scripts and Prettier
-   - Document project structure
-   
-   All core infrastructure is now in place for content migration."
-   ```
-4. Verify commit includes all necessary files
-5. Push to remote if applicable
-
-**Success Criteria:**
-- Clean commit with no untracked files
-- Commit message follows conventional commits
-- All foundation files are included
-- Git history is clean and logical
-
----
-
-## Completion Checklist for Plan 1
-
-Before moving to Plan 2, verify:
-
-- [x] Astro 5 project initialized with TypeScript strict mode
-- [x] All dependencies installed (Tailwind, lightgallery, etc.)
-- [x] Directory structure established following Astro conventions
-- [x] `astro.config.mjs` properly configured
-- [x] TypeScript path aliases working
-- [x] Tailwind CSS configured with custom theme
-- [x] Global styles created and importing correctly
-- [x] Base layout component created with full SEO support
-- [x] Type definitions created for common data structures
-- [x] Utility functions implemented (dates, slugs, images)
-- [x] Development scripts configured
-- [x] Prettier set up for consistent formatting
-- [x] Test page confirms everything works
-- [x] Documentation updated (README, MIGRATION.md)
-- [x] Foundation work committed to Git
+Before moving to Plan 2:
+- [ ] Astro 5 initialized with TypeScript strict
+- [ ] Tailwind CSS added via `npx astro add`
+- [ ] 9 collections defined with Zod schemas
+- [ ] Config collection populated from original site
+- [ ] Pages collection has home.json and profile.json
+- [ ] Government collection has 5 official entries
+- [ ] Statistics collection has 6 stat entries
+- [ ] BaseLayout created with SEO and dark mode
+- [ ] Navbar fetches nav from config collection
+- [ ] Footer fetches data from config collection
+- [ ] MainLayout combines all layout pieces
+- [ ] Dark mode system fully functional
+- [ ] Image optimization structure ready
+- [ ] All tasks committed atomically
+- [ ] `npm run dev` works without errors
+- [ ] `npm run check` passes
+- [ ] `npm run build` succeeds
+- [ ] Zero hardcoded content in any .astro file
 
 **Estimated Time:** 3-4 hours
 
-**Next Steps:** Proceed to Plan 2 for Content Collections setup and schema definitions.
+**Next:** Plan 2 - Content migration from HTML to collections
+
+---
+
+**Key Principle:** Everything must come from content collections. If you see hardcoded text, numbers, or links in a component—it's wrong. Fetch from collections instead.
