@@ -1,8 +1,10 @@
 # 📊 Dashboard Aspirasi Masyarakat - Implementation Plan
 
 **Date**: October 24, 2024  
-**Version**: 1.0  
-**Status**: Planning Phase
+**Version**: 1.1  
+**Status**: Planning Phase  
+**Spreadsheet ID**: `1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM`  
+**Password Hash**: `df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d`
 
 ---
 
@@ -122,7 +124,7 @@ async function hashPassword(password) {
 
 const AUTH_CONFIG = {
   // Pre-computed SHA-256 hash of 'kknbedalo117'
-  PASSWORD_HASH: 'a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6', // REPLACE WITH ACTUAL HASH
+  PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d',
   SESSION_KEY: 'dashboard_auth_token',
   SESSION_DURATION: 30 * 60 * 1000, // 30 minutes in milliseconds
   LAST_ACTIVITY_KEY: 'dashboard_last_activity',
@@ -353,7 +355,7 @@ This returns data without requiring API key (works for public sheets).
 ```javascript
 // Add to js/config.js
 const DASHBOARD_CONFIG = {
-  SPREADSHEET_ID: 'YOUR_SPREADSHEET_ID_HERE', // Replace with actual ID
+  SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
   SHEET_NAME: 'Form Responses 1', // Usually the default name
   API_URL: '', // Will be constructed dynamically
   REFRESH_INTERVAL: 60000, // 1 minute in milliseconds
@@ -791,6 +793,461 @@ window.initializeDashboard = initializeDashboard;
 
 ---
 
+## 📱 RESPONSIVE CHARTS CONFIGURATION
+
+### Chart.js Responsive Settings
+
+#### 1. Global Responsive Configuration
+```javascript
+// Add to dashboard/js/script.js or new dashboard/js/charts.js
+
+// Global Chart.js defaults for responsive behavior
+Chart.defaults.responsive = true;
+Chart.defaults.maintainAspectRatio = false;
+
+// Responsive configuration object
+const RESPONSIVE_CHART_CONFIG = {
+  responsive: true,
+  maintainAspectRatio: false, // Allow custom height
+  aspectRatio: 2, // Width/height ratio (only if maintainAspectRatio = true)
+  
+  // Animation for smooth resizing
+  animation: {
+    duration: 750,
+    easing: 'easeInOutQuart',
+    onProgress: null,
+    onComplete: null,
+  },
+  
+  // Layout padding for mobile
+  layout: {
+    padding: {
+      left: 10,
+      right: 10,
+      top: 10,
+      bottom: 10
+    }
+  },
+  
+  // Responsive plugins configuration
+  plugins: {
+    legend: {
+      display: true,
+      position: 'top',
+      labels: {
+        boxWidth: 15,
+        padding: 10,
+        font: {
+          size: window.innerWidth < 768 ? 10 : 12 // Smaller on mobile
+        }
+      }
+    },
+    title: {
+      display: true,
+      font: {
+        size: window.innerWidth < 768 ? 14 : 16
+      },
+      padding: {
+        top: 10,
+        bottom: 10
+      }
+    },
+    tooltip: {
+      enabled: true,
+      mode: 'index',
+      intersect: false,
+      bodyFont: {
+        size: window.innerWidth < 768 ? 11 : 13
+      },
+      titleFont: {
+        size: window.innerWidth < 768 ? 12 : 14
+      }
+    }
+  },
+  
+  // Responsive scales
+  scales: {
+    x: {
+      ticks: {
+        font: {
+          size: window.innerWidth < 768 ? 9 : 11
+        },
+        maxRotation: window.innerWidth < 768 ? 45 : 0,
+        minRotation: window.innerWidth < 768 ? 45 : 0
+      },
+      grid: {
+        display: window.innerWidth >= 768 // Hide on mobile for clarity
+      }
+    },
+    y: {
+      ticks: {
+        font: {
+          size: window.innerWidth < 768 ? 9 : 11
+        },
+        precision: 0
+      },
+      grid: {
+        display: true
+      }
+    }
+  }
+};
+```
+
+#### 2. HTML Container Structure for Responsive Charts
+```html
+<!-- Update dashboard/index.html chart containers -->
+
+<!-- Chart Container Template -->
+<div class="chart-wrapper w-full mb-6">
+  <!-- Desktop: Two columns, Mobile: Single column -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    
+    <!-- Subject Distribution Chart -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Distribusi per Subjek
+      </h3>
+      <!-- Chart container with responsive height -->
+      <div class="chart-container relative" style="height: 300px;">
+        <canvas id="subject-chart"></canvas>
+      </div>
+    </div>
+    
+    <!-- Timeline Chart -->
+    <div class="bg-white rounded-lg shadow-lg p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">
+        Timeline Aspirasi
+      </h3>
+      <!-- Chart container with responsive height -->
+      <div class="chart-container relative" style="height: 300px;">
+        <canvas id="timeline-chart"></canvas>
+      </div>
+    </div>
+    
+  </div>
+  
+  <!-- Full-width chart for mobile -->
+  <div class="bg-white rounded-lg shadow-lg p-6 mt-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">
+      Tren Mingguan
+    </h3>
+    <!-- Responsive height based on screen size -->
+    <div 
+      class="chart-container relative" 
+      style="height: 250px;"
+      data-mobile-height="200px"
+      data-desktop-height="350px"
+    >
+      <canvas id="weekly-trend-chart"></canvas>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Responsive chart containers */
+.chart-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .chart-container {
+    height: 250px !important;
+  }
+  
+  .chart-wrapper .grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .chart-container {
+    height: 300px !important;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1025px) {
+  .chart-container {
+    height: 350px !important;
+  }
+}
+</style>
+```
+
+#### 3. Responsive Chart Creation Function
+```javascript
+// Add to dashboard/js/charts.js (NEW FILE)
+
+// Utility: Create responsive chart with automatic resize
+function createResponsiveChart(canvasId, type, data, customOptions = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) {
+    console.error(`Canvas with id "${canvasId}" not found`);
+    return null;
+  }
+  
+  const ctx = canvas.getContext('2d');
+  
+  // Merge responsive config with custom options
+  const options = {
+    ...RESPONSIVE_CHART_CONFIG,
+    ...customOptions,
+    plugins: {
+      ...RESPONSIVE_CHART_CONFIG.plugins,
+      ...(customOptions.plugins || {})
+    }
+  };
+  
+  // Create chart
+  const chart = new Chart(ctx, {
+    type: type,
+    data: data,
+    options: options
+  });
+  
+  // Handle window resize
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      updateChartResponsiveness(chart);
+      chart.resize();
+    }, 250); // Debounce 250ms
+  });
+  
+  return chart;
+}
+
+// Update chart responsiveness based on screen size
+function updateChartResponsiveness(chart) {
+  const isMobile = window.innerWidth < 768;
+  
+  // Update font sizes
+  if (chart.options.plugins.legend) {
+    chart.options.plugins.legend.labels.font.size = isMobile ? 10 : 12;
+  }
+  
+  if (chart.options.plugins.title) {
+    chart.options.plugins.title.font.size = isMobile ? 14 : 16;
+  }
+  
+  // Update tick rotation for mobile
+  if (chart.options.scales?.x?.ticks) {
+    chart.options.scales.x.ticks.maxRotation = isMobile ? 45 : 0;
+    chart.options.scales.x.ticks.minRotation = isMobile ? 45 : 0;
+    chart.options.scales.x.ticks.font.size = isMobile ? 9 : 11;
+  }
+  
+  if (chart.options.scales?.y?.ticks) {
+    chart.options.scales.y.ticks.font.size = isMobile ? 9 : 11;
+  }
+  
+  // Hide grid on mobile for x-axis
+  if (chart.options.scales?.x?.grid) {
+    chart.options.scales.x.grid.display = !isMobile;
+  }
+  
+  chart.update();
+}
+
+// Example: Create subject distribution pie chart
+function createSubjectChart(aspirations) {
+  const subjectCounts = {};
+  aspirations.forEach(a => {
+    subjectCounts[a.subject] = (subjectCounts[a.subject] || 0) + 1;
+  });
+  
+  const data = {
+    labels: Object.keys(subjectCounts),
+    datasets: [{
+      label: 'Jumlah Aspirasi',
+      data: Object.values(subjectCounts),
+      backgroundColor: [
+        '#3B82F6', // blue
+        '#10B981', // green
+        '#F59E0B', // amber
+        '#EF4444', // red
+        '#8B5CF6', // purple
+        '#EC4899', // pink
+      ],
+      borderWidth: 2,
+      borderColor: '#ffffff'
+    }]
+  };
+  
+  const customOptions = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Distribusi Aspirasi per Subjek'
+      },
+      legend: {
+        position: window.innerWidth < 768 ? 'bottom' : 'right'
+      }
+    }
+  };
+  
+  return createResponsiveChart('subject-chart', 'doughnut', data, customOptions);
+}
+
+// Example: Create timeline line chart
+function createTimelineChart(aspirations) {
+  // Group by date
+  const dateCounts = {};
+  aspirations.forEach(a => {
+    const date = new Date(a.timestamp).toLocaleDateString('id-ID');
+    dateCounts[date] = (dateCounts[date] || 0) + 1;
+  });
+  
+  const sortedDates = Object.keys(dateCounts).sort((a, b) => {
+    return new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-'));
+  });
+  
+  const data = {
+    labels: sortedDates,
+    datasets: [{
+      label: 'Jumlah Aspirasi',
+      data: sortedDates.map(date => dateCounts[date]),
+      borderColor: '#3B82F6',
+      backgroundColor: 'rgba(59, 130, 246, 0.1)',
+      tension: 0.4,
+      fill: true,
+      pointRadius: 4,
+      pointHoverRadius: 6
+    }]
+  };
+  
+  const customOptions = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Timeline Aspirasi Masyarakat'
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1,
+          precision: 0
+        }
+      }
+    }
+  };
+  
+  return createResponsiveChart('timeline-chart', 'line', data, customOptions);
+}
+
+// Export functions
+window.createResponsiveChart = createResponsiveChart;
+window.createSubjectChart = createSubjectChart;
+window.createTimelineChart = createTimelineChart;
+```
+
+#### 4. Mobile-Specific Optimizations
+```css
+/* Add to dashboard/css/dashboard.css */
+
+/* Chart responsiveness */
+@media (max-width: 640px) {
+  /* Reduce padding on mobile */
+  .chart-wrapper .p-6 {
+    padding: 1rem !important;
+  }
+  
+  /* Stack statistics cards */
+  .grid.grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  /* Chart titles smaller */
+  .chart-container + h3,
+  .chart-wrapper h3 {
+    font-size: 1rem !important;
+  }
+  
+  /* Reduce chart canvas padding */
+  canvas {
+    max-height: 250px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  /* Tablet: 2 columns */
+  .grid.grid-cols-4 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  
+  canvas {
+    max-height: 300px;
+  }
+}
+
+/* Ensure charts don't overflow */
+.chart-container canvas {
+  max-width: 100%;
+  height: auto !important;
+}
+
+/* Loading skeleton for charts */
+.chart-skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+  height: 300px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+```
+
+#### 5. Touch Events for Mobile
+```javascript
+// Add to dashboard/js/charts.js
+
+// Enable touch events for better mobile interaction
+Chart.defaults.interaction = {
+  mode: 'nearest',
+  intersect: false,
+  axis: 'x'
+};
+
+// Custom touch handler for charts
+function enableTouchInteraction(chart) {
+  const canvas = chart.canvas;
+  let touchStartX = 0;
+  let touchEndX = 0;
+  
+  canvas.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  
+  canvas.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe(chart, touchStartX, touchEndX);
+  }, { passive: true });
+}
+
+function handleSwipe(chart, startX, endX) {
+  const swipeThreshold = 50;
+  const diff = startX - endX;
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    // Swipe detected - could add pagination for data
+    console.log(diff > 0 ? 'Swiped left' : 'Swiped right');
+  }
+}
+```
+
+---
+
 ## 🗂️ FILE STRUCTURE
 
 ```
@@ -800,8 +1257,9 @@ dashboard/
 │   ├── auth.js            # Authentication logic (NEW)
 │   ├── data-fetcher.js    # Google Sheets data fetcher (NEW)
 │   ├── dashboard.js       # Dashboard rendering logic (MODIFIED)
+│   ├── charts.js          # Responsive chart creation (NEW)
 │   ├── data.js            # Fallback hardcoded data (KEEP for offline)
-│   └── script.js          # Chart rendering (EXISTING)
+│   └── script.js          # Chart rendering (EXISTING - will be merged with charts.js)
 ├── css/
 │   └── dashboard.css      # Additional dashboard styles (NEW)
 └── README.md              # Dashboard documentation (NEW)
@@ -809,56 +1267,513 @@ dashboard/
 
 ---
 
+## 🔧 MANUAL INTERVENTION REQUIRED
+
+### ⚠️ Critical Steps You MUST Do Manually
+
+Before implementation, these steps **CANNOT** be automated and require your direct action:
+
+---
+
+#### 1. ✋ **Link Google Form to Spreadsheet**
+
+**Why**: The form needs to save responses to a Google Sheet for the dashboard to read.
+
+**Steps**:
+1. Open your Google Form: 
+   ```
+   https://docs.google.com/forms/d/e/1FAIpQLSfWaCgBA-cNraUbTmOGjlmrZQ-99edYMdUSkbA-kQBtZm6QOw/edit
+   ```
+2. Click **"Responses"** tab at the top
+3. Click the green **Google Sheets icon** (📊)
+4. Select **"Create a new spreadsheet"** or use existing
+5. Name it: `Aspirasi Masyarakat Responses`
+6. Click **"Create"**
+7. **Important**: Copy the Spreadsheet ID from the URL (already configured: `1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM`)
+
+**Verify**: 
+- Open the spreadsheet
+- Submit a test form response
+- Check if it appears in the spreadsheet (should be instant)
+
+---
+
+#### 2. ✋ **Make Spreadsheet Public (Read-Only)**
+
+**Why**: Dashboard needs to read data without authentication.
+
+**Steps**:
+1. Open the spreadsheet: 
+   ```
+   https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/edit
+   ```
+2. Click **"Share"** button (top-right)
+3. Click **"Change to anyone with the link"**
+4. Set permission to **"Viewer"** (NOT Editor!)
+5. Click **"Done"**
+
+**Verify**: 
+- Open incognito window
+- Paste this URL:
+  ```
+  https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json
+  ```
+- You should see JSON data (starts with `google.visualization.Query.setResponse`)
+- If you see "access denied", repeat steps above
+
+---
+
+#### 3. ✋ **Verify Form Field Names Match**
+
+**Why**: Dashboard expects specific column names from Google Sheets.
+
+**Expected Columns** (from Google Form):
+```
+Column A: Timestamp (auto-generated)
+Column B: Nama Lengkap (entry.2116275708)
+Column C: No. Telepon / Email (entry.175133211)
+Column D: Subjek (entry.1266128475)
+Column E: Pesan Aspirasi (entry.1942425125)
+```
+
+**Steps**:
+1. Open the linked spreadsheet
+2. Check the **header row** (row 1)
+3. Verify column names match above
+4. If different, you MUST update `transformAspirationsData()` in `dashboard.js`:
+   ```javascript
+   // Update these to match your actual column names
+   timestamp: row['Timestamp'] || row['Stempel Waktu'] || '',
+   name: row['Nama Lengkap'] || '',
+   contact: row['No. Telepon / Email'] || '',
+   subject: row['Subjek'] || '',
+   message: row['Pesan Aspirasi'] || '',
+   ```
+
+**Verify**: 
+- Submit test form
+- Check spreadsheet columns
+- Note any differences
+
+---
+
+#### 4. ✋ **Update config.js with Actual Values**
+
+**Why**: Configuration must point to your real spreadsheet.
+
+**File**: `js/config.js`
+
+**Add this section** (after existing SITE_CONFIG):
+```javascript
+// Dashboard Configuration
+const DASHBOARD_CONFIG = {
+  SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
+  SHEET_NAME: 'Form Responses 1', // ⚠️ CHECK YOUR ACTUAL SHEET NAME!
+  API_URL: '',
+  REFRESH_INTERVAL: 60000, // 1 minute
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 2000,
+};
+
+// Construct API URL
+DASHBOARD_CONFIG.API_URL = `https://docs.google.com/spreadsheets/d/${DASHBOARD_CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DASHBOARD_CONFIG.SHEET_NAME)}`;
+```
+
+**⚠️ IMPORTANT**: Check your actual sheet name!
+- Open spreadsheet
+- Look at bottom-left tab name
+- If it says "Sheet1" or something else, update `SHEET_NAME`
+
+---
+
+#### 5. ✋ **Update auth.js with Password Hash**
+
+**Why**: Password must be encrypted for security.
+
+**File**: `dashboard/js/auth.js`
+
+**Find this line**:
+```javascript
+PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d',
+```
+
+**If you want to change the password**:
+1. Open browser console (F12)
+2. Run this code:
+   ```javascript
+   const password = 'YOUR_NEW_PASSWORD';
+   crypto.subtle.digest('SHA-256', new TextEncoder().encode(password))
+     .then(hash => console.log(
+       Array.from(new Uint8Array(hash))
+         .map(b => b.toString(16).padStart(2, '0'))
+         .join('')
+     ));
+   ```
+3. Copy the output
+4. Replace the `PASSWORD_HASH` value
+
+**Current password**: `kknbedalo117`  
+**Current hash**: `df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d`
+
+---
+
+#### 6. ✋ **Remove Navbar Login/Signup Button**
+
+**Why**: Dashboard uses simple password auth, not user accounts.
+
+**File**: `dashboard/index.html`
+
+**Find and DELETE this section** (around line 51-58):
+```html
+<div id="netlify-identity-button">
+  <button
+    disabled
+    title="Fitur login dinonaktifkan dalam versi statis ini"
+    class="cursor-not-allowed rounded-md bg-blue-600 px-4 py-2 text-white opacity-50 transition duration-300 hover:bg-blue-700"
+  >
+    Login/Signup (Dinonaktifkan)
+  </button>
+</div>
+```
+
+**Replace with**:
+```html
+<div class="flex items-center space-x-4">
+  <span class="text-sm text-gray-600" id="last-refresh-display">
+    <i class="fas fa-clock mr-1"></i>
+    <span id="last-refresh-time">-</span>
+  </span>
+  <button
+    id="refresh-btn"
+    class="rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
+    title="Muat ulang data"
+  >
+    <i class="fas fa-sync-alt mr-1"></i> Refresh
+  </button>
+  <button
+    id="logout-btn"
+    class="rounded-md bg-red-600 px-4 py-2 text-white transition duration-300 hover:bg-red-700"
+    title="Keluar dari dashboard"
+  >
+    <i class="fas fa-sign-out-alt mr-1"></i> Logout
+  </button>
+</div>
+```
+
+---
+
+#### 7. ✋ **Add Logout Functionality**
+
+**Why**: Users need to be able to log out.
+
+**File**: `dashboard/js/auth.js`
+
+**Add this to the DashboardAuth class** (inside showDashboard method):
+```javascript
+showDashboard() {
+  document.getElementById('login-screen').classList.add('hidden');
+  document.getElementById('dashboard-content').classList.remove('hidden');
+  
+  // Initialize dashboard
+  if (window.initializeDashboard) {
+    window.initializeDashboard();
+  }
+  
+  // Add logout button handler
+  const logoutBtn = document.getElementById('logout-btn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      if (confirm('Apakah Anda yakin ingin keluar?')) {
+        this.logout();
+        location.reload();
+      }
+    });
+  }
+}
+```
+
+---
+
+#### 8. ✋ **Test Data Fetch Manually**
+
+**Why**: Verify everything works before going live.
+
+**Steps**:
+1. Open browser console (F12)
+2. Paste this code:
+   ```javascript
+   fetch('https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json&sheet=Form%20Responses%201')
+     .then(res => res.text())
+     .then(text => {
+       console.log('✅ Data fetched successfully!');
+       console.log('First 200 chars:', text.substring(0, 200));
+       
+       // Parse
+       const jsonString = text.match(/google\.visualization\.Query\.setResponse\(([\s\S\w]+)\)/);
+       if (jsonString) {
+         const data = JSON.parse(jsonString[1]);
+         console.log('✅ Parsed successfully!');
+         console.log('Rows:', data.table.rows.length);
+         console.log('Columns:', data.table.cols.map(c => c.label));
+       }
+     })
+     .catch(err => {
+       console.error('❌ Fetch failed:', err);
+       console.log('Check: Is spreadsheet public? Is ID correct?');
+     });
+   ```
+3. Check console output
+4. You should see "✅ Data fetched successfully!"
+5. If error, check spreadsheet sharing settings
+
+---
+
+#### 9. ✋ **Create Necessary Files**
+
+**Why**: New files need to be created manually.
+
+**Files to create**:
+
+**A. `dashboard/js/auth.js`**
+- Copy code from section "Authentication JavaScript (auth.js)" in this document
+- Paste into new file
+- Save as `dashboard/js/auth.js`
+
+**B. `dashboard/js/data-fetcher.js`**
+- Copy code from section "Data Fetcher (dashboard/js/data-fetcher.js)"
+- Paste into new file
+- Save as `dashboard/js/data-fetcher.js`
+
+**C. `dashboard/js/charts.js`**
+- Copy code from section "Responsive Chart Creation Function"
+- Paste into new file
+- Save as `dashboard/js/charts.js`
+
+**D. `dashboard/css/dashboard.css`**
+- Copy code from section "Mobile-Specific Optimizations"
+- Paste into new file
+- Save as `dashboard/css/dashboard.css`
+
+---
+
+#### 10. ✋ **Update HTML Script Loading Order**
+
+**Why**: Scripts must load in correct order to avoid errors.
+
+**File**: `dashboard/index.html`
+
+**Find the script section at the bottom** (before `</body>`).
+
+**Replace with**:
+```html
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+
+<!-- Site Configuration (MUST BE FIRST) -->
+<script src="../js/config.js"></script>
+
+<!-- Dashboard Scripts -->
+<script src="js/data.js"></script> <!-- Fallback data -->
+<script src="js/auth.js"></script> <!-- Authentication -->
+<script src="js/data-fetcher.js"></script> <!-- API fetcher -->
+<script src="js/charts.js"></script> <!-- Chart creation -->
+<script src="js/dashboard.js"></script> <!-- Main logic -->
+<script src="js/script.js"></script> <!-- Existing chart code - can be merged -->
+```
+
+**⚠️ Order is critical!**:
+1. config.js → Defines DASHBOARD_CONFIG
+2. data.js → Fallback data
+3. auth.js → Checks authentication first
+4. data-fetcher.js → API functionality
+5. charts.js → Chart utilities
+6. dashboard.js → Initializes everything
+7. script.js → Existing code
+
+---
+
+#### 11. ✋ **Add Login Screen HTML**
+
+**Why**: Need UI for password entry.
+
+**File**: `dashboard/index.html`
+
+**Find** `<body>` tag and **add this AFTER the opening tag**:
+
+```html
+<body class="min-h-screen bg-gray-100">
+  
+  <!-- Login Screen (ADD THIS) -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100">
+    <div class="max-w-md w-full bg-white rounded-lg shadow-xl p-8 m-4">
+      <div class="text-center mb-6">
+        <i class="fas fa-lock text-5xl text-blue-600 mb-3"></i>
+        <h2 class="text-2xl font-bold text-gray-800">Dashboard Aspirasi</h2>
+        <p class="text-gray-600 mt-2">Masukkan password untuk mengakses</p>
+      </div>
+      
+      <form id="login-form" class="space-y-4">
+        <div>
+          <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+            Password
+          </label>
+          <div class="relative">
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Masukkan password"
+              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              required
+              autocomplete="off"
+            />
+            <button
+              type="button"
+              id="toggle-password"
+              class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              aria-label="Toggle password visibility"
+            >
+              <i class="fas fa-eye"></i>
+            </button>
+          </div>
+        </div>
+        
+        <div id="login-error" class="hidden text-red-600 text-sm bg-red-50 p-3 rounded">
+          <i class="fas fa-exclamation-circle mr-2"></i>
+          <span>Password salah. Silakan coba lagi.</span>
+        </div>
+        
+        <button
+          type="submit"
+          id="login-button"
+          class="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200 flex items-center justify-center"
+        >
+          <span>Masuk Dashboard</span>
+        </button>
+      </form>
+      
+      <div class="mt-6 text-center text-sm text-gray-500">
+        <i class="fas fa-info-circle mr-1"></i>
+        Hubungi admin jika lupa password
+      </div>
+    </div>
+  </div>
+  
+  <!-- Dashboard Content (wrap existing content) -->
+  <div id="dashboard-content" class="hidden">
+    <!-- EXISTING DASHBOARD HTML HERE -->
+    <!-- Move all existing <header>, <main>, <footer> inside this div -->
+  </div>
+
+  <!-- Scripts at bottom -->
+  ...
+</body>
+```
+
+**Action**: Wrap all existing dashboard content inside `<div id="dashboard-content" class="hidden">`.
+
+---
+
+#### 12. ✋ **Test on Localhost First**
+
+**Why**: Catch errors before deployment.
+
+**Steps**:
+1. Install a local server:
+   ```bash
+   npm install -g http-server
+   # or
+   python -m http.server 8000
+   ```
+
+2. Run server:
+   ```bash
+   # In project root
+   http-server -p 8080
+   # or
+   python -m http.server 8080
+   ```
+
+3. Open browser:
+   ```
+   http://localhost:8080/dashboard/
+   ```
+
+4. Test checklist:
+   - [ ] Login screen appears
+   - [ ] Can toggle password visibility
+   - [ ] Wrong password shows error
+   - [ ] Correct password (`kknbedalo117`) logs in
+   - [ ] Loading spinner appears
+   - [ ] Data loads from Google Sheets
+   - [ ] Charts render
+   - [ ] Statistics update
+   - [ ] Refresh button works
+   - [ ] Logout button works
+   - [ ] Session persists on page refresh
+   - [ ] Responsive on mobile (use DevTools)
+
+---
+
+### ✅ Manual Intervention Checklist
+
+Before proceeding to implementation, verify:
+
+- [ ] Google Form linked to spreadsheet
+- [ ] Spreadsheet ID: `1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM`
+- [ ] Spreadsheet is public (Viewer access)
+- [ ] API URL tested in browser (returns JSON)
+- [ ] Column names verified and match code
+- [ ] `config.js` updated with DASHBOARD_CONFIG
+- [ ] `auth.js` has correct PASSWORD_HASH
+- [ ] Navbar login button removed
+- [ ] Logout functionality added
+- [ ] All 4 new files created (auth.js, data-fetcher.js, charts.js, dashboard.css)
+- [ ] HTML script order updated
+- [ ] Login screen HTML added
+- [ ] Existing content wrapped in `dashboard-content` div
+- [ ] Tested on localhost
+- [ ] Mobile responsive verified (DevTools)
+- [ ] Form submission tested (appears in dashboard)
+
+**⚠️ DO NOT SKIP ANY STEPS!** Each one is critical for the dashboard to work.
+
+---
+
 ## ✅ IMPLEMENTATION CHECKLIST
 
 ### Phase 1: Pre-Implementation (Do First)
-- [ ] **Get actual Google Form Spreadsheet ID**
-  - Open Google Form → Responses → Link to Sheets
-  - Note Spreadsheet ID from URL
-  
-- [ ] **Make spreadsheet publicly viewable**
-  - Share → Anyone with link → Viewer
-  - Test URL: `https://docs.google.com/spreadsheets/d/SPREADSHEET_ID/gviz/tq?tqx=out:json`
-  
-- [ ] **Generate password hash**
-  ```javascript
-  // Run in browser console:
-  const password = 'kknbedalo117';
-  crypto.subtle.digest('SHA-256', new TextEncoder().encode(password))
-    .then(hash => console.log(Array.from(new Uint8Array(hash))
-      .map(b => b.toString(16).padStart(2, '0')).join('')));
-  ```
-  - Copy the hash output
-  - Replace `AUTH_CONFIG.PASSWORD_HASH` in auth.js
+
+**⚠️ IMPORTANT**: Complete ALL items in **"🔧 MANUAL INTERVENTION REQUIRED"** section above first!
+
+Quick reference (see detailed steps above):
+- [ ] **Link Google Form to Spreadsheet** (Step 1)
+- [ ] **Make spreadsheet public** (Step 2)
+- [ ] **Verify form field names** (Step 3)
+- [ ] **Test data fetch manually** (Step 8)
 
 ### Phase 2: File Creation
-- [ ] **Create auth.js** with authentication logic
-- [ ] **Create data-fetcher.js** with Google Sheets fetching
-- [ ] **Create dashboard.css** for additional styles
-- [ ] **Update config.js** with `DASHBOARD_CONFIG`
-- [ ] **Update index.html** with login screen HTML
+
+**See Manual Intervention Steps 4, 9, 10, 11** for detailed instructions.
+
+- [ ] **Create dashboard/js/auth.js** (Step 9A)
+- [ ] **Create dashboard/js/data-fetcher.js** (Step 9B)
+- [ ] **Create dashboard/js/charts.js** (Step 9C)
+- [ ] **Create dashboard/css/dashboard.css** (Step 9D)
+- [ ] **Update js/config.js** with DASHBOARD_CONFIG (Step 4)
+- [ ] **Update dashboard/index.html** - add login screen (Step 11)
 
 ### Phase 3: Code Integration
-- [ ] **Update dashboard/index.html**
-  - Remove login/signup button from navbar
-  - Add login screen HTML
-  - Add dashboard content wrapper
-  - Include new scripts in order:
-    ```html
-    <script src="../js/config.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/data-fetcher.js"></script>
-    <script src="js/dashboard.js"></script>
-    ```
 
-- [ ] **Update dashboard.js**
-  - Replace hardcoded data loading with API calls
-  - Implement `transformAspirationsData()` function
-  - Add error handling for API failures
+**See Manual Intervention Steps 6, 7, 10** for detailed instructions.
 
-- [ ] **Update script.js (charts)**
-  - Ensure charts update with new data structure
-  - Add loading states for charts
+- [ ] **Remove navbar login button** (Step 6)
+- [ ] **Add logout functionality** (Step 7)
+- [ ] **Update script loading order** (Step 10)
+- [ ] **Wrap existing content in dashboard-content div** (Step 11)
+- [ ] **Update dashboard.js** - integrate API calls
+- [ ] **Update charts.js** - use responsive chart functions
 
 ### Phase 4: Testing
 - [ ] **Test authentication**
