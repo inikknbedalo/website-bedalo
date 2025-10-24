@@ -11,7 +11,7 @@ const siteConfig = siteConfigEntry.data;
 const { site, contact, social } = siteConfig;
 ---
 
-<footer class="bg-slate-900 text-slate-300">
+<footer class="bg-slate-900 text-slate-300" role="contentinfo">
   <div class="container mx-auto px-6 pb-8 pt-16 lg:px-8">
     <div
       class="flex flex-col items-center justify-between gap-8 border-b border-slate-700 pb-10 md:flex-row"
@@ -27,14 +27,16 @@ const { site, contact, social } = siteConfig;
           href="/kontak#aspirasi"
           data-astro-prefetch
           class="focus:ring-opacity-50 inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          aria-label="Sampaikan aspirasi Anda ke pemerintah dusun"
         >
           Sampaikan Aspirasi Anda
         </a>
       </div>
     </div>
 
-    <div
+    <nav
       class="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:flex lg:justify-center lg:gap-16"
+      aria-label="Footer navigation"
     >
       <div>
         <h3 class="text-base font-semibold tracking-wider text-white">Tautan Langsung</h3>
@@ -43,7 +45,8 @@ const { site, contact, social } = siteConfig;
             <a
               href="/kontak#kontak-perangkat"
               data-astro-prefetch
-              class="transition-colors duration-300 hover:text-blue-400"
+              class="transition-colors duration-300 hover:text-blue-400 focus:text-blue-400 focus:outline-none"
+              aria-label="Lihat kontak perangkat dusun"
             >
               Kontak Perangkat
             </a>
@@ -106,16 +109,17 @@ const { site, contact, social } = siteConfig;
         <h3 class="text-base font-semibold tracking-wider text-white">Hubungi Kami</h3>
         <ul class="mt-4 space-y-4">
           <li class="flex items-center gap-x-3">
-            <i class="fa-solid fa-envelope w-5 text-center text-slate-400"></i>
+            <i class="fa-solid fa-envelope w-5 text-center text-slate-400" aria-hidden="true"></i>
             <a
               href={`mailto:${contact.email}`}
-              class="transition-colors duration-300 hover:text-blue-400"
+              class="transition-colors duration-300 hover:text-blue-400 focus:text-blue-400 focus:outline-none"
+              aria-label={`Kirim email ke ${contact.email}`}
             >
               {contact.email}
             </a>
           </li>
           <li class="flex items-center gap-x-3">
-            <i class="fa-solid fa-phone w-5 text-center text-slate-400"></i>
+            <i class="fa-solid fa-phone w-5 text-center text-slate-400" aria-hidden="true"></i>
             <span>{contact.phone}</span>
           </li>
         </ul>
