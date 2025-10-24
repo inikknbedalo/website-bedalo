@@ -1,36 +1,46 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
 import Section from '../components/ui/Section.astro';
 import Button from '../components/ui/Button.astro';
+
+const pageContent = await getEntry('pages', '404');
+
+if (!pageContent || !('page' in pageContent.data) || pageContent.data.page !== '404') {
+  throw new Error('404 page content not found');
+}
+
+const { title, message, icon, iconColor, actions } = pageContent.data;
 ---
 
-<MainLayout title="404 - Halaman Tidak Ditemukan" description="Halaman yang Anda cari tidak ditemukan">
+<MainLayout title={`${title} - Dusun Bedalo`} description={message}>
   <Section background="white">
     <div class="mx-auto max-w-2xl py-16 text-center">
       <div class="mb-8">
-        <i class="fas fa-exclamation-triangle text-8xl text-yellow-500"></i>
+        <i class:list={[icon, 'text-8xl', `text-${iconColor}`]}></i>
       </div>
 
       <h1 class="mb-4 text-6xl font-bold text-gray-800">404</h1>
 
       <h2 class="mb-4 text-2xl font-semibold text-gray-700">
-        Halaman Tidak Ditemukan
+        {title}
       </h2>
 
       <p class="mb-8 text-gray-600">
-        Maaf, halaman yang Anda cari tidak dapat ditemukan. Mungkin halaman telah dipindahkan atau
-        dihapus.
+        {message}
       </p>
 
       <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
-        <Button href="/" variant="primary" size="lg">
-          <i class="fas fa-home"></i>
-          Kembali ke Beranda
-        </Button>
-        <Button href="/peta-situs" variant="outline" size="lg">
-          <i class="fas fa-sitemap"></i>
-          Lihat Peta Situs
-        </Button>
+        {actions.map((action) => (
+          <Button 
+            href={action.href} 
+            variant={action.variant} 
+            size="lg"
+          >
+            <i class={action.icon}></i>
+            {action.label}
+          </Button>
+        ))}
       </div>
 
       <div class="mt-12">
