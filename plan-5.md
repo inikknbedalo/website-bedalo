@@ -80,9 +80,10 @@ Check all pages have:
 ### Task 2.2: Asset Preloading
 In BaseLayout:
 - Preload critical fonts (Poppins WOFF2)
-- Preconnect to CDN domains (fonts.googleapis.com, cdnjs.cloudflare.com)
+- Preconnect to Google Fonts CDN only
+- **No other CDN preconnects** (Tailwind, Chart.js, lightgallery, CountUp.js are npm packages)
 - Preload hero image on homepage
-- DNS prefetch for external domains
+- DNS prefetch for external domains if needed
 
 **Commit:** "perf(assets): add resource hints"
 
@@ -498,9 +499,11 @@ Migration is complete when:
 - [x] 9 content collections populated
 - [x] Zero hardcoded content in codebase
 - [x] All components built and documented
-- [x] CountUp.js animating statistics
-- [x] Lightgallery working (images + videos)
-- [x] Chart.js dashboard functional
+- [x] CountUp.js animating statistics (via npm)
+- [x] Lightgallery working (images + videos, via npm)
+- [x] Chart.js dashboard functional (via npm)
+- [x] Tailwind CSS via npm (not CDN)
+- [x] Only Google Fonts & Font Awesome via CDN
 - [x] Dark mode works site-wide
 - [x] Astro Image optimization everywhere
 - [x] Lighthouse scores: 95+/95+/95+/100

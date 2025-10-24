@@ -45,8 +45,10 @@ All 5 migration plans have been completely rewritten to address all requirements
 8. **Proper Third-Party Libraries**
    - Google Fonts (Poppins) via CDN ✅
    - Font Awesome 6.7.1 via CDN ✅
-   - lightgallery (npm) for images AND videos ✅
-   - Chart.js (CDN) for dashboard ✅
+   - **Tailwind CSS via npm** (npx astro add tailwind) ✅
+   - **lightgallery via npm** (images + videos) ✅
+   - **CountUp.js via npm** (official library) ✅
+   - **Chart.js via npm** (for dashboard) ✅
 
 9. **Dark Mode Throughout**
    - localStorage persistence
@@ -245,9 +247,11 @@ Migration is successful when:
 - ✅ 9 content collections populated
 - ✅ Zero hardcoded content in codebase
 - ✅ 40+ components built and working
-- ✅ CountUp.js animating statistics
-- ✅ lightgallery working (images + videos)
-- ✅ Chart.js dashboard functional
+- ✅ CountUp.js animating statistics (via npm)
+- ✅ lightgallery working (images + videos, via npm)
+- ✅ Chart.js dashboard functional (via npm)
+- ✅ Tailwind CSS via npm (not CDN)
+- ✅ **Only Google Fonts & Font Awesome via CDN**
 - ✅ Dark mode works site-wide
 - ✅ Astro Image optimization everywhere
 - ✅ Lighthouse: Performance 95+, Accessibility 95+, Best Practices 95+, SEO 100

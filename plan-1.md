@@ -4,6 +4,22 @@
 
 ---
 
+## 📦 Dependencies Strategy
+
+**Via CDN (Only 2):**
+- Google Fonts (Poppins 400, 500, 600, 700)
+- Font Awesome 6.7.1
+
+**Via npm (All Others):**
+- Tailwind CSS → `npx astro add tailwind`
+- lightgallery + plugins → `npm install lightgallery lg-zoom lg-thumbnail lg-video`
+- CountUp.js → `npm install countup.js`
+- Chart.js → `npm install chart.js`
+
+**Rationale:** Modern build process, better performance, version control, tree-shaking.
+
+---
+
 ## Phase 0: Backup & Branch
 
 ### Task 0.1: Create Branch & Backup
@@ -37,7 +53,7 @@
 ### Task 1.3: Add Tailwind CSS
 - Run: `npx astro add tailwind`
 - Accept all prompts (auto-install)
-- Keep CDN scripts in HTML (migration reference)
+- **Note:** Tailwind via npm, NOT CDN (no script tag in HTML)
 - Update `tailwind.config.mjs`: add content paths
 - Copy `static-site/css/tailwind-custom.css` to `src/styles/global.css`
 - Import global CSS in BaseLayout
@@ -170,9 +186,10 @@ File: `src/layouts/BaseLayout.astro`
 - Fetch site config from collection
 - HTML structure with proper meta tags
 - SEO: title, description, Open Graph, Twitter cards
-- Preconnect: Google Fonts, CDN links
-- Load: Poppins font (400, 500, 600, 700) from CDN
+- Preconnect: Google Fonts CDN only
+- Load: Poppins font (400, 500, 600, 700) from Google Fonts CDN
 - Load: Font Awesome 6.7.1 from CDN
+- **Note:** Tailwind via npm (already integrated), no Tailwind CDN
 - Global CSS import
 - Dark mode <html class="dark"> support
 - Skip to content link (a11y)
@@ -311,13 +328,14 @@ File: `src/components/ui/OptimizedImage.astro`
 
 Before moving to Plan 2:
 - [ ] Astro 5 initialized with TypeScript strict
-- [ ] Tailwind CSS added via `npx astro add`
+- [ ] Tailwind CSS added via `npx astro add` (npm, not CDN)
 - [ ] 9 collections defined with Zod schemas
 - [ ] Config collection populated from original site
 - [ ] Pages collection has home.json and profile.json
 - [ ] Government collection has 5 official entries
 - [ ] Statistics collection has 6 stat entries
 - [ ] BaseLayout created with SEO and dark mode
+- [ ] BaseLayout uses Google Fonts & Font Awesome via CDN only
 - [ ] Navbar fetches nav from config collection
 - [ ] Footer fetches data from config collection
 - [ ] MainLayout combines all layout pieces
@@ -328,6 +346,7 @@ Before moving to Plan 2:
 - [ ] `npm run check` passes
 - [ ] `npm run build` succeeds
 - [ ] Zero hardcoded content in any .astro file
+- [ ] No unnecessary CDN scripts (only fonts & Font Awesome)
 
 **Estimated Time:** 3-4 hours
 

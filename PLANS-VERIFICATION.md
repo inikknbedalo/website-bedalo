@@ -107,13 +107,19 @@ Verified in plans:
 
 ## ✓ CDN for Fonts & Icons (Requirement #7)
 
-**Requirement:** Keep Google Fonts and Font Awesome via CDN.
+**Requirement:** Keep Google Fonts and Font Awesome via CDN. All other libraries via npm.
 
-- [x] Plan 1, Task 3.1: BaseLayout with CDN links
-- [x] Poppins from Google Fonts CDN
-- [x] Font Awesome 6.7.1 from CDN
+**Via CDN (Keep):**
+- [x] Plan 1, Task 3.1: Poppins from Google Fonts CDN
+- [x] Plan 1, Task 3.1: Font Awesome 6.7.1 from CDN
 
-**Status:** ✅ COMPLETE - CDN usage preserved
+**Via npm (Not CDN):**
+- [x] Tailwind CSS: `npx astro add tailwind` (Plan 1, Task 1.3)
+- [x] lightgallery: `npm install lightgallery lg-zoom lg-thumbnail lg-video` (Plan 3, Task 5.2)
+- [x] CountUp.js: `npm install countup.js` (Plan 3, Task 6.1)
+- [x] Chart.js: `npm install chart.js` (Plan 4, Task 9.2)
+
+**Status:** ✅ COMPLETE - Only fonts and Font Awesome via CDN
 
 ---
 
@@ -259,12 +265,13 @@ Verification instructions throughout:
 |------------|---------|--------|
 | Phase 0 Backup | All | ✅ |
 | Latest Astro Commands | 1, 3 | ✅ |
-| Official CountUp.js | 3 | ✅ |
+| Official CountUp.js (npm) | 3 | ✅ |
 | 9 Collections | 1, 2 | ✅ |
 | Component Extraction | 3 | ✅ |
 | Astro Image | 1, 4 | ✅ |
-| CDN Fonts/Icons | 1 | ✅ |
-| lightgallery | 3, 4 | ✅ |
+| **Only Fonts & FA via CDN** | **1, 4, 5** | **✅** |
+| lightgallery (npm) | 3, 4 | ✅ |
+| Chart.js (npm) | 4 | ✅ |
 | Dark Mode | 1, 3 | ✅ |
 | Indonesian/English | All | ✅ |
 | TypeScript Strict | 1 | ✅ |

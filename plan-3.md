@@ -354,8 +354,9 @@ Before moving to Plan 4:
 - [ ] FeatureCard, GovernmentCard components built
 - [ ] VisionMission component displaying correctly
 - [ ] GalleryGrid with lightgallery integration
+- [ ] lightgallery installed via npm (not CDN)
 - [ ] lightgallery handles images AND videos
-- [ ] CountUp.js (official library) integrated
+- [ ] CountUp.js (official library) installed via npm
 - [ ] NewsCard, ProductCard, DestinationCard created
 - [ ] AccommodationCard, WarungCard components done
 - [ ] Form components (Field, Textarea, Select) ready
@@ -369,6 +370,7 @@ Before moving to Plan 4:
 - [ ] Component showcase tested
 - [ ] Documentation complete
 - [ ] All components committed atomically
+- [ ] No CDN scripts except fonts & Font Awesome
 
 **Estimated Time:** 6-7 hours
 

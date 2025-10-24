@@ -235,11 +235,17 @@ File: `src/pages/galeri.astro`
 - Note: password protection mechanism
 - Check: Chart.js usage and configuration
 
-### Task 9.2: Create Dashboard Page
+### Task 9.2: Install Chart.js
+- Run: `npm install chart.js`
+- No CDN script tags needed
+- Import in component files
+- **Commit:** "chore(deps): add Chart.js for dashboard"
+
+### Task 9.3: Create Dashboard Page
 File: `src/pages/dashboard/index.astro`
 - Password-protected login screen
 - Fetch dashboard content from pages collection
-- Import Chart.js from CDN
+- Import Chart.js modules
 - Display statistics cards
 - Create charts: demographics, aspirations, categories
 - Filter controls
@@ -248,7 +254,7 @@ File: `src/pages/dashboard/index.astro`
 **Reference:** Match exact layout from `static-site/dashboard/index.html`
 **Commit:** "feat(pages): create dashboard with Chart.js"
 
-### Task 9.3: Dashboard Client-Side Logic
+### Task 9.4: Dashboard Client-Side Logic
 File: `src/scripts/dashboard.ts`
 - Password validation
 - Chart initialization
@@ -458,6 +464,7 @@ Before moving to Plan 5:
 - [ ] Akomodasi index and detail pages
 - [ ] Warung index and detail pages
 - [ ] Gallery with lightgallery (images + videos)
+- [ ] Chart.js installed via npm (not CDN)
 - [ ] Dashboard with Chart.js working
 - [ ] Survey multi-step form functional
 - [ ] Contact page with form
@@ -474,6 +481,7 @@ Before moving to Plan 5:
 - [ ] Accessibility score 95+
 - [ ] Performance score 95+
 - [ ] All pages committed atomically
+- [ ] Only Google Fonts & Font Awesome use CDN
 
 **Estimated Time:** 8-10 hours
 
