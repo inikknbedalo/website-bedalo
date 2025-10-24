@@ -7,19 +7,41 @@ import { getImage } from 'astro:assets';
 
 const pageContent = await getEntry('pages', 'galeri');
 
-if (!pageContent) {
+if (!pageContent || !('page' in pageContent.data) || pageContent.data.page !== 'galeri') {
   throw new Error('Galeri page content not found');
 }
 
 const { hero, sections } = pageContent.data;
 
-// Find sections
-const fotoSection = sections?.find((s) => s.id === 'foto');
-const videoSection = sections?.find((s) => s.id === 'video');
+interface GaleriSection {
+  id: string;
+  title: string;
+  images?: Array<{
+    src: string;
+    alt: string;
+    category: string;
+  }>;
+  videos?: Array<{
+    url: string;
+    title: string;
+    thumbnail: string;
+  }>;
+}
+
+// Find sections with proper type guard
+const fotoSection = sections?.find((s: GaleriSection) => s.id === 'foto') as GaleriSection | undefined;
+const videoSection = sections?.find((s: GaleriSection) => s.id === 'video') as GaleriSection | undefined;
+
+interface ProcessedImage {
+  fullUrl: string;
+  thumbnailUrl: string;
+  alt: string;
+  category: string;
+}
 
 // Process images to get proper URLs
-const processedImages = fotoSection?.images ? await Promise.all(
-  fotoSection.images.map(async (image: any) => {
+const processedImages: ProcessedImage[] = fotoSection?.images ? await Promise.all(
+  fotoSection.images.map(async (image: { src: string; alt: string; category: string }, index: number) => {
     const optimizedImage = await getImage({
       src: image.src,
       width: 800,
