@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Ini adalah isi dari artikel berita contoh pertama. Baca selengkapnya untuk mengetahui informasi detail."
+    />
+    <title>Judul Berita Contoh Pertama | Website Dusun Bedalo</title>
+    <link rel="icon" type="image/x-icon" href="../icon.svg" />
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <!-- GLightbox CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    />
+
+    <!-- Custom Component Classes -->
+    <link rel="stylesheet" href="css/tailwind-custom.css" />
+  </head>
+  <body class="bg-slate-50">
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+      <nav
+        class="container mx-auto flex items-center justify-between px-6 py-4"
+      >
+        <a href="/" class="text-2xl font-bold text-gray-800">Dusun Bedalo</a>
+        <div class="hidden items-center space-x-6 md:flex">
+          <a
+            href="/"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Beranda</a
+          >
+          <a
+            href="/profil.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Profil</a
+          >
+          <a
+            href="/potensi.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Potensi</a
+          >
+          <a
+            href="/pariwisata.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Pariwisata</a
+          >
+          <a
+            href="/berita/"
+            class="border-b-2 border-blue-600 font-semibold text-blue-600"
+            >Berita</a
+          >
+          <a
+            href="/galeri.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Galeri</a
+          >
+          <a
+            href="/kontak.html"
+            class="rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
+            >Kontak</a
+          >
+        </div>
+        <div class="md:hidden">
+          <button
+            id="mobile-menu-button"
+            class="text-gray-800 focus:outline-none"
+            aria-label="Buka menu"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </nav>
+      <div
+        id="mobile-menu"
+        class="absolute hidden w-full bg-white shadow-lg md:hidden"
+      >
+        <a href="/" class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Beranda</a
+        >
+        <a
+          href="/profil.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Profil</a
+        >
+        <a
+          href="/potensi.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Potensi</a
+        >
+        <a
+          href="/pariwisata.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Pariwisata</a
+        >
+        <a href="/berita/" class="block bg-gray-100 px-6 py-3 text-blue-600"
+          >Berita</a
+        >
+        <a
+          href="/galeri.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Galeri</a
+        >
+        <a
+          href="/kontak.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Kontak</a
+        >
+      </div>
+    </header>
+
+    <main class="py-12 md:py-16">
+      <div class="container mx-auto max-w-6xl px-6">
+        <article
+          class="rounded-xl border border-gray-200 bg-white p-6 shadow-lg md:p-10"
+        >
+          <div class="mb-6 text-sm text-gray-500" data-aos="fade-down">
+            <a href="/" class="hover:underline">Beranda</a>
+            <span class="mx-2">&raquo;</span>
+            <a href="/berita/" class="hover:underline">Berita</a>
+            <span class="mx-2">&raquo;</span>
+            <span class="text-gray-700">Judul Berita Contoh...</span>
+          </div>
+
+          <h1
+            class="mb-3 text-3xl font-bold text-gray-900 md:text-4xl"
+            style="font-family: &quot;Lora&quot;, serif"
+            data-aos="fade-up"
+          >
+            Judul Berita Contoh Pertama
+          </h1>
+
+          <div
+            class="mb-4 flex items-center text-sm text-gray-600"
+            data-aos="fade-up"
+            data-aos-delay="100"
+          >
+            <span>Ditulis oleh Admin</span>
+            <span class="mx-2">&bull;</span>
+            <span>23 Oktober 2025</span>
+          </div>
+
+          <div
+            class="mb-6 flex flex-wrap gap-2"
+            data-aos="fade-up"
+            data-aos-delay="150"
+          >
+            <a
+              href="/berita/tag/pembangunan.html"
+              class="rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800 hover:bg-blue-200"
+              >Pembangunan</a
+            >
+            <a
+              href="#"
+              class="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-800 hover:bg-green-200"
+              >Kegiatan Warga</a
+            >
+          </div>
+
+          <div class="my-8" data-aos="fade-up" data-aos-delay="200">
+            <img
+              src="../assets/images/ngedan.webp"
+              alt="Gambar utama untuk berita"
+              width="1200"
+              height="675"
+              class="h-auto w-full rounded-lg object-cover shadow-md"
+            />
+            <p class="mt-2 text-center text-sm text-gray-500">
+              Keterangan singkat untuk gambar di atas.
+            </p>
+          </div>
+
+          <div
+            class="article-content prose"
+            data-aos="fade-up"
+            data-aos-delay="300"
+          >
+            <p class="text-lg text-slate-600">
+              Ini adalah paragraf pembuka dari artikel. Paragraf ini seharusnya
+              memberikan gambaran umum yang menarik tentang topik yang akan
+              dibahas, mendorong pembaca untuk terus membaca.
+            </p>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit...</p>
+            <h2>Sub-judul untuk Bagian Pertama</h2>
+            <p>Excepteur sint occaecat cupidatat non proident...</p>
+          </div>
+
+          <div class="mt-10 border-t border-gray-200 pt-6">
+            <h3 class="mb-4 text-lg font-bold text-gray-800">
+              Bagikan Artikel Ini
+            </h3>
+            <div class="flex items-center gap-3">
+              <a
+                id="share-facebook"
+                href="#"
+                target="_blank"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-600 text-white transition-colors hover:bg-blue-700"
+                aria-label="Bagikan ke Facebook"
+                ><i class="fab fa-facebook-f"></i
+              ></a>
+              <a
+                id="share-twitter"
+                href="#"
+                target="_blank"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-sky-500 text-white transition-colors hover:bg-sky-600"
+                aria-label="Bagikan ke Twitter"
+                ><i class="fab fa-twitter"></i
+              ></a>
+              <a
+                id="share-whatsapp"
+                href="#"
+                target="_blank"
+                class="flex h-10 w-10 items-center justify-center rounded-full bg-green-500 text-white transition-colors hover:bg-green-600"
+                aria-label="Bagikan ke WhatsApp"
+                ><i class="fab fa-whatsapp"></i
+              ></a>
+              <button
+                id="copy-link-button"
+                class="flex h-10 items-center justify-center rounded-full bg-gray-600 px-4 text-white transition-colors hover:bg-gray-700"
+                aria-label="Salin Tautan"
+              >
+                <i class="fas fa-link mr-2"></i>
+                <span id="copy-link-text">Salin Tautan</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="mt-10 border-t border-gray-200 pt-6">
+            <a
+              href="/berita/"
+              class="inline-flex items-center gap-2 font-semibold text-blue-600 hover:underline"
+            >
+              <i class="fas fa-arrow-left"></i>
+              Kembali ke Daftar Berita
+            </a>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <footer class="mt-12 bg-slate-900 text-slate-300 md:mt-16"></footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="../js/script.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // --- Logika untuk Tombol Bagikan ---
+        const articleUrl = window.location.href;
+        const articleTitle = document.title;
+
+        const shareFacebook = document.getElementById("share-facebook");
+        shareFacebook.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(articleUrl)}`;
+
+        const shareTwitter = document.getElementById("share-twitter");
+        shareTwitter.href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(articleUrl)}&text=${encodeURIComponent(articleTitle)}`;
+
+        const shareWhatsapp = document.getElementById("share-whatsapp");
+        shareWhatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(articleTitle)}%20${encodeURIComponent(articleUrl)}`;
+
+        // --- Logika untuk Salin Tautan ---
+        const copyLinkBtn = document.getElementById("copy-link-button");
+        const copyLinkText = document.getElementById("copy-link-text");
+
+        copyLinkBtn.addEventListener("click", function () {
+          navigator.clipboard.writeText(articleUrl).then(
+            function () {
+              // Berhasil disalin
+              copyLinkText.innerText = "Tautan disalin!";
+              setTimeout(function () {
+                copyLinkText.innerText = "Salin Tautan";
+              }, 2000); // Kembalikan teks setelah 2 detik
+            },
+            function () {
+              // Gagal disalin
+              alert("Gagal menyalin tautan.");
+            }
+          );
+        });
+      });
+    </script>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+      });
+
+      // Mobile menu toggle
+      document
+        .getElementById("mobile-menu-button")
+        ?.addEventListener("click", function () {
+          document.getElementById("mobile-menu")?.classList.toggle("hidden");
+        });
+    </script>
+  </body>
+</html>

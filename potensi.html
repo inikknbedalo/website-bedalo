@@ -1,0 +1,685 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Temukan potensi unggulan Dusun Bedalo, mulai dari produk UMKM kreatif, hasil pertanian dan perkebunan, hingga sumber daya alam dan manusianya."
+    />
+    <title>Potensi | Website Dusun Bedalo</title>
+    <link rel="icon" type="image/x-icon" href="/icon.svg" />
+
+    <!-- Preconnect for Performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    <link rel="preconnect" href="https://cdn.tailwindcss.com" />
+
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+
+    <!-- Font Awesome CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <!-- AOS Animation CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+
+    <!-- GLightbox CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css"
+    />
+
+    <!-- Custom Component Classes -->
+    <link rel="stylesheet" href="css/tailwind-custom.css" />
+  </head>
+  <body class="bg-gray-50">
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+      <nav
+        class="container mx-auto flex items-center justify-between px-6 py-4"
+      >
+        <a href="/" class="text-2xl font-bold text-gray-800">Dusun Bedalo</a>
+        <div class="hidden items-center space-x-6 md:flex">
+          <a
+            href="/"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Beranda</a
+          >
+          <a
+            href="/profil.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Profil</a
+          >
+          <a
+            href="/potensi.html"
+            class="border-b-2 border-blue-600 font-semibold text-blue-600"
+            >Potensi</a
+          >
+          <a
+            href="/pariwisata.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Pariwisata</a
+          >
+          <a
+            href="/galeri.html"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Galeri</a
+          >
+          <a
+            href="/berita/"
+            class="text-gray-600 transition duration-300 hover:text-blue-600"
+            >Berita</a
+          >
+          <a
+            href="/kontak.html"
+            class="rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
+            >Kontak</a
+          >
+        </div>
+        <div class="md:hidden">
+          <button
+            id="mobile-menu-button"
+            class="text-gray-800 focus:outline-none"
+            aria-label="Buka menu"
+          >
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M4 6h16M4 12h16m-7 6h7"
+              ></path>
+            </svg>
+          </button>
+        </div>
+      </nav>
+      <div
+        id="mobile-menu"
+        class="absolute hidden w-full bg-white shadow-lg md:hidden"
+      >
+        <a href="/" class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Beranda</a
+        >
+        <a
+          href="/profil.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Profil</a
+        >
+        <a
+          href="/potensi.html"
+          class="block bg-gray-100 px-6 py-3 text-blue-600"
+          >Potensi</a
+        >
+        <a
+          href="/pariwisata.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Pariwisata</a
+        >
+        <a
+          href="/galeri.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Galeri</a
+        >
+        <a
+          href="/berita/"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Berita</a
+        >
+        <a
+          href="/kontak.html"
+          class="block px-6 py-3 text-gray-600 hover:bg-gray-100"
+          >Kontak</a
+        >
+      </div>
+    </header>
+
+    <main>
+      <section class="py-12 md:py-16">
+        <div class="container mx-auto px-6">
+          <div
+            class="mx-auto max-w-3xl rounded-xl bg-gradient-to-br from-green-600 to-emerald-700 p-8 text-center text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl md:p-10"
+            data-aos="fade-up"
+          >
+            <h1 class="mb-3 text-3xl font-bold md:text-4xl">
+              Potensi Dusun Bedalo
+            </h1>
+            <p class="text-lg text-green-100">
+              Sumber Daya dan Kreativitas Warga
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="umkm" class="overflow-hidden bg-white py-20">
+        <div class="container mx-auto px-6">
+          <div class="mb-12 text-center">
+            <h2
+              class="mb-2 text-3xl font-bold text-gray-800"
+              data-aos="fade-up"
+            >
+              UMKM & Produk Unggulan
+            </h2>
+            <p
+              class="mx-auto max-w-2xl text-gray-600"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              Karya kreatif dan produk olahan dari tangan-tangan terampil warga
+              Dusun Bedalo.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div data-aos="fade-up" data-aos-delay="100">
+              <div
+                class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
+              >
+                <a href="/potensi/gaplek.html" class="block">
+                  <img
+                    src="assets/images/ngedan.webp"
+                    alt="Produk Gula Aren"
+                    width="600"
+                    height="400"
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href="/potensi/gaplek.html"
+                      class="transition-colors hover:text-blue-600"
+                      >Gaplek</a
+                    >
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    Manis alami tanpa bahan pengawet, diproses secara
+                    tradisional.
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <div class="mb-4 flex items-center justify-between">
+                      <p class="text-sm text-gray-500">Harga:</p>
+                      <span class="text-lg font-bold text-green-600"
+                        >Rp 25.000</span
+                      >
+                    </div>
+                    <a
+                      href="/potensi/gaplek.html"
+                      class="inline-block w-full rounded-md bg-blue-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-blue-700"
+                    >
+                      Lihat Detail Produk
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="150">
+              <div
+                class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
+              >
+                <a href="/potensi/gula-aren-asli.html" class="block">
+                  <img
+                    src="assets/images/ngedan.webp"
+                    alt="Produk Gula Aren"
+                    width="600"
+                    height="400"
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href="/potensi/gula-aren-asli.html"
+                      class="transition-colors hover:text-blue-600"
+                      >Gula Aren Asli</a
+                    >
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    Manis alami tanpa bahan pengawet, diproses secara
+                    tradisional.
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <div class="mb-4 flex items-center justify-between">
+                      <p class="text-sm text-gray-500">Harga:</p>
+                      <span class="text-lg font-bold text-green-600"
+                        >Rp 25.000</span
+                      >
+                    </div>
+                    <a
+                      href="/potensi/gula-aren-asli.html"
+                      class="inline-block w-full rounded-md bg-blue-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-blue-700"
+                    >
+                      Lihat Detail Produk
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="200">
+              <div
+                class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
+              >
+                <a href="/potensi/keripik-singkong.html" class="block">
+                  <img
+                    src="assets/images/ngedan.webp"
+                    alt="Produk Keripik Singkong"
+                    width="600"
+                    height="400"
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href="/potensi/keripik-singkong.html"
+                      class="transition-colors hover:text-blue-600"
+                      >Keripik Singkong</a
+                    >
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    Renyah dan gurih, dibuat dari singkong pilihan dari kebun
+                    sendiri.
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <div class="mb-4 flex items-center justify-between">
+                      <p class="text-sm text-gray-500">Harga:</p>
+                      <span class="text-lg font-bold text-green-600"
+                        >Rp 15.000</span
+                      >
+                    </div>
+                    <a
+                      href="/potensi/keripik-singkong.html"
+                      class="inline-block w-full rounded-md bg-blue-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-blue-700"
+                    >
+                      Lihat Detail Produk
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="akomodasi-warung" class="overflow-hidden bg-gray-50 py-20">
+        <div class="container mx-auto px-6">
+          <div class="mb-12 text-center">
+            <h2
+              class="mb-2 text-3xl font-bold text-gray-800"
+              data-aos="fade-up"
+            >
+              Akomodasi & Warung Sekitar
+            </h2>
+            <p
+              class="mx-auto max-w-2xl text-gray-600"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              Temukan tempat makan dan menginap di sekitar Dusun Bedalo.
+            </p>
+          </div>
+          <div class="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+            <div data-aos="fade-up" data-aos-delay="100">
+              <div
+                class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
+              >
+                <a href="/warung/index.html" class="block">
+                  <img
+                    src="assets/images/ngedan.webp"
+                    alt="Warung Makan di Bedalo"
+                    width="600"
+                    height="400"
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href="/warung/index.html"
+                      class="transition-colors hover:text-blue-600"
+                      >Warung Sekitar</a
+                    >
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    Temukan tempat makan dan warung sederhana yang menyajikan
+                    hidangan lokal di sekitar Dusun Bedalo.
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <a
+                      href="/warung/index.html"
+                      class="inline-block w-full rounded-md bg-orange-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-orange-700"
+                    >
+                      Lihat Daftar Warung
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div data-aos="fade-up" data-aos-delay="150">
+              <div
+                class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl"
+              >
+                <a href="/akomodasi/index.html" class="block">
+                  <img
+                    src="assets/images/ngedan.webp"
+                    alt="Penginapan di Bedalo"
+                    width="600"
+                    height="400"
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href="/akomodasi/index.html"
+                      class="transition-colors hover:text-blue-600"
+                      >Penginapan Tersedia</a
+                    >
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    Cari informasi mengenai homestay atau penginapan lain yang
+                    tersedia di dekat Dusun Bedalo untuk kunjungan Anda.
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <a
+                      href="/akomodasi/index.html"
+                      class="inline-block w-full rounded-md bg-purple-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-purple-700"
+                    >
+                      Lihat Daftar Penginapan
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pertanian" class="bg-white py-20">
+        <div class="container mx-auto px-6">
+          <div class="mb-12 text-center">
+            <h2
+              class="mb-2 text-3xl font-bold text-gray-800"
+              data-aos="fade-up"
+            >
+              Pertanian & Perkebunan
+            </h2>
+          </div>
+          <div class="flex flex-col items-center gap-12 md:flex-row">
+            <div class="md:w-1/2" data-aos="fade-right">
+              <img
+                src="assets/images/ngedan.webp"
+                alt="Lahan pertanian yang hijau dan subur di Dusun Bedalo"
+                width="800"
+                height="600"
+                class="h-full w-full rounded-lg object-cover shadow-xl"
+              />
+            </div>
+            <div class="md:w-1/2" data-aos="fade-left">
+              <h3 class="mb-4 text-2xl font-bold text-gray-800">
+                Kesuburan Tanah Bedalo
+              </h3>
+              <p class="mb-6 leading-relaxed text-gray-600">
+                Lahan pertanian di Dusun Bedalo sangat subur dan menjadi tumpuan
+                hidup sebagian besar warga. Berbagai komoditas unggulan
+                dihasilkan dari sini.
+              </p>
+              <h4 class="mb-3 font-semibold text-gray-800">Komoditas Utama:</h4>
+              <div class="grid grid-cols-2 gap-4 text-gray-700">
+                <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+                  <i class="fas fa-seedling text-green-500"></i> Padi
+                </div>
+                <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+                  <i class="fas fa-carrot text-yellow-600"></i> Singkong
+                </div>
+                <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+                  <i class="fas fa-leaf text-green-500"></i> Sayur-mayur
+                </div>
+                <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+                  <i class="fas fa-pepper-hot text-red-500"></i> Cabai
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="lainnya" class="overflow-hidden bg-gray-50 py-20">
+        <div class="container mx-auto px-6">
+          <div class="mb-12 text-center">
+            <h2
+              class="mb-2 text-3xl font-bold text-gray-800"
+              data-aos="fade-up"
+            >
+              Potensi Lainnya
+            </h2>
+          </div>
+          <div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
+            <div
+              class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg"
+              data-aos="fade-up"
+              data-aos-delay="100"
+            >
+              <i class="fas fa-cow mb-4 text-5xl text-blue-500"></i>
+              <h4 class="my-2 text-xl font-bold text-gray-800">Peternakan</h4>
+              <p class="text-sm text-gray-600">
+                Pengembangan ternak sapi, kambing, dan ayam untuk memenuhi
+                kebutuhan pangan dan ekonomi warga.
+              </p>
+            </div>
+            <div
+              class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg"
+              data-aos="fade-up"
+              data-aos-delay="200"
+            >
+              <i class="fas fa-fish mb-4 text-5xl text-cyan-500"></i>
+              <h4 class="my-2 text-xl font-bold text-gray-800">Perikanan</h4>
+              <p class="text-sm text-gray-600">
+                Pemanfaatan sumber air untuk budidaya ikan air tawar sebagai
+                sumber protein dan pendapatan tambahan.
+              </p>
+            </div>
+            <div
+              class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg"
+              data-aos="fade-up"
+              data-aos-delay="300"
+            >
+              <i class="fas fa-users-cog mb-4 text-5xl text-gray-500"></i>
+              <h4 class="my-2 text-xl font-bold text-gray-800">
+                Jasa & Keahlian
+              </h4>
+              <p class="text-sm text-gray-600">
+                Warga memiliki keahlian di bidang pertukangan, kerajinan tangan,
+                dan jasa lainnya yang siap membantu.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-slate-900 text-slate-300">
+      {/* ... (Standard Footer Code - Same as previous version) ... */}
+      <div class="container mx-auto px-6 pt-16 pb-8 lg:px-8">
+        <div
+          class="flex flex-col items-center justify-between gap-8 border-b border-slate-700 pb-10 md:flex-row"
+        >
+          <div class="text-center md:text-left">
+            <h2 class="text-3xl font-bold text-white">Dusun Bedalo</h2>
+            <p class="mt-2 max-w-md text-slate-400">
+              Desa Krambilsawit, Kec. Saptosari, Kab. Gunungkidul, Daerah
+              Istimewa Yogyakarta.
+            </p>
+          </div>
+          <div>
+            <a
+              href="/kontak.html#aspirasi"
+              class="focus:ring-opacity-50 inline-block rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white shadow-md transition-transform duration-300 hover:scale-105 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              >Sampaikan Aspirasi Anda</a
+            >
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 gap-8 py-10 sm:grid-cols-2 lg:flex lg:justify-center lg:gap-16"
+        >
+          <div>
+            <h3 class="text-base font-semibold tracking-wider text-white">
+              Tautan Langsung
+            </h3>
+            <ul class="mt-4 space-y-3">
+              <li>
+                <a
+                  href="/kontak.html#kontak-perangkat"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Kontak Perangkat</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/profil.html#peta"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Peta Wilayah</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/galeri.html"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Galeri</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold tracking-wider text-white">
+              Tentang Kami
+            </h3>
+            <ul class="mt-4 space-y-3">
+              <li>
+                <a
+                  href="/tentang-kkn.html"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Tentang KKN 117</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/peta-situs.html"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Peta Situs</a
+                >
+              </li>
+              <li>
+                <a
+                  href="/kebijakan-privasi.html"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >Kebijakan Privasi</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="lg:col-span-2">
+            <h3 class="text-base font-semibold tracking-wider text-white">
+              Hubungi Kami
+            </h3>
+            <ul class="mt-4 space-y-4">
+              <li class="flex items-center gap-x-3">
+                <i
+                  class="fa-solid fa-envelope w-5 text-center text-slate-400"
+                ></i
+                ><a
+                  href="mailto:inikknbedalo@gmail.com"
+                  class="transition-colors duration-300 hover:text-blue-400"
+                  >inikknbedalo@gmail.com</a
+                >
+              </li>
+              <li class="flex items-center gap-x-3">
+                <i class="fa-solid fa-phone w-5 text-center text-slate-400"></i
+                ><span>+62 831-0758-1144</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="mt-8 border-t border-slate-700 pt-8 text-center">
+          <div class="flex flex-wrap justify-center gap-x-6 gap-y-4">
+            <a
+              href="https://instagram.com/your-username"
+              aria-label="Instagram"
+              class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+              ><i class="fa-brands fa-instagram text-2xl"></i
+            ></a>
+            <a
+              href="https://youtube.com/your-channel"
+              aria-label="YouTube"
+              class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+              ><i class="fa-brands fa-youtube text-2xl"></i
+            ></a>
+            <a
+              href="https://tiktok.com/@your-username"
+              aria-label="TikTok"
+              class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+              ><i class="fa-brands fa-tiktok text-2xl"></i
+            ></a>
+            <a
+              href="https://facebook.com/your-profile"
+              aria-label="Facebook"
+              class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+              ><i class="fa-brands fa-facebook text-2xl"></i
+            ></a>
+            <a
+              href="https://x.com/your-handle"
+              aria-label="X (Twitter)"
+              class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+              ><i class="fa-brands fa-twitter text-2xl"></i
+            ></a>
+          </div>
+          <p class="mt-6 text-sm text-slate-300">
+            © 2025 Website Dusun Bedalo oleh Mahasiswa KKN 117 UIN Sunan
+            Kalijaga Yogyakarta.
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/countup.js@2.0.7/dist/countUp.min.js"></script>
+
+    <script src="js/script.js"></script>
+
+    <script>
+      // Initialize AOS
+      AOS.init({
+        duration: 800,
+        once: true,
+        offset: 100,
+      });
+
+      // Mobile menu toggle
+      document
+        .getElementById("mobile-menu-button")
+        ?.addEventListener("click", function () {
+          document.getElementById("mobile-menu")?.classList.toggle("hidden");
+        });
+    </script>
+  </body>
+</html>

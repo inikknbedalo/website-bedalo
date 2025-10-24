@@ -1,0 +1,19 @@
+body {
+  /* Styles for body */
+}
+
+.checklist-item.item-checked label span:first-child {
+  /* Styles for checked items */
+}
+
+.checklist-item.item-checked label span:first-child svg {
+  /* Styles for SVG in checked items */
+}
+
+.tab-content {
+  /* Styles for tab content */
+}
+
+.tab-btn.active {
+  /* Styles for active tab button */
+}

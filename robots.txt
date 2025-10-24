@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+Disallow: /dashboard/
+Disallow: /survei/
+
+Sitemap: https://bedalo.pages.dev/peta-situs.html
