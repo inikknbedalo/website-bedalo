@@ -4,10 +4,10 @@ import Navbar from '../components/layout/Navbar.astro';
 import Footer from '../components/layout/Footer.astro';
 
 interface Props {
-  title?: string;
-  description?: string;
-  image?: string;
-  canonicalURL?: string;
+  title?: string | undefined;
+  description?: string | undefined;
+  image?: string | undefined;
+  canonicalURL?: string | undefined;
 }
 
 const { title, description, image, canonicalURL } = Astro.props;
