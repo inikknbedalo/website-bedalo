@@ -151,7 +151,6 @@ const config = defineCollection({
       refreshInterval: z.number(),
       maxRetries: z.number(),
       retryDelay: z.number(),
-      passwordHash: z.string(),
       sessionKey: z.string(),
       sessionDuration: z.number(),
       itemsPerPage: z.number(),

@@ -4,7 +4,6 @@
   "refreshInterval": 300000,
   "maxRetries": 3,
   "retryDelay": 2000,
-  "passwordHash": "df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d",
   "sessionKey": "dashboard_auth",
   "sessionDuration": 86400000,
   "itemsPerPage": 10
