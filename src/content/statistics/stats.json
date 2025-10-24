@@ -1,0 +1,52 @@
+{
+  "stats": [
+    {
+      "id": "total-kk",
+      "label": "Jumlah KK",
+      "value": "120",
+      "suffix": "",
+      "icon": "fas fa-users",
+      "description": "Kepala Keluarga di Dusun Bedalo"
+    },
+    {
+      "id": "total-warga",
+      "label": "Jumlah Warga",
+      "value": "450",
+      "suffix": "",
+      "icon": "fas fa-user-friends",
+      "description": "Total penduduk Dusun Bedalo"
+    },
+    {
+      "id": "laki-laki",
+      "label": "Laki-laki",
+      "value": "230",
+      "suffix": "",
+      "icon": "fas fa-male",
+      "description": "Jumlah penduduk laki-laki"
+    },
+    {
+      "id": "perempuan",
+      "label": "Perempuan",
+      "value": "220",
+      "suffix": "",
+      "icon": "fas fa-female",
+      "description": "Jumlah penduduk perempuan"
+    },
+    {
+      "id": "umkm",
+      "label": "UMKM",
+      "value": "15",
+      "suffix": "+",
+      "icon": "fas fa-store",
+      "description": "Usaha Mikro Kecil Menengah aktif"
+    },
+    {
+      "id": "destinasi-wisata",
+      "label": "Destinasi Wisata",
+      "value": "2",
+      "suffix": "",
+      "icon": "fas fa-umbrella-beach",
+      "description": "Pantai Ngedan dan Pantai Ngluwen"
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import Banner from '../../components/sections/Banner.astro';
+import Section from '../../components/ui/Section.astro';
+import NewsCard from '../../components/content/NewsCard.astro';
+import Pagination from '../../components/ui/Pagination.astro';
+import { sortByDate, filterDraft } from '../../utils/collections';
+import { ARTICLES_PER_PAGE } from '../../config';
+
+const allBerita = await getCollection('berita');
+const publishedBerita = sortByDate(filterDraft(allBerita), 'desc');
+const totalPages = Math.ceil(publishedBerita.length / ARTICLES_PER_PAGE);
+const articles = publishedBerita.slice(0, ARTICLES_PER_PAGE);
+---
+
+<MainLayout title="Berita" description="Berita dan update terkini dari Dusun Bedalo">
+  <Banner title="Berita Dusun Bedalo" subtitle="Update terkini dan informasi seputar dusun" />
+
+  <Section background="white">
+    {
+      articles.length > 0 ? (
+        <div class="space-y-8">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article) => (
+              <NewsCard article={article} />
+            ))}
+          </div>
+          
+          {totalPages > 1 && (
+            <div class="pt-8">
+              <Pagination
+                currentPage={1}
+                totalPages={totalPages}
+                basePath="/berita/page"
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">Belum ada berita tersedia.</p>
+        </div>
+      )
+    }
+  </Section>
+</MainLayout>

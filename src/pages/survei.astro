@@ -1,0 +1,336 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Banner from '../components/sections/Banner.astro';
+import Section from '../components/ui/Section.astro';
+import Card from '../components/ui/Card.astro';
+
+const teams = [
+  {
+    id: 1,
+    name: 'Tim 1: Koordinator & Stakeholder',
+    color: 'gray',
+    description: 'Wawancara tokoh kunci (Dukuh, RW, RT), menjadi pusat informasi, dan bertanggung jawab atas development & finalisasi website.',
+    forms: [
+      {
+        title: 'Form A: Stakeholder Kunci',
+        url: 'https://forms.gle/39xXy6qZMmXgXy556',
+        color: 'gray'
+      },
+      {
+        title: 'Form A: Informasi Dusun',
+        url: 'https://forms.gle/jkjhB5Kxoi93V8cb9',
+        color: 'gray'
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Tim Pantai: Akomodasi, Jasa, Wisata & Infra',
+    color: 'cyan',
+    description: 'Gabungan Tim 2 & 5. Mendata homestay, jasa, memetakan daya tarik wisata, akses jalan, & tes konektivitas. Wajib mencatat koordinat GPS.',
+    forms: [
+      {
+        title: 'Form B: Akomodasi',
+        url: 'https://forms.gle/qW4JDaG1xquSEMUD9',
+        color: 'blue'
+      },
+      {
+        title: 'Form E: Jasa',
+        url: 'https://forms.gle/my3vWKMwUFHfNA1E9',
+        color: 'yellow'
+      },
+      {
+        title: 'Form F: Wisata',
+        url: 'https://forms.gle/yJdWyn3E4kUpyArr9',
+        color: 'purple'
+      },
+      {
+        title: 'Form G: Infrastruktur',
+        url: 'https://forms.gle/3CxpisqoxyxajFsAA',
+        color: 'indigo'
+      }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Tim Warung: Kuliner, Kerajinan & Produk Lokal',
+    color: 'orange',
+    description: 'Gabungan Tim 3 & 4. Mendata warung, cafe, pengrajin, dan produk lokal. Dokumentasikan menu/produk unggulan dan proses pembuatan jika ada.',
+    forms: [
+      {
+        title: 'Form C: Kuliner',
+        url: 'https://forms.gle/RHBbXkNWooPqaGbi7',
+        color: 'red'
+      },
+      {
+        title: 'Form D: Kerajinan & Produk',
+        url: 'https://forms.gle/ZcrbFtMuPzDiJFXB6',
+        color: 'green'
+      }
+    ]
+  }
+];
+
+const colorClasses = {
+  gray: 'border-gray-800 text-gray-800',
+  cyan: 'border-cyan-800 text-cyan-800',
+  orange: 'border-orange-800 text-orange-800',
+  blue: 'bg-blue-600 hover:bg-blue-700',
+  yellow: 'bg-yellow-600 hover:bg-yellow-700',
+  purple: 'bg-purple-600 hover:bg-purple-700',
+  indigo: 'bg-indigo-600 hover:bg-indigo-700',
+  red: 'bg-red-600 hover:bg-red-700',
+  green: 'bg-green-600 hover:bg-green-700'
+};
+---
+
+<MainLayout
+  title="Survei Digitalisasi Bedalo"
+  description="Panduan, checklist, dan jadwal untuk tim survei KKN"
+>
+  <Banner
+    title="Survei Digitalisasi Bedalo"
+    subtitle="Panduan dan Formulir untuk Tim Survei KKN"
+    background="gradient"
+  />
+
+  <!-- Hero Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="mb-8 flex justify-center">
+        <i class="fas fa-clipboard-list text-6xl text-blue-600"></i>
+      </div>
+      <h2 class="mb-4 text-3xl font-bold text-gray-800">Program Survei Digitalisasi</h2>
+      <p class="mb-8 text-lg leading-relaxed text-gray-600">
+        Halaman ini berisi panduan survei dan link formulir untuk tim KKN dalam rangka 
+        pendataan potensi desa dan digitalisasi informasi Dusun Bedalo.
+      </p>
+      
+      <!-- Database Link -->
+      <a
+        href="https://docs.google.com/spreadsheets/d/1THGeYhivhE9zUZaW6KuiknF41-oQdDPM1rqI9rg8-Kg/edit?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-8 py-4 text-lg font-bold text-white shadow-xl transition-all hover:scale-105 hover:bg-green-700"
+      >
+        <i class="fas fa-file-excel text-xl"></i>
+        Buka Database Hasil Survei
+      </a>
+    </div>
+  </Section>
+
+  <!-- Teams & Forms -->
+  <Section background="gray">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        <i class="fas fa-users mr-2 text-blue-600"></i>
+        Tugas Tim & Tautan Formulir
+      </h2>
+      <p class="text-gray-600">Setiap tim memiliki tugas dan formulir spesifik</p>
+    </div>
+
+    <div class="space-y-8">
+      {
+        teams.map((team) => (
+          <Card variant="default" padding="p-6">
+            <h3
+              class:list={[
+                'mb-4 border-b pb-2 text-xl font-bold',
+                colorClasses[team.color]
+              ]}
+            >
+              {team.name}
+            </h3>
+            <p class="mb-6 text-gray-600">{team.description}</p>
+            
+            <div class:list={[
+              'grid gap-4',
+              team.forms.length === 2 ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
+            ]}>
+              {team.forms.map((form) => (
+                <a
+                  href={form.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class:list={[
+                    'rounded-md px-4 py-3 text-center font-semibold text-white transition-colors',
+                    colorClasses[form.color]
+                  ]}
+                >
+                  <i class="fas fa-external-link-alt mr-2" />
+                  {form.title}
+                </a>
+              ))}
+            </div>
+          </Card>
+        ))
+      }
+    </div>
+  </Section>
+
+  <!-- Schedule Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-4xl">
+      <div class="mb-8 text-center">
+        <h2 class="mb-2 text-3xl font-bold text-gray-800">
+          <i class="fas fa-calendar-alt mr-2 text-purple-600"></i>
+          Jadwal Survei
+        </h2>
+        <p class="text-gray-600">Rencana pelaksanaan survei lapangan</p>
+      </div>
+
+      <div class="grid gap-8 md:grid-cols-2">
+        <!-- Day 1 -->
+        <Card variant="default" padding="p-6">
+          <h3 class="mb-4 text-xl font-bold text-blue-700">
+            <i class="far fa-calendar mr-2"></i>
+            Hari Pertama
+          </h3>
+          <div class="space-y-4">
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">09:45 – 10:00: Briefing Pagi</p>
+              <p class="text-sm text-gray-600">
+                Finalisasi area, cek kesiapan alat & form. (Semua Tim)
+              </p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">10:00 – 12:00: Sesi Survei 1</p>
+              <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                <li><strong>Tim 1:</strong> Menemui tokoh kunci</li>
+                <li><strong>Tim Warung:</strong> Mendata kuliner</li>
+                <li><strong>Tim Pantai:</strong> Memetakan jalan</li>
+              </ul>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">12:00 – 13:00: Istirahat</p>
+              <p class="text-sm text-gray-600">Makan siang & input data sementara</p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">13:00 – 15:00: Sesi Survei 2</p>
+              <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                <li><strong>Tim 1:</strong> Input data, koordinasi</li>
+                <li><strong>Tim Warung:</strong> Mendatangi UMKM</li>
+                <li><strong>Tim Pantai:</strong> Fokus pada spot wisata</li>
+              </ul>
+            </div>
+          </div>
+        </Card>
+
+        <!-- Day 2 -->
+        <Card variant="default" padding="p-6">
+          <h3 class="mb-4 text-xl font-bold text-green-700">
+            <i class="far fa-calendar mr-2"></i>
+            Hari Kedua
+          </h3>
+          <div class="space-y-4">
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">09:00 – 09:30: Evaluasi Hari 1</p>
+              <p class="text-sm text-gray-600">Review data & pembagian area tersisa</p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">09:30 – 12:00: Sesi Survei 3</p>
+              <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                <li><strong>Tim 1:</strong> Follow up tokoh kunci</li>
+                <li><strong>Tim Warung:</strong> Validasi data</li>
+                <li><strong>Tim Pantai:</strong> Mencari rute alternatif</li>
+              </ul>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">12:00 – 13:00: Istirahat</p>
+              <p class="text-sm text-gray-600">Makan siang & finalisasi data</p>
+            </div>
+            <div class="rounded-lg bg-gray-50 p-4">
+              <p class="font-bold text-gray-700">13:00 – 15:00: Finalisasi</p>
+              <ul class="mt-2 space-y-1 text-sm text-gray-600">
+                <li><strong>Tim 1:</strong> Finalisasi website</li>
+                <li><strong>Semua Tim:</strong> Kompilasi & review akhir</li>
+              </ul>
+            </div>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Guidelines -->
+  <Section background="gray">
+    <div class="mx-auto max-w-3xl">
+      <Card variant="default" padding="p-8">
+        <h3 class="mb-6 text-2xl font-bold text-gray-800">
+          <i class="fas fa-lightbulb mr-2 text-yellow-500"></i>
+          Panduan Umum
+        </h3>
+        
+        <div class="space-y-4">
+          <div class="flex gap-4">
+            <div class="flex-shrink-0">
+              <i class="fas fa-map-marker-alt text-2xl text-red-600"></i>
+            </div>
+            <div>
+              <h4 class="mb-1 font-bold text-gray-800">GPS Coordinates</h4>
+              <p class="text-gray-600">
+                Wajib mencatat koordinat GPS untuk setiap lokasi wisata, akomodasi, dan UMKM.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0">
+              <i class="fas fa-camera text-2xl text-blue-600"></i>
+            </div>
+            <div>
+              <h4 class="mb-1 font-bold text-gray-800">Dokumentasi Visual</h4>
+              <p class="text-gray-600">
+                Ambil foto berkualitas baik untuk setiap objek survei (minimal 3-5 foto per lokasi).
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0">
+              <i class="fas fa-users text-2xl text-green-600"></i>
+            </div>
+            <div>
+              <h4 class="mb-1 font-bold text-gray-800">Wawancara</h4>
+              <p class="text-gray-600">
+                Lakukan wawancara singkat dengan pemilik/pengelola untuk informasi detail.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex gap-4">
+            <div class="flex-shrink-0">
+              <i class="fas fa-check-circle text-2xl text-purple-600"></i>
+            </div>
+            <div>
+              <h4 class="mb-1 font-bold text-gray-800">Verifikasi Data</h4>
+              <p class="text-gray-600">
+                Pastikan semua data sudah terisi lengkap dan akurat sebelum submit form.
+              </p>
+            </div>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </Section>
+
+  <!-- Contact CTA -->
+  <Section background="white">
+    <div class="mx-auto max-w-2xl text-center">
+      <div class="rounded-xl bg-gradient-to-r from-blue-600 to-purple-700 p-8 text-white shadow-xl">
+        <i class="fas fa-question-circle mb-4 text-5xl"></i>
+        <h2 class="mb-4 text-2xl font-bold">Ada Pertanyaan?</h2>
+        <p class="mb-6 text-blue-100">
+          Hubungi koordinator Tim 1 atau tim KKN jika ada pertanyaan terkait survei.
+        </p>
+        <a
+          href="/kontak"
+          class="inline-block rounded-lg bg-white px-6 py-3 font-semibold text-blue-600 transition-colors hover:bg-blue-50"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

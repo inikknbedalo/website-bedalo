@@ -1,0 +1,256 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
+import Banner from '../components/sections/Banner.astro';
+import Section from '../components/ui/Section.astro';
+import Card from '../components/ui/Card.astro';
+import Button from '../components/ui/Button.astro';
+import OfficialCard from '../components/ui/OfficialCard.astro';
+
+const siteConfig = await getEntry('config', 'site');
+const governmentData = await getEntry('government', 'officials');
+
+if (!siteConfig) {
+  throw new Error('Site config not found');
+}
+
+const { contact } = siteConfig.data;
+const officials = governmentData?.data.officials || [];
+---
+
+<MainLayout title="Kontak" description="Hubungi Dusun Bedalo">
+  <Banner title="Hubungi Kami" subtitle="Informasi Kontak dan Saluran Aspirasi Warga" />
+
+  <!-- Contact Officials Section -->
+  {
+    officials.length > 0 && (
+      <Section background="white" id="kontak-perangkat">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">Kontak Perangkat Dusun</h2>
+        </div>
+        <div class="mx-auto grid max-w-6xl grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {officials.map((official) => (
+            <OfficialCard
+              name={official.name}
+              position={official.position}
+              photo={official.photo}
+              photoAlt={official.photoAlt}
+              phone={official.contact}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Contact Info Section -->
+  <Section background="gray">
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <Card variant="default" padding="p-6">
+        <div class="flex items-start gap-4">
+          <div class="rounded-full bg-blue-100 p-3">
+            <i class="fas fa-phone text-xl text-blue-600"></i>
+          </div>
+          <div>
+            <h3 class="mb-1 font-bold text-gray-800">Telepon</h3>
+            <a
+              href={`tel:${contact.phone}`}
+              class="text-gray-600 hover:text-blue-600"
+            >
+              {contact.phone}
+            </a>
+          </div>
+        </div>
+      </Card>
+
+      <Card variant="default" padding="p-6">
+        <div class="flex items-start gap-4">
+          <div class="rounded-full bg-green-100 p-3">
+            <i class="fab fa-whatsapp text-xl text-green-600"></i>
+          </div>
+          <div>
+            <h3 class="mb-1 font-bold text-gray-800">WhatsApp</h3>
+            <a
+              href={`https://wa.me/${contact.whatsapp}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="text-gray-600 hover:text-green-600"
+            >
+              {contact.whatsapp}
+            </a>
+          </div>
+        </div>
+      </Card>
+
+      <Card variant="default" padding="p-6">
+        <div class="flex items-start gap-4">
+          <div class="rounded-full bg-red-100 p-3">
+            <i class="fas fa-envelope text-xl text-red-600"></i>
+          </div>
+          <div>
+            <h3 class="mb-1 font-bold text-gray-800">Email</h3>
+            <a
+              href={`mailto:${contact.email}`}
+              class="break-all text-gray-600 hover:text-red-600"
+            >
+              {contact.email}
+            </a>
+          </div>
+        </div>
+      </Card>
+
+      <Card variant="default" padding="p-6">
+        <div class="flex items-start gap-4">
+          <div class="rounded-full bg-purple-100 p-3">
+            <i class="fas fa-map-marker-alt text-xl text-purple-600"></i>
+          </div>
+          <div>
+            <h3 class="mb-1 font-bold text-gray-800">Alamat</h3>
+            <p class="text-gray-600">{contact.address}</p>
+          </div>
+        </div>
+      </Card>
+    </div>
+  </Section>
+
+  <!-- Aspirasi Form Section -->
+  <Section background="white" id="aspirasi">
+    <div class="mx-auto max-w-4xl">
+      <div class="flex flex-col items-center gap-12 lg:flex-row">
+        <div class="text-center lg:w-1/3 lg:text-left">
+          <h2 class="text-3xl font-bold text-gray-800">
+            Punya Ide atau Masukan?
+          </h2>
+          <p class="mt-4 leading-relaxed text-gray-600">
+            Kami sangat terbuka untuk menerima aspirasi, kritik, dan saran
+            dari seluruh warga demi kemajuan Dusun Bedalo. Silakan
+            sampaikan melalui formulir berikut.
+          </p>
+        </div>
+        <div class="w-full lg:w-2/3">
+          <Card variant="default" padding="p-8" class="shadow-2xl">
+            <h3 class="mb-6 text-center text-2xl font-bold text-gray-800">
+              Formulir Aspirasi Warga
+            </h3>
+            <form
+              id="aspirasi-form"
+              action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfWaCgBA-cNraUbTmOGjlmrZQ-99edYMdUSkbA-kQBtZm6QOw/formResponse"
+              method="POST"
+              target="hidden_iframe"
+              class="space-y-4"
+            >
+              <div>
+                <label for="nama" class="mb-2 block text-sm font-bold text-gray-700">
+                  Nama Lengkap
+                </label>
+                <input
+                  type="text"
+                  id="nama"
+                  name="entry.2116275708"
+                  placeholder="Masukkan nama Anda"
+                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label for="kontak" class="mb-2 block text-sm font-bold text-gray-700">
+                  No. Telepon / Email
+                </label>
+                <input
+                  type="text"
+                  id="kontak"
+                  name="entry.175133211"
+                  placeholder="Agar kami bisa menghubungi Anda kembali"
+                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                  required
+                />
+              </div>
+              <div>
+                <label for="subjek" class="mb-2 block text-sm font-bold text-gray-700">
+                  Subjek
+                </label>
+                <select
+                  id="subjek"
+                  name="entry.1266128475"
+                  class="w-full appearance-none rounded border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                  required
+                >
+                  <option value="" disabled selected>
+                    -- Pilih Subjek --
+                  </option>
+                  <option value="Perbaikan Jalan">Perbaikan Jalan</option>
+                  <option value="Fasilitas Umum">Fasilitas Umum</option>
+                  <option value="Keamanan">Keamanan</option>
+                  <option value="Kebersihan">Kebersihan</option>
+                  <option value="Kegiatan Pemuda">Kegiatan Pemuda</option>
+                  <option value="Lainnya">Lainnya</option>
+                </select>
+              </div>
+              <div>
+                <label for="pesan" class="mb-2 block text-sm font-bold text-gray-700">
+                  Pesan Aspirasi
+                </label>
+                <textarea
+                  id="pesan"
+                  name="entry.1942425125"
+                  rows="5"
+                  placeholder="Tuliskan pesan, ide, atau masukan Anda di sini..."
+                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                  required
+                ></textarea>
+              </div>
+              <div class="text-center">
+                <Button type="submit" variant="primary" class="w-full transform px-8 py-3 transition duration-300 hover:scale-105">
+                  <i class="fas fa-paper-plane"></i>
+                  Kirim Pesan
+                </Button>
+              </div>
+            </form>
+          </Card>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Status Modal -->
+  <div
+    id="status-modal"
+    class="fixed inset-0 z-[1001] hidden items-center justify-center bg-black bg-opacity-50 p-4"
+  >
+    <div class="w-full max-w-sm rounded-lg bg-white p-8 text-center shadow-xl">
+      <div id="modal-content"></div>
+    </div>
+  </div>
+</MainLayout>
+
+<iframe name="hidden_iframe" id="hidden_iframe" class="hidden" title="Hidden form submission iframe" aria-hidden="true"></iframe>
+
+<script>
+  const form = document.getElementById('aspirasi-form') as HTMLFormElement;
+  const modal = document.getElementById('status-modal') as HTMLElement;
+  const modalContent = document.getElementById('modal-content') as HTMLElement;
+
+  form?.addEventListener('submit', () => {
+    setTimeout(() => {
+      modalContent.innerHTML = `
+        <div class="mb-4">
+          <i class="fas fa-check-circle text-6xl text-green-500"></i>
+        </div>
+        <h3 class="mb-2 text-xl font-bold text-gray-800">Terima Kasih!</h3>
+        <p class="mb-6 text-gray-600">Aspirasi Anda telah berhasil dikirim.</p>
+        <button id="close-modal" class="rounded-full bg-blue-600 px-6 py-2 font-bold text-white transition duration-300 hover:bg-blue-700">
+          Tutup
+        </button>
+      `;
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      form.reset();
+
+      const closeBtn = document.getElementById('close-modal');
+      closeBtn?.addEventListener('click', () => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      });
+    }, 1000);
+  });
+</script>

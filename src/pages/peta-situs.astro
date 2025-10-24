@@ -1,0 +1,153 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
+import Banner from '../components/sections/Banner.astro';
+import Section from '../components/ui/Section.astro';
+
+const siteConfig = await getEntry('config', 'site');
+
+if (!siteConfig) {
+  throw new Error('Site config not found');
+}
+
+const { navigation } = siteConfig.data;
+
+const sitePages = [
+  {
+    icon: 'fas fa-home',
+    color: 'blue',
+    title: 'Beranda',
+    description: 'Halaman utama dan pengenalan singkat Dusun Bedalo.',
+    href: '/'
+  },
+  {
+    icon: 'fas fa-user-circle',
+    color: 'blue',
+    title: 'Profil',
+    description: 'Sejarah, visi & misi, struktur pemerintahan, dan data demografi.',
+    href: '/profil'
+  },
+  {
+    icon: 'fas fa-lightbulb',
+    color: 'blue',
+    title: 'Potensi',
+    description: 'Informasi mengenai UMKM, pertanian, dan potensi unggulan lainnya.',
+    href: '/potensi'
+  },
+  {
+    icon: 'fas fa-map-signs',
+    color: 'blue',
+    title: 'Pariwisata & Budaya',
+    description: 'Destinasi wisata, tradisi, kesenian, dan kalender acara budaya.',
+    href: '/pariwisata'
+  },
+  {
+    icon: 'fas fa-images',
+    color: 'blue',
+    title: 'Galeri',
+    description: 'Kumpulan foto dan video momen-momen di Dusun Bedalo.',
+    href: '/galeri'
+  },
+  {
+    icon: 'fas fa-envelope',
+    color: 'blue',
+    title: 'Kontak',
+    description: 'Informasi kontak perangkat dusun dan formulir aspirasi warga.',
+    href: '/kontak'
+  }
+];
+
+const aboutPages = [
+  {
+    icon: 'fas fa-users',
+    color: 'blue',
+    title: 'Tentang KKN',
+    description: 'Informasi mengenai tim KKN yang membangun website ini.',
+    href: '/tentang-kkn'
+  },
+  {
+    icon: 'fas fa-sitemap',
+    color: 'blue',
+    title: 'Peta Situs',
+    description: 'Halaman yang menampilkan semua halaman website.',
+    href: '/peta-situs'
+  },
+  {
+    icon: 'fas fa-shield-alt',
+    color: 'blue',
+    title: 'Kebijakan Privasi',
+    description: 'Menjelaskan bagaimana kami menangani dan melindungi data pribadi Anda.',
+    href: '/kebijakan-privasi'
+  }
+];
+---
+
+<MainLayout title="Peta Situs" description="Navigasi dan struktur lengkap website Dusun Bedalo">
+  <Banner title="Peta Situs" subtitle="Navigasi dan struktur lengkap website Dusun Bedalo." />
+
+  <Section background="white">
+    <div class="container mx-auto max-w-5xl">
+      <!-- Main Pages -->
+      <div class="mb-12">
+        <h2 class="mb-8 border-b-2 border-blue-500 pb-3 text-3xl font-bold text-gray-800">
+          Halaman Utama
+        </h2>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {sitePages.map((page) => (
+            <a
+              href={page.href}
+              data-astro-prefetch
+              class="group flex h-full flex-col rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div>
+                <div class={`mb-4 text-${page.color}-600`}>
+                  <i class={`${page.icon} text-3xl`}></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600">
+                  {page.title}
+                </h3>
+                <p class="mt-2 flex-grow text-gray-600">
+                  {page.description}
+                </p>
+              </div>
+              <span class="mt-4 self-start text-sm font-semibold text-blue-600 group-hover:underline">
+                Kunjungi Halaman &rarr;
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- About Pages -->
+      <div class="mb-12">
+        <h2 class="mb-8 border-b-2 border-blue-500 pb-3 text-3xl font-bold text-gray-800">
+          Tentang Website
+        </h2>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {aboutPages.map((page) => (
+            <a
+              href={page.href}
+              data-astro-prefetch
+              class="group flex h-full flex-col rounded-xl bg-white p-6 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            >
+              <div>
+                <div class={`mb-4 text-${page.color}-600`}>
+                  <i class={`${page.icon} text-3xl`}></i>
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 transition-colors duration-300 group-hover:text-blue-600">
+                  {page.title}
+                </h3>
+                <p class="mt-2 flex-grow text-gray-600">
+                  {page.description}
+                </p>
+              </div>
+              <span class="mt-4 self-start text-sm font-semibold text-blue-600 group-hover:underline">
+                Kunjungi Halaman &rarr;
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

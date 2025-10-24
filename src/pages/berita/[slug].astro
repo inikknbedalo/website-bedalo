@@ -1,0 +1,117 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import MainLayout from '../../layouts/MainLayout.astro';
+import Section from '../../components/ui/Section.astro';
+import Badge from '../../components/ui/Badge.astro';
+import StructuredData from '../../components/seo/StructuredData.astro';
+import SocialShare from '../../components/content/SocialShare.astro';
+import RelatedArticles from '../../components/content/RelatedArticles.astro';
+import { formatDate } from '../../utils/format';
+
+export const getStaticPaths = (async () => {
+  const beritaEntries = await getCollection('berita');
+  return beritaEntries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, pubDate, author, image, imageAlt, imageCaption, category, tags } = entry.data;
+
+// Get related articles (same category, max 3)
+const allBerita = await getCollection('berita');
+const relatedArticles = allBerita
+  .filter((article) => 
+    article.id !== entry.id && 
+    article.data.category === category &&
+    !article.data.draft
+  )
+  .slice(0, 3);
+
+const structuredData = {
+  title,
+  description,
+  image: image.src,
+  datePublished: pubDate.toISOString(),
+  dateModified: pubDate.toISOString(),
+  author,
+};
+---
+
+<MainLayout title={title} description={description} image={image.src}>
+  <StructuredData type="Article" data={structuredData} />
+
+  <Section background="white">
+    <article class="mx-auto max-w-4xl">
+      <nav class="mb-6 text-sm text-gray-500">
+        <a href="/" data-astro-prefetch class="hover:underline">Beranda</a>
+        <span class="mx-2">›</span>
+        <a href="/berita" data-astro-prefetch class="hover:underline">Berita</a>
+        <span class="mx-2">›</span>
+        <span class="text-gray-700">{title}</span>
+      </nav>
+
+      <header class="mb-8">
+        <h1 class="mb-4 text-3xl font-bold text-gray-900 md:text-4xl">
+          {title}
+        </h1>
+
+        <div class="mb-4 flex flex-wrap items-center gap-4 text-sm text-gray-600">
+          <Badge variant="primary">{category}</Badge>
+          <span>Oleh {author}</span>
+          <span>•</span>
+          <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        </div>
+
+        {
+          tags && tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <Badge variant="default" size="sm">
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          )
+        }
+      </header>
+
+      <div class="mb-2 aspect-video overflow-hidden rounded-lg">
+        <Image src={image} alt={imageAlt} class="h-full w-full object-cover" priority />
+      </div>
+      
+      {imageCaption && (
+        <p class="mb-8 text-center text-sm italic text-gray-600">
+          {imageCaption}
+        </p>
+      )}
+
+      <div
+        class="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-gray-900 prose-p:text-gray-700 prose-p:leading-relaxed prose-a:text-blue-600 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-strong:text-gray-900 prose-strong:font-bold prose-em:text-gray-800 prose-em:italic prose-ul:list-disc prose-ul:pl-6 prose-ol:list-decimal prose-ol:pl-6 prose-li:text-gray-700 prose-li:my-2 prose-blockquote:border-l-4 prose-blockquote:border-blue-600 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-gray-700 prose-code:bg-gray-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-sm prose-pre:bg-gray-900 prose-pre:text-gray-100 prose-img:rounded-lg prose-img:shadow-lg"
+      >
+        <Content />
+      </div>
+
+      <div class="mt-10">
+        <SocialShare title={title} url={`/berita/${entry.id}`} />
+      </div>
+
+      <RelatedArticles articles={relatedArticles} />
+
+      <div class="mt-10 border-t border-gray-200 pt-6">
+        <a
+          href="/berita"
+          data-astro-prefetch
+          class="inline-flex items-center gap-2 font-semibold text-blue-600 hover:underline"
+        >
+          <i class="fas fa-arrow-left"></i>
+          Kembali ke Daftar Berita
+        </a>
+      </div>
+    </article>
+  </Section>
+</MainLayout>

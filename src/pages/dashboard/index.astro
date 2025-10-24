@@ -1,0 +1,126 @@
+---
+/**
+ * Dashboard Aspirasi Page
+ * Real-time dashboard for community aspirations/feedback
+ * Password-protected with client-side authentication
+ */
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import LoginScreen from '../../components/dashboard/LoginScreen.astro';
+import DashboardStats from '../../components/dashboard/DashboardStats.astro';
+import DashboardCharts from '../../components/dashboard/DashboardCharts.astro';
+import DashboardTable from '../../components/dashboard/DashboardTable.astro';
+import { FULL_DASHBOARD_CONFIG } from '../../config/dashboard';
+
+const title = 'Dashboard Aspirasi';
+const description = 'Dashboard real-time untuk Aspirasi Masyarakat Dusun Bedalo';
+---
+
+<BaseLayout 
+  title={title}
+  description={description}
+  robots="noindex, nofollow"
+>
+  <!-- Dashboard Custom Styles -->
+  <style is:global>
+    @import '../../styles/dashboard/dashboard.css';
+  </style>
+
+  <!-- Loading Spinner -->
+  <div id="loading-spinner" class="hidden fixed inset-0 z-[9998] flex items-center justify-center bg-white/80">
+    <div class="spinner"></div>
+  </div>
+
+  <!-- Login Screen Component -->
+  <LoginScreen />
+
+  <!-- Dashboard Content -->
+  <div id="dashboard-content" style="display: none;">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white shadow-md">
+      <nav class="container mx-auto flex items-center justify-between px-6 py-4">
+        <a href="/" class="flex items-center text-xl font-bold text-gray-800">
+          <i class="fas fa-arrow-left mr-3 text-gray-600 transition-colors hover:text-blue-600"></i>
+          Dashboard Aspirasi Masyarakat
+        </a>
+        
+        <div class="flex items-center space-x-3">
+          <!-- Last Refresh Time -->
+          <span class="text-sm text-gray-600 hidden sm:flex items-center" id="last-refresh-display">
+            <i class="fas fa-clock mr-1"></i>
+            <span id="last-refresh-time">-</span>
+          </span>
+          
+          <!-- Refresh Button -->
+          <button
+            id="refresh-btn"
+            class="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            title="Muat ulang data"
+          >
+            <i class="fas fa-sync-alt" id="refresh-icon"></i>
+            <span class="hidden sm:inline">Refresh</span>
+          </button>
+          
+          <!-- Session Expiry Info (tooltip) -->
+          <div class="relative group">
+            <i class="fas fa-info-circle text-gray-500 cursor-help"></i>
+            <div class="hidden group-hover:block absolute right-0 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg z-50">
+              Sesi aktif selama 24 jam sejak login. Tidak perlu logout manual.
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Error Message -->
+    <div id="error-message" class="hidden fixed top-20 left-1/2 transform -translate-x-1/2 z-50 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg max-w-md">
+    </div>
+    
+    <!-- Main Content -->
+    <main class="container mx-auto space-y-8 p-6 transition-opacity duration-500" id="main-content">
+      <!-- Welcome Message -->
+      <div
+        id="welcome-message"
+        class="rounded-md border-l-4 border-blue-500 bg-blue-100 p-4 text-blue-800 shadow"
+        role="alert"
+      >
+        <p class="font-bold">Selamat Datang!</p>
+        <p>Dashboard real-time untuk Aspirasi Masyarakat Dusun Bedalo.</p>
+      </div>
+
+      <!-- Statistics Cards -->
+      <DashboardStats />
+
+      <!-- Charts -->
+      <DashboardCharts />
+
+      <!-- Data Table -->
+      <DashboardTable />
+      
+      <!-- Footer -->
+      <footer class="mt-8 py-4 text-center text-sm text-gray-500">
+        Dashboard Aspirasi Masyarakat &copy; 2025
+      </footer>
+    </main>
+  </div>
+
+  <!-- Dashboard Configuration -->
+  <script is:inline define:vars={{ config: FULL_DASHBOARD_CONFIG }}>
+    window.DASHBOARD_CONFIG = config;
+  </script>
+
+  <!-- Dashboard Scripts with Chart.js from npm -->
+  <script>
+    import Chart from 'chart.js/auto';
+    import 'chartjs-adapter-date-fns';
+    
+    // Make Chart available globally
+    window.Chart = Chart;
+    
+    // Import dashboard modules
+    import '../../../public/scripts/dashboard/fallback-data.js';
+    import '../../../public/scripts/dashboard/auth.js';
+    import '../../../public/scripts/dashboard/data-fetcher.js';
+    import '../../../public/scripts/dashboard/charts.js';
+    import '../../../public/scripts/dashboard/dashboard.js';
+  </script>
+</BaseLayout>

@@ -1,0 +1,137 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import MainLayout from '../../layouts/MainLayout.astro';
+import Section from '../../components/ui/Section.astro';
+import Card from '../../components/ui/Card.astro';
+
+export const getStaticPaths = (async () => {
+  const potensiEntries = await getCollection('potensi');
+  return potensiEntries.map((entry) => ({
+    params: { slug: entry.id.replace(/\.md$/, '') },
+    props: { entry },
+  }));
+}) satisfies GetStaticPaths;
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const { title, description, category, owner, contact, price, image, imageAlt } = entry.data;
+
+// Format contact for WhatsApp
+const waNumber = contact?.replace(/\D/g, '') || '';
+const waLink = waNumber ? `https://wa.me/${waNumber}?text=Halo, saya ingin tanya tentang ${title}` : '#';
+
+// Category badge colors
+const categoryColors: Record<string, string> = {
+  pertanian: 'bg-green-100 text-green-700',
+  kerajinan: 'bg-purple-100 text-purple-700',
+  kuliner: 'bg-orange-100 text-orange-700',
+  jasa: 'bg-blue-100 text-blue-700',
+  lainnya: 'bg-gray-100 text-gray-700',
+};
+---
+
+<MainLayout title={title} description={description}>
+
+  <!-- Main Content -->
+  <Section background="white">
+    <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
+      <!-- Left: Image & Quick Info -->
+      <div class="lg:col-span-1">
+        <!-- Image -->
+        <div class="sticky top-24">
+          <Image
+            src={image}
+            alt={imageAlt}
+            class="mb-6 aspect-[4/3] w-full rounded-lg object-cover shadow-xl"
+            widths={[400, 600]}
+            sizes="(max-width: 1024px) 100vw, 33vw"
+          />
+
+          <!-- Quick Info Card -->
+          <Card variant="default" padding="p-6">
+            <h3 class="mb-4 text-lg font-bold text-gray-800">Informasi</h3>
+
+            <div class="space-y-3">
+              <!-- Category -->
+              <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <span class="text-sm text-gray-600">Kategori</span>
+                <span class:list={['rounded-full px-3 py-1 text-sm font-semibold', categoryColors[category] || categoryColors.lainnya]}>
+                  {category.charAt(0).toUpperCase() + category.slice(1)}
+                </span>
+              </div>
+
+              <!-- Owner -->
+              <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <span class="text-sm text-gray-600">Produsen</span>
+                <span class="font-semibold text-gray-700">{owner}</span>
+              </div>
+
+              <!-- Price -->
+              {price && (
+                <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                  <span class="text-sm text-gray-600">Harga</span>
+                  <span class="text-lg font-bold text-green-600">
+                    <i class="fas fa-tag mr-1 text-green-500"></i>
+                    {price}
+                  </span>
+                </div>
+              )}
+
+              <!-- Contact -->
+              {contact && (
+                <div class="border-b border-gray-200 pb-3">
+                  <span class="mb-1 block text-sm text-gray-600">Kontak</span>
+                  <p class="text-sm font-medium text-gray-700">
+                    <i class="fas fa-phone mr-1 text-gray-400"></i>
+                    {contact}
+                  </p>
+                </div>
+              )}
+
+              <!-- Contact Button -->
+              {waNumber && (
+                <a
+                  href={waLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-4 block w-full rounded-lg bg-green-600 px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-green-700"
+                >
+                  <i class="fab fa-whatsapp mr-2"></i>
+                  Hubungi via WhatsApp
+                </a>
+              )}
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Right: Description & Details -->
+      <div class="lg:col-span-2">
+        <!-- Description -->
+        <Card variant="default" padding="p-8" class="mb-6">
+          <article class="prose prose-lg max-w-none">
+            <Content />
+          </article>
+        </Card>
+
+        <!-- Additional Info (if needed in the future) -->
+        <!-- You can add more cards here similar to the specialties section in warung -->
+      </div>
+    </div>
+  </Section>
+
+  <!-- Back Button -->
+  <Section background="gray">
+    <div class="text-center">
+      <a
+        href="/potensi"
+        class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition-colors hover:bg-gray-50"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Kembali ke Daftar Potensi
+      </a>
+    </div>
+  </Section>
+</MainLayout>

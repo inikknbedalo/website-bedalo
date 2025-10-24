@@ -1,0 +1,234 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry, getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Banner from '../components/sections/Banner.astro';
+import Section from '../components/ui/Section.astro';
+import Card from '../components/ui/Card.astro';
+import StatsCard from '../components/ui/StatsCard.astro';
+import ngedanImage from '../assets/images/ngedan.webp';
+
+const profileContent = await getEntry('pages', 'profile');
+const governmentData = await getEntry('government', 'officials');
+
+if (!profileContent) {
+  throw new Error('Profile page content not found');
+}
+
+const { hero, sections } = profileContent.data;
+const officials = governmentData?.data.officials || [];
+
+// Find sections
+const sejarah = sections.find((s) => s.id === 'sejarah');
+const demographics = sections.find((s) => s.id === 'demographics');
+const structure = sections.find((s) => s.id === 'structure');
+const peta = sections.find((s) => s.id === 'peta');
+const visiMisi = sections.find((s) => s.id === 'visi-misi');
+---
+
+<MainLayout title={hero.title} description={hero.subtitle}>
+  <!-- Banner -->
+  <Banner title={hero.title} subtitle={hero.subtitle} />
+
+  <!-- History Section -->
+  {
+    sejarah && (
+      <Section background="white" id="sejarah">
+        <div class="flex flex-col items-center gap-12 md:flex-row">
+          <div class="md:w-1/2">
+            <h2 class="mb-4 text-3xl font-bold text-gray-800">{sejarah.title}</h2>
+            {sejarah.subtitle && (
+              <p class="mb-4 text-lg font-semibold text-gray-700">{sejarah.subtitle}</p>
+            )}
+            <div class="space-y-4 leading-relaxed text-gray-600">
+              {sejarah.content.split('\n\n').map((paragraph) => (
+                <p>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+          <div class="md:w-1/2">
+            <Image
+              src={ngedanImage}
+              alt="Pemandangan Dusun Bedalo"
+              class="aspect-video h-full w-full rounded-lg object-cover shadow-xl"
+              widths={[400, 800, 1200]}
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
+          </div>
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Demographics Section -->
+  {
+    demographics && (
+      <Section background="gray" id="demographics">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{demographics.title}</h2>
+          {demographics.subtitle && (
+            <p class="mx-auto max-w-2xl text-gray-600">{demographics.subtitle}</p>
+          )}
+        </div>
+        <div class="mb-8 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          {demographics.items?.map((item) => (
+            <div class="rounded-lg bg-white p-6 text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl">
+              <div class="mb-3">
+                <i class:list={[item.icon, `text-4xl text-${item.color}-500`]} />
+              </div>
+              <p class="text-3xl font-bold text-gray-800">{item.value}</p>
+              <p class="text-gray-500">{item.title}</p>
+            </div>
+          ))}
+        </div>
+        {demographics.livelihood && (
+          <div class="rounded-lg bg-white p-6 text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl">
+            <div class="mb-3">
+              <i class:list={[demographics.livelihood.icon, `text-4xl text-${demographics.livelihood.color}-600`]} />
+            </div>
+            <p class="mb-2 text-gray-500">{demographics.livelihood.title}</p>
+            <p class="text-xl font-semibold text-gray-800">{demographics.livelihood.value}</p>
+          </div>
+        )}
+      </Section>
+    )
+  }
+
+  <!-- Structure/Government Section -->
+  {
+    structure && officials.length > 0 && (
+      <Section background="white" id="structure">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{structure.title}</h2>
+          {structure.subtitle && (
+            <p class="mx-auto max-w-2xl text-gray-600">{structure.subtitle}</p>
+          )}
+        </div>
+
+        <!-- Kepala Dusun (Chief) -->
+        <div class="mb-10 flex justify-center">
+          {officials
+            .filter((official) => official.position === 'Kepala Dusun')
+            .map((official) => (
+              <div class="h-full w-full max-w-sm rounded-lg bg-white p-8 text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl">
+                <Image
+                  src={official.photo}
+                  alt={official.photoAlt}
+                  width={128}
+                  height={128}
+                  class="mx-auto mb-4 h-32 w-32 rounded-full border-4 border-gray-200 object-cover"
+                />
+                <h3 class="text-xl font-bold text-gray-800">{official.name}</h3>
+                <p class="font-semibold text-blue-600">{official.position}</p>
+                {official.period && (
+                  <p class="text-sm text-gray-500">{official.period}</p>
+                )}
+              </div>
+            ))}
+        </div>
+
+        <!-- RW Leader -->
+        <div class="mb-10 flex justify-center">
+          {officials
+            .filter((official) => official.position.includes('RW'))
+            .map((official) => (
+              <div class="h-full w-full max-w-sm rounded-lg bg-white p-8 text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl">
+                <Image
+                  src={official.photo}
+                  alt={official.photoAlt}
+                  width={128}
+                  height={128}
+                  class="mx-auto mb-4 h-32 w-32 rounded-full border-4 border-gray-200 object-cover"
+                />
+                <h3 class="text-xl font-bold text-gray-800">{official.name}</h3>
+                <p class="font-semibold text-blue-600">{official.position}</p>
+                {official.period && (
+                  <p class="text-sm text-gray-500">{official.period}</p>
+                )}
+              </div>
+            ))}
+        </div>
+
+        <!-- RT Leaders -->
+        <div class="mb-12 text-center">
+          <h3 class="mb-6 text-2xl font-bold text-gray-800">Rukun Tetangga (RT)</h3>
+        </div>
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-3">
+          {officials
+            .filter((official) => official.position.includes('RT'))
+            .map((official) => (
+              <div class="h-full rounded-lg bg-white p-8 text-center shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl">
+                <Image
+                  src={official.photo}
+                  alt={official.photoAlt}
+                  width={128}
+                  height={128}
+                  class="mx-auto mb-4 h-32 w-32 rounded-full border-4 border-gray-200 object-cover"
+                />
+                <h3 class="text-xl font-bold text-gray-800">{official.name}</h3>
+                <p class="font-semibold text-blue-600">{official.position}</p>
+                {official.period && (
+                  <p class="text-sm text-gray-500">{official.period}</p>
+                )}
+              </div>
+            ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Map Section -->
+  {
+    peta && (
+      <Section background="white" id="peta">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{peta.title}</h2>
+        </div>
+        <div class="w-full">
+          <div class="aspect-video overflow-hidden rounded-lg bg-gray-200 shadow-xl">
+            <iframe
+              src={peta.mapUrl}
+              width="100%"
+              height="100%"
+              style="border: 0"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              title="Peta Wilayah Dusun Bedalo"
+            />
+          </div>
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Vision & Mission Section -->
+  {
+    visiMisi && (
+      <Section background="gray" id="visi-misi">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{visiMisi.title}</h2>
+        </div>
+        <div class="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+          {visiMisi.items?.map((item) => (
+            <Card variant="default" padding="p-8">
+              <div class="mb-4 flex items-center gap-4">
+                <i class:list={[item.icon, 'text-3xl text-blue-600']} />
+                <h3 class="text-2xl font-bold text-gray-800">{item.title}</h3>
+              </div>
+              {item.type === 'visi' ? (
+                <p class="leading-relaxed text-gray-600">{item.content}</p>
+              ) : (
+                <ul class="list-outside list-disc space-y-2 pl-5 leading-relaxed text-gray-600">
+                  {item.items?.map((misiItem) => (
+                    <li>{misiItem}</li>
+                  ))}
+                </ul>
+              )}
+            </Card>
+          ))}
+        </div>
+      </Section>
+    )
+  }
+</MainLayout>

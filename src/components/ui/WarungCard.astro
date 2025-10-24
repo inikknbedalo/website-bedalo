@@ -1,0 +1,125 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  warung: CollectionEntry<'warung'>;
+  class?: string;
+}
+
+const { warung, class: className = '' } = Astro.props;
+const { id, data } = warung;
+const { title, description, image, imageAlt, type, owner, openingHours, specialties } = data;
+
+const slug = id.replace(/\.md$/, '');
+
+// Format contact for WhatsApp
+const waNumber = data.contact?.replace(/\D/g, '') || '';
+const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
+
+// Type badge colors - note: 'kafe' not 'cafe' to match schema
+type TypeColors = {
+  [key: string]: string;
+};
+
+const typeColors: TypeColors = {
+  warung: 'bg-orange-100 text-orange-700',
+  kafe: 'bg-brown-100 text-brown-700',
+  toko: 'bg-green-100 text-green-700',
+  restoran: 'bg-red-100 text-red-700',
+};
+---
+
+<article class:list={['warung-card', className]}>
+  <div
+    class="group flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+  >
+    <!-- Image -->
+    <a href={`/warung/${slug}`} class="block overflow-hidden">
+      <Image
+        src={image}
+        alt={imageAlt}
+        widths={[400, 600]}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-110"
+      />
+    </a>
+
+    <!-- Content -->
+    <div class="flex flex-grow flex-col p-6">
+      <!-- Title & Type -->
+      <div class="mb-2">
+        <a href={`/warung/${slug}`} class="group/title">
+          <h3 class="text-xl font-bold text-gray-800 transition-colors group-hover/title:text-orange-600">
+            {title}
+          </h3>
+        </a>
+        <span class:list={['inline-block rounded-full px-3 py-1 text-xs font-semibold', typeColors[type] || typeColors.warung]}>
+          {type.charAt(0).toUpperCase() + type.slice(1)}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <p class="mb-4 flex-grow text-sm leading-relaxed text-gray-600">
+        {description}
+      </p>
+
+      <!-- Info Grid -->
+      <div class="mb-4 space-y-2 border-t border-gray-200 pt-4">
+        <!-- Owner -->
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500">Pemilik</span>
+          <span class="font-semibold text-gray-700">{owner}</span>
+        </div>
+
+        <!-- Opening Hours -->
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500">Jam Buka</span>
+          <span class="text-sm font-medium text-gray-700">
+            <i class="far fa-clock mr-1 text-gray-400"></i>
+            {openingHours}
+          </span>
+        </div>
+
+        <!-- Specialties -->
+        <div class="pt-2">
+          <span class="mb-2 block text-sm text-gray-500">Menu Unggulan:</span>
+          <div class="flex flex-wrap gap-2">
+            {
+              specialties?.slice(0, 3).map((specialty) => (
+                <span class="rounded bg-orange-50 px-2 py-1 text-xs text-orange-600">
+                  {specialty}
+                </span>
+              ))
+            }
+            {specialties && specialties.length > 3 && (
+              <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                +{specialties.length - 3} lagi
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-2">
+        <a
+          href={`/warung/${slug}`}
+          class="flex-1 rounded-lg bg-orange-600 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-orange-700"
+        >
+          <i class="fas fa-info-circle mr-1"></i>
+          Detail
+        </a>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex-1 rounded-lg bg-green-600 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-green-700"
+        >
+          <i class="fab fa-whatsapp mr-1"></i>
+          Hubungi
+        </a>
+      </div>
+    </div>
+  </div>
+</article>

@@ -1,0 +1,92 @@
+{
+  "page": "home",
+  "hero": {
+    "title": "Selamat Datang di Dusun Bedalo",
+    "subtitle": "Menjelajahi Keindahan, Kearifan Lokal, dan Potensi Tersembunyi di Jantung Dusun.",
+    "image": "../../assets/images/ngedan.webp",
+    "cta": {
+      "text": "Jelajahi Sekarang",
+      "href": "#profil"
+    },
+    "imageAlt": "Pemandangan Pantai Ngedan di Dusun Bedalo"
+  },
+  "welcome": {
+    "title": "Sambutan Hangat dari Kami",
+    "content": "Assalamu'alaikum Warahmatullahi Wabarakatuh. Puji syukur kehadirat Tuhan Yang Maha Esa, kami dapat menghadirkan website resmi Dusun Bedalo. Website ini merupakan wujud komitmen kami untuk memberikan informasi yang transparan dan membuka pintu bagi siapa saja yang ingin mengenal dusun kami lebih dekat.\n\nKami berharap, melalui media digital ini, potensi-potensi yang kami miliki, baik dari keindahan alam, kekayaan budaya, hingga kreativitas warga, dapat dikenal lebih luas. Kami mengundang Anda untuk menjelajahi setiap sudut informasi di website ini dan merasakan kehangatan Dusun Bedalo. Selamat datang!",
+    "profile": {
+      "name": "Sumindar",
+      "title": "Kepala Dusun Bedalo",
+      "photo": "../../assets/images/cat.jpg",
+      "link": "/profil",
+      "photoAlt": "Foto Sumindar"
+    }
+  },
+  "sections": [
+    {
+      "id": "potensi",
+      "title": "Potensi Unggulan Dusun",
+      "content": "Dusun Bedalo dianugerahi berbagai potensi yang menjadi sumber kehidupan dan kebanggaan warga.",
+      "items": [
+        {
+          "icon": "fas fa-store",
+          "title": "UMKM & Produk Lokal",
+          "description": "Temukan berbagai produk kreatif dan olahan pangan hasil karya warga.",
+          "link": "/potensi"
+        },
+        {
+          "icon": "fas fa-umbrella-beach",
+          "title": "Wisata Alam",
+          "description": "Nikmati keindahan Pantai Ngedan dan Pantai Ngluwen yang menawan.",
+          "link": "/pariwisata"
+        },
+        {
+          "icon": "fas fa-seedling",
+          "title": "Pertanian & Perkebunan",
+          "description": "Hasil bumi berkualitas dari lahan pertanian dan perkebunan produktif.",
+          "link": "/potensi"
+        }
+      ]
+    },
+    {
+      "id": "pariwisata",
+      "title": "Pariwisata & Kekayaan Budaya",
+      "content": "Dari pemandangan alam yang memukau hingga tradisi yang lestari, Dusun Bedalo menawarkan pengalaman yang tak terlupakan.",
+      "cta": {
+        "text": "Temukan Destinasi Wisata",
+        "href": "/pariwisata"
+      },
+      "images": [
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp"
+      ],
+      "imageAlts": [
+        "Destinasi Wisata 1",
+        "Kesenian Budaya",
+        "Destinasi Wisata 2",
+        "Tradisi Lokal"
+      ]
+    },
+    {
+      "id": "galeri",
+      "title": "Galeri Momen Dusun Bedalo",
+      "images": [
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp",
+        "../../assets/images/ngedan.webp"
+      ],
+      "cta": {
+        "text": "Lihat Galeri Lengkap",
+        "href": "/galeri"
+      },
+      "imageAlts": [
+        "Galeri Kegiatan Warga",
+        "Galeri Anak-anak",
+        "Galeri Pemandangan",
+        "Galeri Upacara Adat"
+      ]
+    }
+  ]
+}

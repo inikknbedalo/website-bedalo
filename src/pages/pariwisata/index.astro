@@ -1,0 +1,282 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
+import Banner from '../../components/sections/Banner.astro';
+import Section from '../../components/ui/Section.astro';
+import DestinationCard from '../../components/content/DestinationCard.astro';
+import { filterDraft } from '../../utils/collections';
+import ngedanImage from '../../assets/images/ngedan.webp';
+
+const allPariwisata = await getCollection('pariwisata');
+const publishedPariwisata = filterDraft(allPariwisata);
+---
+
+<MainLayout
+  title="Pariwisata & Budaya"
+  description="Jelajahi pesona pariwisata dan budaya Dusun Bedalo"
+>
+  <section class="py-12 md:py-16">
+    <div class="container mx-auto px-6">
+      <div
+        class="mx-auto max-w-3xl rounded-xl bg-gradient-to-br from-purple-600 to-violet-700 p-8 text-center text-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl md:p-10"
+        data-aos="fade-up"
+      >
+        <h1 class="mb-3 text-3xl font-bold md:text-4xl">
+          Pariwisata & Budaya
+        </h1>
+        <p class="text-lg text-purple-100">
+          Pesona Alam dan Kekayaan Tradisi Dusun Bedalo
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <Section id="destinasi" background="white">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800" data-aos="fade-up">
+        Destinasi Wisata
+      </h2>
+      <p
+        class="mx-auto max-w-2xl text-gray-600"
+        data-aos="fade-up"
+        data-aos-delay="100"
+      >
+        Jelajahi sudut-sudut indah di Dusun Bedalo yang menawarkan
+        ketenangan dan pemandangan memukau.
+      </p>
+    </div>
+
+    {
+      publishedPariwisata.length > 0 ? (
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+          {publishedPariwisata.map((destination) => (
+            <div data-aos="fade-up">
+              <div class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl">
+                <a href={`/pariwisata/${destination.id}`} class="block">
+                  <Image
+                    src={destination.data.image}
+                    alt={destination.data.imageAlt}
+                    width={600}
+                    height={400}
+                    class="h-48 w-full object-cover"
+                  />
+                </a>
+                <div class="flex flex-grow flex-col p-6">
+                  <h3 class="mb-2 text-xl font-bold text-gray-800">
+                    <a
+                      href={`/pariwisata/${destination.id}`}
+                      class="transition-colors hover:text-blue-600"
+                    >
+                      {destination.data.title}
+                    </a>
+                  </h3>
+                  <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+                    {destination.data.description}
+                  </p>
+                  <div class="mt-auto border-t pt-4">
+                    <a
+                      href={`/pariwisata/${destination.id}`}
+                      class="inline-block w-full rounded-md bg-blue-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-blue-700"
+                    >
+                      Lihat Detail
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">Belum ada destinasi tersedia.</p>
+        </div>
+      )
+    }
+  </Section>
+
+  <section id="tradisi" class="overflow-hidden py-20">
+    <div class="container mx-auto space-y-16 px-6">
+      <div class="mb-12 text-center">
+        <h2 class="mb-2 text-3xl font-bold text-gray-800" data-aos="fade-up">
+          Adat Istiadat & Tradisi
+        </h2>
+      </div>
+
+      <div
+        class="flex flex-col items-center gap-8 md:flex-row md:gap-12"
+        data-aos="fade-up"
+      >
+        <div class="md:w-1/2">
+          <Image
+            src={ngedanImage}
+            alt="Prosesi upacara adat Sedekah Bumi"
+            class="aspect-video h-auto w-full rounded-lg object-cover shadow-xl"
+            width={600}
+            height={400}
+          />
+        </div>
+        <div class="md:w-1/2">
+          <h3 class="mb-4 text-2xl font-bold text-gray-800">
+            Upacara Sedekah Bumi
+          </h3>
+          <div class="space-y-4 leading-relaxed text-gray-600">
+            <p>
+              Tradisi ini merupakan wujud syukur warga kepada Tuhan atas hasil
+              panen yang melimpah. Diadakan setahun sekali, acara ini diisi
+              dengan doa bersama dan makan-makan.
+            </p>
+            <p>
+              Seluruh warga bergotong-royong mempersiapkan acara, menunjukkan
+              kuatnya rasa kebersamaan di dusun kami.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="flex flex-col items-center gap-8 md:flex-row-reverse md:gap-12"
+        data-aos="fade-up"
+      >
+        <div class="md:w-1/2">
+          <Image
+            src={ngedanImage}
+            alt="Warga berkumpul untuk Sedekah Ardi"
+            class="aspect-video h-auto w-full rounded-lg object-cover shadow-xl"
+            width={600}
+            height={400}
+          />
+        </div>
+        <div class="md:w-1/2">
+          <h3 class="mb-4 text-2xl font-bold text-gray-800">
+            Upacara Sedekah Ardi
+          </h3>
+          <div class="space-y-4 leading-relaxed text-gray-600">
+            <p>
+              Mirip dengan Sedekah Bumi, tradisi ini adalah bentuk rasa syukur
+              yang mendalam atas karunia dan kesuburan tanah yang diberikan
+              oleh Sang Pencipta.
+            </p>
+            <p>
+              Momen ini mempererat tali persaudaraan antarwarga melalui
+              kegiatan doa dan kenduri bersama.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Section id="kesenian" background="white">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800" data-aos="fade-up">
+        Kesenian & Budaya
+      </h2>
+    </div>
+
+    <div
+      class="flex flex-col items-center gap-8 md:flex-row md:gap-12"
+      data-aos="fade-up"
+    >
+      <div class="md:w-1/2">
+        <Image
+          src={ngedanImage}
+          alt="Penari menampilkan Tari Topeng Ireng"
+          class="aspect-video h-auto w-full rounded-lg object-cover shadow-xl"
+          width={600}
+          height={400}
+        />
+      </div>
+      <div class="md:w-1/2">
+        <h3 class="mb-4 text-2xl font-bold text-gray-800">
+          Tari Topeng Ireng
+        </h3>
+        <div class="space-y-4 leading-relaxed text-gray-600">
+          <p>
+            Tarian ini merupakan salah satu kesenian kebanggaan Dusun Bedalo
+            yang sering ditampilkan dalam berbagai acara budaya. Gerakannya
+            yang energik dan kostumnya yang unik selalu memukau penonton.
+          </p>
+          <p>
+            Sanggar tari kami terbuka bagi siapa saja yang ingin belajar dan
+            melestarikan budaya ini.
+          </p>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <section id="kalender" class="py-20">
+    <div class="container mx-auto px-6">
+      <div class="mb-12 text-center">
+        <h2 class="mb-2 text-3xl font-bold text-gray-800" data-aos="fade-up">
+          Kalender Acara Budaya
+        </h2>
+      </div>
+      <div
+        class="mx-auto max-w-3xl rounded-lg bg-white p-8 shadow-lg"
+        data-aos="zoom-in"
+      >
+        <ul class="divide-y divide-gray-200">
+          <li
+            class="flex flex-col items-start justify-between gap-4 py-4 sm:flex-row sm:items-center"
+          >
+            <div>
+              <p class="text-lg font-semibold text-gray-800">
+                Upacara Sedekah Ardi
+              </p>
+              <p class="text-sm text-gray-500">
+                Wujud syukur atas hasil panen.
+              </p>
+            </div>
+            <div class="flex-shrink-0 text-left sm:text-right">
+              <p
+                class="rounded-full bg-purple-100 px-3 py-1 font-semibold text-purple-600"
+              >
+                Agustus 2025
+              </p>
+            </div>
+          </li>
+
+          <li
+            class="flex flex-col items-start justify-between gap-4 py-4 sm:flex-row sm:items-center"
+          >
+            <div>
+              <p class="text-lg font-semibold text-gray-800">
+                Pentas Seni & Budaya
+              </p>
+              <p class="text-sm text-gray-500">Perayaan hari kemerdekaan.</p>
+            </div>
+            <div class="flex-shrink-0 text-left sm:text-right">
+              <p
+                class="rounded-full bg-purple-100 px-3 py-1 font-semibold text-purple-600"
+              >
+                Agustus 2025
+              </p>
+            </div>
+          </li>
+
+          <li
+            class="flex flex-col items-start justify-between gap-4 py-4 sm:flex-row sm:items-center"
+          >
+            <div>
+              <p class="text-lg font-semibold text-gray-800">
+                Festival Dolanan Anak
+              </p>
+              <p class="text-sm text-gray-500">
+                Melestarikan permainan tradisional.
+              </p>
+            </div>
+            <div class="flex-shrink-0 text-left sm:text-right">
+              <p
+                class="rounded-full bg-purple-100 px-3 py-1 font-semibold text-purple-600"
+              >
+                Oktober 2025
+              </p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</MainLayout>

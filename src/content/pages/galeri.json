@@ -1,0 +1,60 @@
+{
+  "page": "galeri",
+  "hero": {
+    "title": "Galeri Dusun Bedalo",
+    "subtitle": "Momen Indah dan Kehidupan Warga",
+    "image": "../../assets/images/ngedan.webp",
+    "imageAlt": "Galeri Dusun Bedalo"
+  },
+  "sections": [
+    {
+      "id": "foto",
+      "title": "Foto Kegiatan",
+      "subtitle": "Dokumentasi aktivitas dan momen spesial warga Dusun Bedalo",
+      "images": [
+        {
+          "src": "../../assets/images/ngedan.webp",
+          "alt": "Suasana pantai ngedan",
+          "category": "Pemandangan"
+        },
+        {
+          "src": "../../assets/images/kkn-team.webp",
+          "alt": "Potensi gula aren asli dari Dusun Bedalo",
+          "category": "Kegiatan"
+        },
+        {
+          "src": "../../assets/images/ngedan.webp",
+          "alt": "Keripik singkong renyah buatan warga",
+          "category": "Pemandangan"
+        },
+        {
+          "src": "../../assets/images/kkn-team.webp",
+          "alt": "Kegiatan senam bersama warga Dusun Bedalo",
+          "category": "Kegiatan"
+        }
+      ]
+    },
+    {
+      "id": "video",
+      "title": "Video Dokumentasi",
+      "videos": [
+        {
+          "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+          "title": "Profil Dusun Bedalo",
+          "thumbnail": "https://i.ytimg.com/vi/dQw4w9WgXcQ/hqdefault.jpg"
+        },
+        {
+          "url": "https://www.youtube.com/watch?v=o-YBDTqX_ZU",
+          "title": "Keindahan Pantai Ngedan",
+          "thumbnail": "https://i.ytimg.com/vi/o-YBDTqX_ZU/hqdefault.jpg"
+        },
+        {
+          "url": "https://youtu.be/LXb3EKWsInQ",
+          "title": "Judul Video Anda",
+          "thumbnail": "https://i.ytimg.com/vi/LXb3EKWsInQ/hqdefault.jpg"
+        }
+      ]
+    }
+  ],
+  "categories": ["Semua", "Kegiatan", "Pemandangan"]
+}

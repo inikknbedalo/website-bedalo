@@ -1,0 +1,82 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import Banner from '../../components/sections/Banner.astro';
+import Section from '../../components/ui/Section.astro';
+import WarungCard from '../../components/ui/WarungCard.astro';
+
+const allWarung = await getCollection('warung');
+const publishedWarung = allWarung.filter((item) => !item.data.draft);
+---
+
+<MainLayout
+  title="Warung & UMKM Dusun Bedalo"
+  description="Daftar warung makan, kafe, dan toko di Dusun Bedalo"
+>
+  <Banner
+    title="Warung & UMKM"
+    subtitle="Kuliner dan Usaha Lokal Dusun Bedalo"
+    background="gradient"
+  />
+
+  <!-- Info Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="mb-8 flex justify-center">
+        <i class="fas fa-store text-5xl text-gray-400"></i>
+      </div>
+      <h2 class="mb-4 text-2xl font-bold text-gray-800">Dukung UMKM Lokal</h2>
+      <p class="leading-relaxed text-gray-600">
+        Berikut adalah daftar warung makan, kafe, dan toko di Dusun Bedalo. Mari dukung usaha
+        lokal warga kami dengan berkunjung dan berbelanja di tempat-tempat berikut.
+      </p>
+    </div>
+  </Section>
+
+  <!-- Warung List -->
+  <Section background="gray" id="daftar-warung">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        <i class="fas fa-utensils mr-2 text-orange-600"></i>
+        Daftar Warung & UMKM
+      </h2>
+    </div>
+
+    {
+      publishedWarung.length > 0 ? (
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {publishedWarung.map((warung) => (
+            <WarungCard warung={warung} />
+          ))}
+        </div>
+      ) : (
+        <div class="rounded-lg bg-white p-12 text-center shadow-lg">
+          <i class="fas fa-store mb-4 text-5xl text-gray-300"></i>
+          <p class="text-gray-600">Belum ada warung yang terdaftar.</p>
+        </div>
+      )
+    }
+  </Section>
+
+  <!-- CTA Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-2xl text-center">
+      <div
+        class="rounded-xl bg-gradient-to-r from-orange-600 to-red-700 p-8 text-white shadow-xl"
+      >
+        <h2 class="mb-4 text-2xl font-bold">Punya Usaha?</h2>
+        <p class="mb-6 text-orange-100">
+          Daftarkan usaha Anda untuk muncul di halaman ini dan menjangkau lebih banyak
+          pelanggan.
+        </p>
+        <a
+          href="/kontak"
+          class="inline-block rounded-lg bg-white px-6 py-3 font-semibold text-orange-600 transition-colors hover:bg-orange-50"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

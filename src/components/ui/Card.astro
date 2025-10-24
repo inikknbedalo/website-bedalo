@@ -1,0 +1,19 @@
+---
+interface Props {
+  variant?: 'default' | 'hover' | 'bordered';
+  padding?: string;
+  class?: string;
+}
+
+const { variant = 'default', padding = 'p-6', class: className = '' } = Astro.props;
+
+const variantClasses = {
+  default: 'bg-white rounded-lg shadow',
+  hover: 'bg-white rounded-lg shadow transition-all duration-300 hover:-translate-y-1 hover:shadow-xl',
+  bordered: 'bg-white rounded-lg border border-gray-200',
+};
+---
+
+<div class:list={[variantClasses[variant], padding, className]}>
+  <slot />
+</div>

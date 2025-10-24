@@ -1,0 +1,188 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface GalleryImage {
+  src: ImageMetadata;
+  alt: string;
+  category?: string;
+}
+
+interface Props {
+  images: GalleryImage[];
+  categories?: string[];
+  class?: string;
+}
+
+const { images, categories = [], class: className = '' } = Astro.props;
+const hasCategories = categories.length > 0;
+---
+
+<div class:list={['gallery-section', className]}>
+  <!-- Category Filter -->
+  {
+    hasCategories && (
+      <div class="mb-8 flex flex-wrap justify-center gap-3">
+        {categories.map((category) => (
+          <button
+            type="button"
+            class="gallery-filter rounded-full bg-white px-6 py-2 text-sm font-semibold text-gray-700 shadow-md transition-all duration-300 hover:bg-blue-600 hover:text-white hover:shadow-lg"
+            data-category={category.toLowerCase()}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+    )
+  }
+
+  <!-- Gallery Grid -->
+  <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+    {
+      images.map((image, index) => (
+        <button
+          type="button"
+          class="gallery-item group block aspect-video overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl cursor-pointer border-0 p-0 bg-transparent"
+          data-category={image.category?.toLowerCase() || 'semua'}
+          data-index={index}
+          aria-label={`View image: ${image.alt}`}
+        >
+          <Image
+            src={image.src}
+            alt={image.alt}
+            widths={[400, 600]}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+            loading="lazy"
+          />
+        </button>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .gallery-item {
+    opacity: 1;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .gallery-item.hidden {
+    display: none;
+  }
+
+  .gallery-filter.active {
+    background-color: rgb(37, 99, 235);
+    color: white;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  }
+</style>
+
+<script>
+  // Client-side filtering
+  const filterButtons = document.querySelectorAll('.gallery-filter');
+  const galleryItems = document.querySelectorAll('.gallery-item');
+
+  filterButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const category = (button as HTMLElement).dataset.category || 'semua';
+
+      // Update active state
+      filterButtons.forEach((btn) => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      // Filter items
+      galleryItems.forEach((item) => {
+        const itemCategory = (item as HTMLElement).dataset.category || 'semua';
+        
+        if (category === 'semua' || itemCategory === category) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    });
+  });
+
+  // Set first button as active
+  if (filterButtons.length > 0 && filterButtons[0]) {
+    filterButtons[0].classList.add('active');
+  }
+
+  // Simple lightbox functionality
+  const images = Array.from(document.querySelectorAll('.gallery-item'));
+  let currentIndex = 0;
+
+  // Create lightbox overlay
+  const createLightbox = () => {
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox-overlay fixed inset-0 z-50 hidden bg-black bg-opacity-90 items-center justify-center p-4';
+    overlay.innerHTML = `
+      <button class="lightbox-close absolute top-4 right-4 text-white text-4xl hover:text-gray-300 z-10">&times;</button>
+      <button class="lightbox-prev absolute left-4 text-white text-4xl hover:text-gray-300 z-10">&larr;</button>
+      <button class="lightbox-next absolute right-4 text-white text-4xl hover:text-gray-300 z-10">&rarr;</button>
+      <div class="lightbox-content max-w-5xl max-h-full"></div>
+    `;
+    document.body.appendChild(overlay);
+    return overlay;
+  };
+
+  const lightbox = createLightbox();
+  const lightboxContent = lightbox.querySelector('.lightbox-content');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+  const prevBtn = lightbox.querySelector('.lightbox-prev');
+  const nextBtn = lightbox.querySelector('.lightbox-next');
+
+  const showLightbox = (index: number) => {
+    currentIndex = index;
+    const item = images[index];
+    const img = item?.querySelector('img');
+    
+    if (img && lightboxContent) {
+      lightboxContent.innerHTML = `<img src="${img.src}" alt="${img.alt}" class="max-w-full max-h-screen object-contain rounded-lg">`;
+      lightbox.classList.remove('hidden');
+      lightbox.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+  };
+
+  const hideLightbox = () => {
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+    document.body.style.overflow = '';
+  };
+
+  const showNext = () => {
+    currentIndex = (currentIndex + 1) % images.length;
+    showLightbox(currentIndex);
+  };
+
+  const showPrev = () => {
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    showLightbox(currentIndex);
+  };
+
+  // Event listeners
+  images.forEach((item, index) => {
+    item.addEventListener('click', (e) => {
+      e.preventDefault();
+      showLightbox(index);
+    });
+  });
+
+  closeBtn?.addEventListener('click', hideLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) hideLightbox();
+  });
+  nextBtn?.addEventListener('click', showNext);
+  prevBtn?.addEventListener('click', showPrev);
+
+  // Keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (!lightbox.classList.contains('hidden')) {
+      if (e.key === 'Escape') hideLightbox();
+      if (e.key === 'ArrowRight') showNext();
+      if (e.key === 'ArrowLeft') showPrev();
+    }
+  });
+</script>

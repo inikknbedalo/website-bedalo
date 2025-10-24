@@ -1,0 +1,51 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  content: string;
+  cta: { text: string; href: string };
+  images: ImageMetadata[];
+  imageAlts: string[];
+}
+
+const { title, content, cta, images, imageAlts } = Astro.props;
+---
+
+<section id="pariwisata" class="overflow-hidden bg-white py-20">
+  <div class="container mx-auto px-6">
+    <div class="flex flex-col items-center gap-12 md:flex-row">
+      <div class="md:w-1/2">
+        <h2 class="mb-4 text-3xl font-bold text-gray-800">
+          {title}
+        </h2>
+        <p class="mb-6 leading-relaxed text-gray-600">
+          {content}
+        </p>
+        <a
+          href={cta.href}
+          data-astro-prefetch
+          class="inline-block rounded-md bg-blue-600 px-6 py-3 font-semibold text-white transition duration-300 hover:bg-blue-700"
+        >
+          {cta.text}
+        </a>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 md:w-1/2">
+        {
+          images.map((image, index) => (
+            <div class="overflow-hidden rounded-lg shadow-md">
+              <Image
+                src={image}
+                alt={imageAlts[index] || `Tourism image ${index + 1}`}
+                width={400}
+                height={400}
+                class="h-full w-full transform object-cover transition-transform duration-300 hover:scale-105"
+              />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>

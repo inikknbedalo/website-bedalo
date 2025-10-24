@@ -1,0 +1,199 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import Banner from '../../components/sections/Banner.astro';
+import Section from '../../components/ui/Section.astro';
+import ProductCard from '../../components/content/ProductCard.astro';
+import { filterDraft } from '../../utils/collections';
+
+const allPotensi = await getCollection('potensi');
+const publishedPotensi = filterDraft(allPotensi);
+---
+
+<MainLayout
+  title="Potensi | Website Dusun Bedalo"
+  description="Temukan potensi unggulan Dusun Bedalo, mulai dari produk UMKM kreatif, hasil pertanian dan perkebunan, hingga sumber daya alam dan manusianya."
+>
+  <Banner
+    title="Potensi Dusun Bedalo"
+    subtitle="Sumber Daya dan Kreativitas Warga"
+    background="gradient"
+  />
+
+
+
+  <!-- Products Grid -->
+  <Section background="white">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        UMKM & Produk Unggulan
+      </h2>
+      <p class="mx-auto max-w-2xl text-gray-600">
+        Karya kreatif dan produk olahan dari tangan-tangan terampil warga Dusun Bedalo.
+      </p>
+    </div>
+    {
+      publishedPotensi.length > 0 ? (
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {publishedPotensi.map((product) => (
+            <ProductCard product={product} />
+          ))}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">Belum ada produk tersedia.</p>
+        </div>
+      )
+    }
+  </Section>
+
+  <!-- Akomodasi & Warung Sekitar -->
+  <Section background="gray">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        Akomodasi & Warung Sekitar
+      </h2>
+      <p class="mx-auto max-w-2xl text-gray-600">
+        Temukan tempat makan dan menginap di sekitar Dusun Bedalo.
+      </p>
+    </div>
+    <div class="mx-auto grid max-w-4xl grid-cols-1 gap-8 md:grid-cols-2">
+      <div class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl">
+        <a href="/warung" class="block">
+          <img
+            src="/images/ngedan.webp"
+            alt="Warung Makan di Bedalo"
+            width="600"
+            height="400"
+            class="h-48 w-full object-cover"
+          />
+        </a>
+        <div class="flex flex-grow flex-col p-6">
+          <h3 class="mb-2 text-xl font-bold text-gray-800">
+            <a href="/warung" class="transition-colors hover:text-orange-600">
+              Warung Sekitar
+            </a>
+          </h3>
+          <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+            Temukan tempat makan dan warung sederhana yang menyajikan hidangan lokal di sekitar Dusun Bedalo.
+          </p>
+          <div class="mt-auto border-t pt-4">
+            <a
+              href="/warung"
+              class="inline-block w-full rounded-md bg-orange-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-orange-700"
+            >
+              Lihat Daftar Warung
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-shadow hover:shadow-xl">
+        <a href="/akomodasi" class="block">
+          <img
+            src="/images/ngedan.webp"
+            alt="Penginapan di Bedalo"
+            width="600"
+            height="400"
+            class="h-48 w-full object-cover"
+          />
+        </a>
+        <div class="flex flex-grow flex-col p-6">
+          <h3 class="mb-2 text-xl font-bold text-gray-800">
+            <a href="/akomodasi" class="transition-colors hover:text-purple-600">
+              Penginapan Tersedia
+            </a>
+          </h3>
+          <p class="mb-4 line-clamp-3 flex-grow text-sm text-gray-600">
+            Cari informasi mengenai homestay atau penginapan lain yang tersedia di dekat Dusun Bedalo untuk kunjungan Anda.
+          </p>
+          <div class="mt-auto border-t pt-4">
+            <a
+              href="/akomodasi"
+              class="inline-block w-full rounded-md bg-purple-600 px-4 py-2 text-center font-semibold text-white transition duration-300 hover:bg-purple-700"
+            >
+              Lihat Daftar Penginapan
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Pertanian & Perkebunan -->
+  <Section background="white">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        Pertanian & Perkebunan
+      </h2>
+    </div>
+    <div class="flex flex-col items-center gap-12 md:flex-row">
+      <div class="md:w-1/2">
+        <img
+          src="/images/ngedan.webp"
+          alt="Lahan pertanian yang hijau dan subur di Dusun Bedalo"
+          width="800"
+          height="600"
+          class="h-full w-full rounded-lg object-cover shadow-xl"
+        />
+      </div>
+      <div class="md:w-1/2">
+        <h3 class="mb-4 text-2xl font-bold text-gray-800">
+          Kesuburan Tanah Bedalo
+        </h3>
+        <p class="mb-6 leading-relaxed text-gray-600">
+          Lahan pertanian di Dusun Bedalo sangat subur dan menjadi tumpuan hidup sebagian besar warga. 
+          Berbagai komoditas unggulan dihasilkan dari sini.
+        </p>
+        <h4 class="mb-3 font-semibold text-gray-800">Komoditas Utama:</h4>
+        <div class="grid grid-cols-2 gap-4 text-gray-700">
+          <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+            <i class="fas fa-seedling text-green-500"></i> Padi
+          </div>
+          <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+            <i class="fas fa-carrot text-yellow-600"></i> Singkong
+          </div>
+          <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+            <i class="fas fa-leaf text-green-500"></i> Sayur-mayur
+          </div>
+          <div class="flex items-center gap-3 rounded-md bg-gray-100 p-3">
+            <i class="fas fa-pepper-hot text-red-500"></i> Cabai
+          </div>
+        </div>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Potensi Lainnya -->
+  <Section background="gray">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        Potensi Lainnya
+      </h2>
+    </div>
+    <div class="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
+      <div class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg">
+        <i class="fas fa-cow mb-4 text-5xl text-blue-500"></i>
+        <h4 class="my-2 text-xl font-bold text-gray-800">Peternakan</h4>
+        <p class="text-sm text-gray-600">
+          Pengembangan ternak sapi, kambing, dan ayam untuk memenuhi kebutuhan pangan dan ekonomi warga.
+        </p>
+      </div>
+      <div class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg">
+        <i class="fas fa-fish mb-4 text-5xl text-cyan-500"></i>
+        <h4 class="my-2 text-xl font-bold text-gray-800">Perikanan</h4>
+        <p class="text-sm text-gray-600">
+          Pemanfaatan sumber air untuk budidaya ikan air tawar sebagai sumber protein dan pendapatan tambahan.
+        </p>
+      </div>
+      <div class="rounded-lg border border-gray-200 bg-white p-8 text-center transition-shadow hover:shadow-lg">
+        <i class="fas fa-users-cog mb-4 text-5xl text-gray-500"></i>
+        <h4 class="my-2 text-xl font-bold text-gray-800">
+          Jasa & Keahlian
+        </h4>
+        <p class="text-sm text-gray-600">
+          Warga memiliki keahlian di bidang pertukangan, kerajinan tangan, dan jasa lainnya yang siap membantu.
+        </p>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

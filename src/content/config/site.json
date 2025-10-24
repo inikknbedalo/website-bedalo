@@ -1,0 +1,60 @@
+{
+  "site": {
+    "title": "Dusun Bedalo",
+    "description": "Temukan pesona tersembunyi Dusun Bedalo di Gunung Kidul. Jelajahi Pantai Ngedan yang eksotis, cicipi kuliner lokal, dan kenali budaya kami. Rencanakan kunjungan Anda!",
+    "url": "https://bedalo.pages.dev",
+    "author": "Tim KKN Universitas Gadjah Mada",
+    "locale": "id_ID"
+  },
+  "contact": {
+    "phone": "+6283107581144",
+    "whatsapp": "6283107581144",
+    "email": "inikknbedalo@gmail.com",
+    "address": "Desa Krambilsawit, Kec. Saptosari, Kab. Gunungkidul, Daerah Istimewa Yogyakarta",
+    "maps": "https://maps.google.com"
+  },
+  "social": {
+    "instagram": "https://instagram.com/your-username",
+    "youtube": "https://youtube.com/your-channel",
+    "tiktok": "https://tiktok.com/@your-username",
+    "facebook": "https://facebook.com/your-profile",
+    "twitter": "https://x.com/your-handle"
+  },
+  "navigation": [
+    {
+      "label": "Beranda",
+      "href": "/",
+      "primary": false
+    },
+    {
+      "label": "Profil",
+      "href": "/profil",
+      "primary": false
+    },
+    {
+      "label": "Potensi",
+      "href": "/potensi",
+      "primary": false
+    },
+    {
+      "label": "Pariwisata",
+      "href": "/pariwisata",
+      "primary": false
+    },
+    {
+      "label": "Galeri",
+      "href": "/galeri",
+      "primary": false
+    },
+    {
+      "label": "Berita",
+      "href": "/berita",
+      "primary": false
+    },
+    {
+      "label": "Kontak",
+      "href": "/kontak",
+      "primary": true
+    }
+  ]
+}

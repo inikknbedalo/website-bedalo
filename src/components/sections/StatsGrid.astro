@@ -1,0 +1,107 @@
+---
+import { getEntry } from 'astro:content';
+import Section from '../ui/Section.astro';
+import Card from '../ui/Card.astro';
+
+interface Stat {
+  id: string;
+  label: string;
+  value: string;
+  suffix?: string | undefined;
+  icon: string;
+  description?: string | undefined;
+}
+
+interface Props {
+  stats?: Stat[] | undefined;
+}
+
+let { stats } = Astro.props;
+
+// Fetch from collection if not provided
+if (!stats) {
+  const statsData = await getEntry('statistics', 'stats');
+  // Map to ensure proper types with explicit undefined
+  stats = statsData?.data.stats.map(stat => ({
+    ...stat,
+    suffix: stat.suffix ?? undefined,
+    description: stat.description ?? undefined,
+  })) || [];
+}
+---
+
+<Section>
+  <div class="mb-12 text-center">
+    <h2 class="mb-2 text-3xl font-bold text-gray-800">
+      Statistik Dusun Bedalo
+    </h2>
+    <p class="mx-auto max-w-2xl text-gray-600">
+      Data demografi dan potensi dusun
+    </p>
+  </div>
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+    {
+      stats?.map((stat) => (
+        <Card variant="hover" padding="p-6">
+          <div class="text-center">
+            <div class="mb-3 text-blue-600">
+              <i class:list={[stat.icon, 'text-4xl']} />
+            </div>
+            <p
+              class="count-up-number text-3xl font-bold text-gray-800"
+              data-value={stat.value}
+            >
+              {stat.value}
+              {stat.suffix || ''}
+            </p>
+            <p class="text-gray-500">{stat.label}</p>
+          </div>
+        </Card>
+      ))
+    }
+  </div>
+</Section>
+
+<script>
+  import { CountUp } from 'countup.js';
+
+  function initCountUp() {
+    const elements = document.querySelectorAll('.count-up-number');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const element = entry.target as HTMLElement;
+            const value = element.getAttribute('data-value');
+            if (value) {
+              const numValue = parseInt(value, 10);
+              const countUp = new CountUp(element, numValue, {
+                duration: 2.5,
+                useEasing: true,
+                useGrouping: true,
+                suffix: element.textContent?.replace(value, '') || '',
+              });
+
+              if (!countUp.error) {
+                countUp.start();
+              }
+
+              observer.unobserve(element);
+            }
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    elements.forEach((el) => observer.observe(el));
+  }
+
+  // Initialize on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCountUp);
+  } else {
+    initCountUp();
+  }
+</script>

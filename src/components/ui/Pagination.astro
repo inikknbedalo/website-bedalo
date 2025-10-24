@@ -1,0 +1,101 @@
+---
+interface Props {
+  currentPage: number;
+  totalPages: number;
+  basePath: string;
+}
+
+const { currentPage, totalPages, basePath } = Astro.props;
+
+const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+const prevPage = currentPage > 1 ? currentPage - 1 : null;
+const nextPage = currentPage < totalPages ? currentPage + 1 : null;
+
+// Helper to get the correct URL for a page
+const getPageUrl = (page: number) => {
+  if (page === 1) {
+    // First page should be the index
+    return basePath.replace('/page', '');
+  }
+  return `${basePath}/${page}`;
+};
+
+// Show max 5 page numbers
+const getPageNumbers = () => {
+  if (totalPages <= 5) return pages;
+  
+  if (currentPage <= 3) return [1, 2, 3, 4, 5];
+  if (currentPage >= totalPages - 2) return [totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages];
+  
+  return [currentPage - 2, currentPage - 1, currentPage, currentPage + 1, currentPage + 2];
+};
+
+const pageNumbers = getPageNumbers();
+---
+
+<nav class="flex items-center justify-center gap-2" aria-label="Pagination">
+  {prevPage && (
+    <a
+      href={getPageUrl(prevPage)}
+      data-astro-prefetch
+      class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 text-gray-700 hover:bg-gray-50"
+    >
+      <i class="fas fa-chevron-left text-sm"></i>
+      <span class="hidden sm:inline">Sebelumnya</span>
+    </a>
+  )}
+
+  <div class="flex items-center gap-1">
+    {pageNumbers[0] && pageNumbers[0] > 1 && (
+      <>
+        <a
+          href={getPageUrl(1)}
+          data-astro-prefetch
+          class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          1
+        </a>
+        {pageNumbers[0] > 2 && <span class="px-2 text-gray-500">...</span>}
+      </>
+    )}
+
+    {pageNumbers.map((page) => (
+      <a
+        href={getPageUrl(page)}
+        data-astro-prefetch
+        class={`flex h-10 w-10 items-center justify-center rounded-lg border ${
+          page === currentPage
+            ? 'border-blue-600 bg-blue-600 text-white'
+            : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50'
+        }`}
+        aria-current={page === currentPage ? 'page' : undefined}
+      >
+        {page}
+      </a>
+    ))}
+
+    {pageNumbers[pageNumbers.length - 1] && pageNumbers[pageNumbers.length - 1] < totalPages && (
+      <>
+        {pageNumbers[pageNumbers.length - 1] < totalPages - 1 && <span class="px-2 text-gray-500">...</span>}
+        <a
+          href={getPageUrl(totalPages)}
+          data-astro-prefetch
+          class="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
+        >
+          {totalPages}
+        </a>
+      </>
+    )}
+  </div>
+
+  {nextPage && (
+    <a
+      href={getPageUrl(nextPage)}
+      data-astro-prefetch
+      class="flex h-10 items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 text-gray-700 hover:bg-gray-50"
+    >
+      <span class="hidden sm:inline">Selanjutnya</span>
+      <i class="fas fa-chevron-right text-sm"></i>
+    </a>
+  )}
+</nav>

@@ -1,0 +1,111 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  accommodation: CollectionEntry<'akomodasi'>;
+  class?: string;
+}
+
+const { accommodation, class: className = '' } = Astro.props;
+const { id, data } = accommodation;
+const { title, description, image, imageAlt, price, facilities, capacity, type } = data;
+
+// Format contact for WhatsApp
+const waNumber = data.contact?.replace(/\D/g, '') || '';
+const waLink = waNumber ? `https://wa.me/${waNumber}` : '#';
+---
+
+<article class:list={['accommodation-card', className]}>
+  <div
+    class="group flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl"
+  >
+    <!-- Image -->
+    <a href={`/akomodasi/${id}`} class="block overflow-hidden">
+      <Image
+        src={image}
+        alt={imageAlt}
+        widths={[400, 600]}
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-110"
+      />
+    </a>
+
+    <!-- Content -->
+    <div class="flex flex-grow flex-col p-6">
+      <!-- Title & Type -->
+      <div class="mb-2">
+        <a href={`/akomodasi/${id}`} class="group/title">
+          <h3 class="text-xl font-bold text-gray-800 transition-colors group-hover/title:text-blue-600">
+            {title}
+          </h3>
+        </a>
+        <span class="inline-block rounded-full bg-purple-100 px-3 py-1 text-xs font-semibold text-purple-700">
+          {type === 'homestay' ? 'Homestay' : 'Guest House'}
+        </span>
+      </div>
+
+      <!-- Description -->
+      <p class="mb-4 flex-grow text-sm leading-relaxed text-gray-600">
+        {description}
+      </p>
+
+      <!-- Info Grid -->
+      <div class="mb-4 space-y-2 border-t border-gray-200 pt-4">
+        <!-- Price -->
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500">Harga</span>
+          <span class="font-bold text-blue-600">{price}</span>
+        </div>
+
+        <!-- Capacity -->
+        <div class="flex items-center justify-between">
+          <span class="text-sm text-gray-500">Kapasitas</span>
+          <span class="font-semibold text-gray-700">
+            <i class="fas fa-users mr-1 text-gray-400"></i>
+            {capacity} orang
+          </span>
+        </div>
+
+        <!-- Facilities -->
+        <div class="pt-2">
+          <span class="mb-2 block text-sm text-gray-500">Fasilitas:</span>
+          <div class="flex flex-wrap gap-2">
+            {
+              facilities?.slice(0, 3).map((facility) => (
+                <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                  {facility}
+                </span>
+              ))
+            }
+            {facilities && facilities.length > 3 && (
+              <span class="rounded bg-gray-100 px-2 py-1 text-xs text-gray-600">
+                +{facilities.length - 3} lagi
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex gap-2">
+        <a
+          href={`/akomodasi/${id}`}
+          class="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-blue-700"
+        >
+          <i class="fas fa-info-circle mr-1"></i>
+          Detail
+        </a>
+        <a
+          href={waLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex-1 rounded-lg bg-green-600 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-green-700"
+        >
+          <i class="fab fa-whatsapp mr-1"></i>
+          Hubungi
+        </a>
+      </div>
+    </div>
+  </div>
+</article>

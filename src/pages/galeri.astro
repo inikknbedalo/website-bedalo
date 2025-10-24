@@ -1,0 +1,170 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
+import Banner from '../components/sections/Banner.astro';
+import Section from '../components/ui/Section.astro';
+import { getImage } from 'astro:assets';
+
+const pageContent = await getEntry('pages', 'galeri');
+
+if (!pageContent) {
+  throw new Error('Galeri page content not found');
+}
+
+const { hero, sections } = pageContent.data;
+
+// Find sections
+const fotoSection = sections?.find((s) => s.id === 'foto');
+const videoSection = sections?.find((s) => s.id === 'video');
+
+// Process images to get proper URLs
+const processedImages = fotoSection?.images ? await Promise.all(
+  fotoSection.images.map(async (image: any) => {
+    const optimizedImage = await getImage({
+      src: image.src,
+      width: 800,
+      height: 450,
+      format: 'webp'
+    });
+    const thumbnailImage = await getImage({
+      src: image.src,
+      width: 400,
+      height: 225,
+      format: 'webp'
+    });
+    return {
+      fullUrl: optimizedImage.src,
+      thumbnailUrl: thumbnailImage.src,
+      alt: image.alt,
+      category: image.category
+    };
+  })
+) : [];
+---
+
+<MainLayout title={hero.title} description={hero.subtitle}>
+  <Banner title={hero.title} subtitle={hero.subtitle} background="gradient" />
+
+  <!-- Photo Gallery Section -->
+  {
+    fotoSection && processedImages.length > 0 && (
+      <Section background="gray" id="foto">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{fotoSection.title}</h2>
+        </div>
+        
+        <div id="photo-gallery" class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {processedImages.map((image, index) => (
+            <a
+              href={image.fullUrl}
+              class="glightbox group block aspect-video overflow-hidden rounded-lg shadow-md transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl"
+              data-gallery="gallery-dusun"
+              data-aos="zoom-in"
+              data-aos-delay={100 + index * 50}
+            >
+              <img
+                src={image.thumbnailUrl}
+                alt={image.alt}
+                width="400"
+                height="225"
+                class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+                loading="lazy"
+              />
+            </a>
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Video Gallery Section -->
+  {
+    videoSection && videoSection.videos && (
+      <Section background="white" id="video">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">{videoSection.title}</h2>
+        </div>
+        
+        <div id="video-gallery" class="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-2">
+          {videoSection.videos.map((video: any, index: number) => (
+            <a
+              href={video.url}
+              class="glightbox-video group block overflow-hidden rounded-lg bg-white shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-[1.03] hover:shadow-xl"
+              data-gallery="videos"
+              data-aos="fade-up" 
+              data-aos-delay={100 + index * 100}
+            >
+              <div class="relative aspect-video">
+                <img
+                  src={video.thumbnail}
+                  alt={`Thumbnail: ${video.title}`}
+                  class="h-full w-full object-cover transition-transform duration-300"
+                />
+                <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <i class="fas fa-play text-4xl text-white"></i>
+                </div>
+              </div>
+              <div class="p-4">
+                <h3 class="font-semibold text-gray-800 transition-colors group-hover:text-blue-600">
+                  {video.title}
+                </h3>
+              </div>
+            </a>
+          ))}
+        </div>
+      </Section>
+    )
+  }
+</MainLayout>
+
+<style is:global>
+  @import 'glightbox/dist/css/glightbox.min.css';
+</style>
+
+<script>
+  import GLightbox from 'glightbox';
+
+  function initGallery() {
+    // Clean up any existing instances
+    const existingGallery = (window as any).glightboxInstance;
+    if (existingGallery) {
+      existingGallery.destroy();
+    }
+
+    // Initialize GLightbox for photo gallery
+    const photoLightbox = GLightbox({
+      selector: '.glightbox',
+      touchNavigation: true,
+      loop: true,
+      closeButton: true,
+      zoomable: true,
+      draggable: true
+    });
+
+    // Initialize GLightbox for video gallery
+    const videoLightbox = GLightbox({
+      selector: '.glightbox-video',
+      touchNavigation: true,
+      loop: true,
+      autoplayVideos: true,
+      closeButton: true,
+      plyr: {
+        config: {
+          ratio: '16:9',
+          youtube: {
+            noCookie: true,
+            rel: 0,
+            showinfo: 0,
+            iv_load_policy: 3
+          }
+        }
+      }
+    });
+
+    // Store instances for cleanup
+    (window as any).glightboxInstance = { photo: photoLightbox, video: videoLightbox };
+  }
+
+  document.addEventListener('astro:page-load', initGallery);
+  document.addEventListener('DOMContentLoaded', initGallery);
+</script>

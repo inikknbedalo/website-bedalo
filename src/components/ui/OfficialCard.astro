@@ -1,0 +1,46 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  name: string;
+  position: string;
+  photo: ImageMetadata;
+  photoAlt: string;
+  phone?: string;
+  class?: string;
+}
+
+const { name, position, photo, photoAlt, phone, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'flex items-center gap-5 rounded-lg bg-white p-6 shadow-lg transition-shadow hover:shadow-xl',
+    className,
+  ]}
+>
+  <div class="h-20 w-20 flex-shrink-0 overflow-hidden rounded-full border-2 border-gray-200">
+    <Image
+      src={photo}
+      alt={photoAlt}
+      width={80}
+      height={80}
+      class="h-full w-full object-cover"
+    />
+  </div>
+  <div>
+    <h4 class="text-lg font-bold text-gray-800">{name}</h4>
+    <p class="mb-2 text-sm text-gray-500">{position}</p>
+    {
+      phone && (
+        <a
+          href={`tel:${phone.replace(/\D/g, '')}`}
+          class="flex items-center gap-2 text-sm text-blue-600 hover:underline"
+        >
+          <i class="fas fa-phone-alt fa-xs" />
+          <span>{phone}</span>
+        </a>
+      )
+    }
+  </div>
+</div>

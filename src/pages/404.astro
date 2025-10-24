@@ -1,0 +1,84 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import Section from '../components/ui/Section.astro';
+import Button from '../components/ui/Button.astro';
+---
+
+<MainLayout title="404 - Halaman Tidak Ditemukan" description="Halaman yang Anda cari tidak ditemukan">
+  <Section background="white">
+    <div class="mx-auto max-w-2xl py-16 text-center">
+      <div class="mb-8">
+        <i class="fas fa-exclamation-triangle text-8xl text-yellow-500"></i>
+      </div>
+
+      <h1 class="mb-4 text-6xl font-bold text-gray-800">404</h1>
+
+      <h2 class="mb-4 text-2xl font-semibold text-gray-700">
+        Halaman Tidak Ditemukan
+      </h2>
+
+      <p class="mb-8 text-gray-600">
+        Maaf, halaman yang Anda cari tidak dapat ditemukan. Mungkin halaman telah dipindahkan atau
+        dihapus.
+      </p>
+
+      <div class="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <Button href="/" variant="primary" size="lg">
+          <i class="fas fa-home"></i>
+          Kembali ke Beranda
+        </Button>
+        <Button href="/peta-situs" variant="outline" size="lg">
+          <i class="fas fa-sitemap"></i>
+          Lihat Peta Situs
+        </Button>
+      </div>
+
+      <div class="mt-12">
+        <h3 class="mb-4 text-lg font-semibold text-gray-800">
+          Halaman Populer
+        </h3>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a
+            href="/profil"
+            data-astro-prefetch
+            class="text-blue-600 hover:underline"
+          >
+            Profil Dusun
+          </a>
+          <span class="text-gray-400">•</span>
+          <a
+            href="/berita"
+            data-astro-prefetch
+            class="text-blue-600 hover:underline"
+          >
+            Berita
+          </a>
+          <span class="text-gray-400">•</span>
+          <a
+            href="/potensi"
+            data-astro-prefetch
+            class="text-blue-600 hover:underline"
+          >
+            Potensi
+          </a>
+          <span class="text-gray-400">•</span>
+          <a
+            href="/pariwisata"
+            data-astro-prefetch
+            class="text-blue-600 hover:underline"
+          >
+            Pariwisata
+          </a>
+          <span class="text-gray-400">•</span>
+          <a
+            href="/kontak"
+            data-astro-prefetch
+            class="text-blue-600 hover:underline"
+          >
+            Kontak
+          </a>
+        </div>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

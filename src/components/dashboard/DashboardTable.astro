@@ -1,0 +1,107 @@
+---
+/**
+ * Dashboard Data Table Component
+ * Displays aspirations data with search, filter, and pagination
+ */
+---
+
+<section class="rounded-lg bg-white p-6 shadow-lg">
+  <h3 class="mb-4 text-lg font-semibold text-gray-700">
+    Detail Aspirasi
+  </h3>
+
+  <!-- Filters -->
+  <div class="mb-4 flex flex-col gap-4 sm:flex-row">
+    <input
+      type="text"
+      id="search-input"
+      placeholder="Cari Nama/Subjek/Pesan..."
+      class="flex-grow rounded-md border p-2 outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
+    />
+    <select
+      id="filter-select"
+      class="w-full sm:w-48 rounded-md border p-2 outline-none focus:border-transparent focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Semua Subjek</option>
+    </select>
+    <button
+      id="reset-filters"
+      class="rounded-md bg-gray-500 px-4 py-2 text-white transition-colors hover:bg-gray-600"
+    >
+      Reset
+    </button>
+  </div>
+
+  <!-- Table -->
+  <div class="overflow-x-auto min-h-[330px]">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+          >
+            Timestamp
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+          >
+            Nama
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+          >
+            Kontak
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+          >
+            Subjek
+          </th>
+          <th
+            scope="col"
+            class="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase"
+          >
+            Pesan
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        id="data-table-body"
+        class="divide-y divide-gray-200 bg-white"
+      >
+        <tr>
+          <td colspan="5" class="p-4 text-center text-gray-500">
+            Memuat data tabel...
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
+    <span id="page-info" class="text-sm text-gray-700">
+      Halaman 0 dari 0
+    </span>
+    <div class="space-x-2">
+      <button
+        id="prev-page"
+        class="rounded-md bg-blue-500 px-3 py-1 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled
+      >
+        Sebelumnya
+      </button>
+      <button
+        id="next-page"
+        class="rounded-md bg-blue-500 px-3 py-1 text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+        disabled
+      >
+        Berikutnya
+      </button>
+    </div>
+  </div>
+</section>

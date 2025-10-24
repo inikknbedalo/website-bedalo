@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  subtitle: string;
+  image: ImageMetadata;
+  imageAlt: string;
+  cta?: {
+    text: string;
+    href: string;
+  };
+  overlay?: boolean;
+}
+
+const { title, subtitle, image, imageAlt, cta, overlay = true } = Astro.props;
+---
+
+<section class="relative h-[60vh] bg-gray-200 md:h-[80vh]">
+  <Image
+    src={image}
+    alt={imageAlt}
+    class="absolute inset-0 h-full w-full object-cover"
+    loading="eager"
+    fetchpriority="high"
+  />
+  {overlay && <div class="absolute inset-0 z-10 bg-black bg-opacity-50"></div>}
+  <div
+    class="relative z-20 container mx-auto flex h-full flex-col items-center justify-center px-6 text-center text-white"
+  >
+    <h1 class="mb-4 text-4xl font-bold leading-tight md:text-6xl">
+      {title}
+    </h1>
+    <p class="max-w-3xl text-lg md:text-xl">
+      {subtitle}
+    </p>
+    {
+      cta && (
+        <a
+          href={cta.href}
+          data-astro-prefetch
+          class="mt-8 transform rounded-full bg-blue-600 px-8 py-3 font-semibold text-white transition duration-300 hover:scale-105 hover:bg-blue-700"
+        >
+          {cta.text}
+        </a>
+      )
+    }
+  </div>
+</section>

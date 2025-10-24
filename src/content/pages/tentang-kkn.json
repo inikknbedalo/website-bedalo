@@ -1,0 +1,91 @@
+{
+  "page": "tentang-kkn",
+  "hero": {
+    "title": "Tentang KKN 117 Bedalo",
+    "subtitle": "Tim Pengabdian Masyarakat UIN Sunan Kalijaga",
+    "image": "../../assets/images/kkn-team.webp",
+    "imageAlt": "Tim KKN UIN Sunan Kalijaga Angkatan 117 di Dusun Bedalo"
+  },
+  "intro": {
+    "title": "Pengantar",
+    "subtitle": "Sekilas tentang program KKN kami di Dusun Bedalo.",
+    "content": "Kami adalah kelompok mahasiswa dari Universitas Islam Negeri (UIN) Sunan Kalijaga Yogyakarta yang melaksanakan Kuliah Kerja Nyata (KKN) Reguler Angkatan 117 di Dusun Bedalo, Desa Krambilsawit, Kecamatan Saptosari, Kabupaten Gunungkidul. Periode pengabdian kami berlangsung dari tanggal 1 Juli hingga 18 Agustus 2024.\n\nDengan tema besar \"Penguatan Kapasitas Masyarakat Berbasis Kearifan Lokal Menuju Desa Mandiri\", tim kami berfokus pada berbagai program kerja yang bertujuan untuk memberdayakan masyarakat Dusun Bedalo. Salah satu inisiatif utama kami adalah pengembangan website dusun ini sebagai platform digital untuk promosi potensi lokal, penyebaran informasi, dan peningkatan partisipasi warga.\n\nMelalui website ini, kami berharap dapat membantu Dusun Bedalo untuk lebih dikenal luas, memudahkan akses informasi bagi warga dan pihak luar, serta mendukung upaya digitalisasi administrasi dan promosi pariwisata serta produk UMKM lokal. Kami berterima kasih atas sambutan hangat dan kerjasama dari seluruh warga Dusun Bedalo selama pelaksanaan KKN.",
+    "image": "../../assets/images/kkn-team.webp",
+    "imageAlt": "Tim KKN UIN Sunan Kalijaga Angkatan 117 di Dusun Bedalo"
+  },
+  "team": {
+    "title": "Tim KKN 117 Bedalo",
+    "members": [
+      {
+        "name": "Alisya Putri Rahmadhiani",
+        "major": "Ilmu Komunikasi",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Alisya Putri Rahmadhiani",
+        "instagram": "#"
+      },
+      {
+        "name": "Ardiandi Deya Shidiq",
+        "major": "Pengembangan Masyarakat Islam",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Ardiandi Deya Shidiq",
+        "instagram": "#"
+      },
+      {
+        "name": "Asyadu Rahman",
+        "major": "Teknik Informatika",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Asyadu Rahman",
+        "instagram": "#"
+      },
+      {
+        "name": "Atha Aulia Nur Syafitri",
+        "major": "Pendidikan Guru Madrasah Ibtidaiyah",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Atha Aulia Nur Syafitri",
+        "instagram": "#"
+      },
+      {
+        "name": "Dika Izki Fadillah",
+        "major": "Studi Agama-Agama",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Dika Izki Fadillah",
+        "instagram": "#"
+      },
+      {
+        "name": "Embun Lahfah El Khalieqy",
+        "major": "Ilmu Kesejahteraan Sosial",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Embun Lahfah El Khalieqy",
+        "instagram": "#"
+      },
+      {
+        "name": "Hartini Berma Ningsi",
+        "major": "Manajemen Pendidikan Islam",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Hartini Berma Ningsi",
+        "instagram": "#"
+      },
+      {
+        "name": "Meta Indiyasari",
+        "major": "Pendidikan Bahasa Arab",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Meta Indiyasari",
+        "instagram": "#"
+      },
+      {
+        "name": "Muhammad Aditya",
+        "major": "Teknik Informatika",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Muhammad Aditya",
+        "instagram": "#"
+      },
+      {
+        "name": "Titi Prihartati",
+        "major": "Pendidikan Agama Islam",
+        "photo": "../../assets/images/profil.png",
+        "photoAlt": "Foto Titi Prihartati",
+        "instagram": "#"
+      }
+    ]
+  }
+}

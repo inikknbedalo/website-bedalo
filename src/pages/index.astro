@@ -1,0 +1,134 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry, getCollection } from 'astro:content';
+import Hero from '../components/sections/Hero.astro';
+import WelcomeSection from '../components/sections/WelcomeSection.astro';
+import StatsGrid from '../components/sections/StatsGrid.astro';
+import FeatureCard from '../components/sections/FeatureCard.astro';
+import TourismSection from '../components/sections/TourismSection.astro';
+import GalleryPreview from '../components/sections/GalleryPreview.astro';
+import NewsCard from '../components/content/NewsCard.astro';
+import Section from '../components/ui/Section.astro';
+import StructuredData from '../components/seo/StructuredData.astro';
+import { sortByDate, filterDraft } from '../utils/collections';
+
+const homeContent = await getEntry('pages', 'home');
+
+if (!homeContent) {
+  throw new Error('Home page content not found');
+}
+
+const { hero, welcome, sections } = homeContent.data;
+
+// Fetch recent news
+const allBerita = await getCollection('berita');
+const recentBerita = sortByDate(filterDraft(allBerita), 'desc').slice(0, 3);
+
+// Extract section data
+const potensiSection = sections.find((s) => s.id === 'potensi');
+const pariwisataSection = sections.find((s) => s.id === 'pariwisata');
+const galeriSection = sections.find((s) => s.id === 'galeri');
+---
+
+<MainLayout title="Beranda">
+  <StructuredData type="Organization" />
+  <!-- Hero Section -->
+  <Hero
+    title={hero.title}
+    subtitle={hero.subtitle}
+    image={hero.image}
+    imageAlt={hero.imageAlt}
+    cta={hero.cta}
+  />
+
+  <!-- Welcome Section with Profile -->
+  <Section background="white">
+    <WelcomeSection heading={welcome.title} content={welcome.content} profile={welcome.profile} />
+  </Section>
+
+  <!-- Potensi Overview Section -->
+  {
+    potensiSection && (
+      <Section background="gray" id={potensiSection.id}>
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">
+            {potensiSection.title}
+          </h2>
+          <p class="mx-auto max-w-2xl text-gray-600">
+            {potensiSection.content}
+          </p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {potensiSection.items.map((item) => (
+            <FeatureCard
+              icon={item.icon}
+              title={item.title}
+              description={item.description}
+              link={item.link}
+            />
+          ))}
+        </div>
+      </Section>
+    )
+  }
+
+  <!-- Statistics Section -->
+  <StatsGrid />
+
+  <!-- Pariwisata & Budaya Section -->
+  {
+    pariwisataSection && pariwisataSection.cta && pariwisataSection.images && (
+      <TourismSection
+        title={pariwisataSection.title}
+        content={pariwisataSection.content}
+        cta={pariwisataSection.cta}
+        images={pariwisataSection.images}
+        imageAlts={pariwisataSection.imageAlts || []}
+      />
+    )
+  }
+
+  <!-- Gallery Preview Section -->
+  {
+    galeriSection && galeriSection.cta && galeriSection.images && (
+      <Section background="gray">
+        <GalleryPreview
+          title={galeriSection.title}
+          images={galeriSection.images}
+          imageAlts={galeriSection.imageAlts || []}
+          cta={galeriSection.cta}
+        />
+      </Section>
+    )
+  }
+
+  <!-- Recent News Section -->
+  {
+    recentBerita.length > 0 && (
+      <Section background="white">
+        <div class="mb-12 text-center">
+          <h2 class="mb-2 text-3xl font-bold text-gray-800">Berita Terbaru</h2>
+          <p class="mx-auto max-w-2xl text-gray-600">
+            Update terkini dari Dusun Bedalo
+          </p>
+        </div>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {recentBerita.map((article) => (
+            <NewsCard article={article} />
+          ))}
+        </div>
+        <div class="mt-8 text-center">
+          <a
+            href="/berita"
+            data-astro-prefetch
+            class="inline-flex items-center gap-2 font-semibold text-blue-600 hover:underline"
+          >
+            Lihat Semua Berita
+            <i class="fas fa-arrow-right" />
+          </a>
+        </div>
+      </Section>
+    )
+  }
+</MainLayout>
+

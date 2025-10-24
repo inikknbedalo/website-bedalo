@@ -1,0 +1,85 @@
+---
+interface Props {
+  type?: 'Organization' | 'Article' | 'Product' | 'Place' | 'LocalBusiness';
+  data?: Record<string, unknown>;
+}
+
+const { type = 'Organization', data = {} } = Astro.props;
+
+let schema: Record<string, unknown> = {
+  '@context': 'https://schema.org',
+};
+
+if (type === 'Organization') {
+  schema = {
+    ...schema,
+    '@type': 'Organization',
+    name: 'Dusun Bedalo',
+    url: 'https://bedalo.pages.dev',
+    logo: 'https://bedalo.pages.dev/assets/images/logo.png',
+    description: 'Website resmi Dusun Bedalo, Krambilsawit, Saptosari, Gunungkidul',
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Saptosari',
+      addressRegion: 'Gunungkidul',
+      addressCountry: 'ID',
+    },
+    ...data,
+  };
+} else if (type === 'Article') {
+  schema = {
+    ...schema,
+    '@type': 'Article',
+    headline: data.title as string,
+    description: data.description as string,
+    image: data.image as string,
+    datePublished: data.datePublished as string,
+    dateModified: data.dateModified as string,
+    author: {
+      '@type': 'Person',
+      name: data.author as string,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Dusun Bedalo',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://bedalo.pages.dev/assets/images/logo.png',
+      },
+    },
+    ...data,
+  };
+} else if (type === 'Product') {
+  schema = {
+    ...schema,
+    '@type': 'Product',
+    name: data.name as string,
+    description: data.description as string,
+    image: data.image as string,
+    offers: {
+      '@type': 'Offer',
+      price: data.price as string,
+      priceCurrency: 'IDR',
+      availability: 'https://schema.org/InStock',
+    },
+    ...data,
+  };
+} else if (type === 'Place') {
+  schema = {
+    ...schema,
+    '@type': 'TouristAttraction',
+    name: data.name as string,
+    description: data.description as string,
+    image: data.image as string,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: 'Saptosari',
+      addressRegion: 'Gunungkidul',
+      addressCountry: 'ID',
+    },
+    ...data,
+  };
+}
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />

@@ -1,0 +1,83 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import Banner from '../../components/sections/Banner.astro';
+import Section from '../../components/ui/Section.astro';
+import AccommodationCard from '../../components/ui/AccommodationCard.astro';
+
+const allAccommodation = await getCollection('akomodasi');
+const publishedAccommodation = allAccommodation.filter((item) => !item.data.draft);
+---
+
+<MainLayout
+  title="Akomodasi Dusun Bedalo"
+  description="Daftar penginapan dan homestay di Dusun Bedalo"
+>
+  <Banner
+    title="Daftar Akomodasi"
+    subtitle="Penginapan Nyaman di Dusun Bedalo"
+    background="purple"
+  />
+
+  <!-- Info Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-3xl text-center">
+      <div class="mb-8 flex justify-center">
+        <i class="fas fa-info-circle text-5xl text-gray-400"></i>
+      </div>
+      <h2 class="mb-4 text-2xl font-bold text-gray-800">Informasi Penginapan</h2>
+      <p class="leading-relaxed text-gray-600">
+        Berikut adalah beberapa pilihan penginapan seperti homestay yang tersedia di sekitar
+        Dusun Bedalo. Silakan hubungi kontak yang tertera untuk informasi ketersediaan dan
+        pemesanan.
+      </p>
+    </div>
+  </Section>
+
+  <!-- Accommodation List -->
+  <Section background="gray" id="daftar-penginapan">
+    <div class="mb-12 text-center">
+      <h2 class="mb-2 text-3xl font-bold text-gray-800">
+        <i class="fas fa-bed mr-2 text-purple-600"></i>
+        Pilihan Penginapan
+      </h2>
+    </div>
+
+    {
+      publishedAccommodation.length > 0 ? (
+        <div class="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {publishedAccommodation.map((accommodation) => (
+            <AccommodationCard accommodation={accommodation} />
+          ))}
+        </div>
+      ) : (
+        <div class="rounded-lg bg-white p-12 text-center shadow-lg">
+          <i class="fas fa-bed mb-4 text-5xl text-gray-300"></i>
+          <p class="text-gray-600">Belum ada penginapan yang terdaftar.</p>
+        </div>
+      )
+    }
+  </Section>
+
+  <!-- CTA Section -->
+  <Section background="white">
+    <div class="mx-auto max-w-2xl text-center">
+      <div
+        class="rounded-xl bg-gradient-to-r from-purple-600 to-indigo-700 p-8 text-white shadow-xl"
+      >
+        <h2 class="mb-4 text-2xl font-bold">Punya Penginapan?</h2>
+        <p class="mb-6 text-purple-100">
+          Daftarkan penginapan Anda untuk muncul di halaman ini dan menjangkau lebih banyak
+          wisatawan.
+        </p>
+        <a
+          href="/kontak"
+          class="inline-block rounded-lg bg-white px-6 py-3 font-semibold text-purple-600 transition-colors hover:bg-purple-50"
+        >
+          <i class="fas fa-envelope mr-2"></i>
+          Hubungi Kami
+        </a>
+      </div>
+    </div>
+  </Section>
+</MainLayout>

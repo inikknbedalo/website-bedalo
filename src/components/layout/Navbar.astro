@@ -1,0 +1,110 @@
+---
+import { getEntry } from 'astro:content';
+
+const siteConfig = await getEntry('config', 'site');
+
+if (!siteConfig) {
+  throw new Error('Site configuration not found');
+}
+
+const { navigation, site } = siteConfig.data;
+const currentPath = Astro.url.pathname;
+---
+
+<header class="sticky top-0 z-50 bg-white shadow-md">
+  <nav
+    class="container mx-auto flex items-center justify-between px-6 py-4"
+    role="navigation"
+    aria-label="Navigasi utama"
+  >
+    <a href="/" class="text-2xl font-bold text-gray-800" aria-label={`${site.title} - Beranda`}>
+      {site.title}
+    </a>
+    <div class="hidden items-center space-x-6 md:flex">
+      {
+        navigation.map((item) => {
+          const isActive = currentPath === item.href || currentPath === `${item.href}/`;
+          const isPrimary = item.primary;
+
+          return (
+            <a
+              href={item.href}
+              data-astro-prefetch
+              class:list={[
+                'transition duration-300',
+                {
+                  'border-b-2 border-blue-600 font-semibold text-blue-600': isActive && !isPrimary,
+                  'text-gray-600 hover:text-blue-600': !isActive && !isPrimary,
+                  'rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700':
+                    isPrimary && !isActive,
+                  'rounded-md bg-blue-700 px-4 py-2 text-white': isPrimary && isActive,
+                },
+              ]}
+            >
+              {item.label}
+            </a>
+          );
+        })
+      }
+    </div>
+    <div class="md:hidden">
+      <button
+        id="mobile-menu-button"
+        class="rounded p-2 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-label="Buka menu navigasi"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <svg
+          class="h-6 w-6"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+  <div id="mobile-menu" class="absolute hidden w-full bg-white shadow-lg md:hidden">
+    {
+      navigation.map((item) => {
+        const isActive = currentPath === item.href || currentPath === `${item.href}/`;
+
+        return (
+          <a
+            href={item.href}
+            data-astro-prefetch
+            class:list={[
+              'block px-6 py-3',
+              {
+                'bg-gray-100 text-blue-600': isActive,
+                'text-gray-600 hover:bg-gray-100': !isActive,
+              },
+            ]}
+          >
+            {item.label}
+          </a>
+        );
+      })
+    }
+  </div>
+</header>
+
+<script>
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      const isHidden = mobileMenu.classList.contains('hidden');
+      mobileMenu.classList.toggle('hidden');
+      mobileMenuButton.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+    });
+  }
+</script>

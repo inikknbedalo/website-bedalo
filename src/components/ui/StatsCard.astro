@@ -1,0 +1,25 @@
+---
+interface Props {
+  icon: string;
+  title: string;
+  value: string;
+  description: string;
+  class?: string;
+}
+
+const { icon, title, value, description, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={[
+    'rounded-lg bg-white p-8 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:scale-105 hover:shadow-xl',
+    className,
+  ]}
+>
+  <div class="mb-4 flex items-center justify-center">
+    <i class:list={[icon, 'text-4xl text-blue-600']}></i>
+  </div>
+  <h3 class="mb-2 text-center text-xl font-bold text-gray-800">{title}</h3>
+  <p class="mb-2 text-center text-3xl font-extrabold text-blue-600">{value}</p>
+  <p class="text-center text-sm text-gray-600">{description}</p>
+</div>

@@ -1,0 +1,31 @@
+---
+interface Props {
+  id?: string;
+  padding?: 'sm' | 'md' | 'lg';
+  background?: 'white' | 'gray' | 'transparent';
+  class?: string;
+}
+
+const { id, padding = 'md', background = 'transparent', class: className = '' } = Astro.props;
+
+const paddingClasses = {
+  sm: 'py-12 md:py-16',
+  md: 'py-16 md:py-20',
+  lg: 'py-20 md:py-24',
+};
+
+const backgroundClasses = {
+  white: 'bg-white',
+  gray: 'bg-gray-50',
+  transparent: '',
+};
+---
+
+<section
+  id={id}
+  class:list={['overflow-hidden', paddingClasses[padding], backgroundClasses[background], className]}
+>
+  <div class="container mx-auto px-6">
+    <slot />
+  </div>
+</section>

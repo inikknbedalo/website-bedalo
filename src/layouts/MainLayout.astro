@@ -1,0 +1,32 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Navbar from '../components/layout/Navbar.astro';
+import Footer from '../components/layout/Footer.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonicalURL?: string;
+}
+
+const { title, description, image, canonicalURL } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} image={image} canonicalURL={canonicalURL}>
+  <!-- Skip to main content link for accessibility -->
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-blue-600 focus:px-4 focus:py-2 focus:text-white"
+  >
+    Lompat ke konten utama
+  </a>
+
+  <Navbar />
+
+  <main id="main-content">
+    <slot />
+  </main>
+
+  <Footer />
+</BaseLayout>

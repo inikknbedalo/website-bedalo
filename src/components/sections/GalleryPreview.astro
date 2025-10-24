@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  images: ImageMetadata[];
+  imageAlts: string[];
+  cta: { text: string; href: string };
+}
+
+const { title, images, imageAlts, cta } = Astro.props;
+---
+
+<div class="text-center">
+  <h2 class="mb-12 text-3xl font-bold text-gray-800">
+    {title}
+  </h2>
+
+  <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+    {
+      images.map((image, index) => (
+        <button
+          type="button"
+          class="gallery-item group block aspect-video w-full overflow-hidden rounded-lg shadow-md cursor-pointer border-0 p-0 bg-transparent"
+          data-lightbox="gallery"
+          aria-label={imageAlts[index] || `View gallery image ${index + 1}`}
+        >
+          <Image
+            src={image}
+            alt={imageAlts[index] || `Gallery image ${index + 1}`}
+            width={400}
+            height={225}
+            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+        </button>
+      ))
+    }
+  </div>
+
+  <a
+    href={cta.href}
+    data-astro-prefetch
+    class="mt-12 inline-block rounded-md border border-gray-300 bg-white px-8 py-3 font-semibold text-gray-800 transition duration-300 hover:bg-gray-100"
+  >
+    {cta.text}
+  </a>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    galleryItems.forEach((item) => {
+      item.addEventListener('click', (e) => {
+        e.preventDefault();
+        // Lightbox functionality would be triggered here
+        // For now, this is just a placeholder for future lightbox integration
+      });
+    });
+  });
+</script>

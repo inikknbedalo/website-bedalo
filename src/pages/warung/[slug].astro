@@ -1,0 +1,140 @@
+---
+import MainLayout from '../../layouts/MainLayout.astro';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+import Section from '../../components/ui/Section.astro';
+import Card from '../../components/ui/Card.astro';
+
+export async function getStaticPaths() {
+  const allWarung = await getCollection('warung');
+  
+  return allWarung.map((warung) => ({
+    params: { slug: warung.id.replace(/\.md$/, '') },
+    props: { warung },
+  }));
+}
+
+interface Props {
+  warung: CollectionEntry<'warung'>;
+}
+
+const { warung } = Astro.props;
+const { data } = warung;
+const { Content } = await render(warung);
+
+const waNumber = data.contact?.replace(/\D/g, '') || '';
+const waLink = waNumber ? `https://wa.me/${waNumber}?text=Halo, saya ingin tanya tentang ${data.title}` : '#';
+---
+
+<MainLayout title={data.title} description={data.description}>
+
+  <!-- Main Content -->
+  <Section background="white">
+    <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-3">
+      <!-- Left: Image & Quick Info -->
+      <div class="lg:col-span-1">
+        <!-- Image -->
+        <div class="sticky top-24">
+          <Image
+            src={data.image}
+            alt={data.imageAlt}
+            class="mb-6 aspect-[4/3] w-full rounded-lg object-cover shadow-xl"
+            widths={[400, 600]}
+            sizes="(max-width: 1024px) 100vw, 33vw"
+          />
+
+          <!-- Quick Info Card -->
+          <Card variant="default" padding="p-6">
+            <h3 class="mb-4 text-lg font-bold text-gray-800">Informasi</h3>
+
+            <div class="space-y-3">
+              <!-- Type -->
+              <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <span class="text-sm text-gray-600">Jenis</span>
+                <span class="rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-700">
+                  {data.type.charAt(0).toUpperCase() + data.type.slice(1)}
+                </span>
+              </div>
+
+              <!-- Owner -->
+              <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <span class="text-sm text-gray-600">Pemilik</span>
+                <span class="font-semibold text-gray-700">{data.owner}</span>
+              </div>
+
+              <!-- Opening Hours -->
+              <div class="flex items-center justify-between border-b border-gray-200 pb-3">
+                <span class="text-sm text-gray-600">Jam Buka</span>
+                <span class="text-sm font-medium text-gray-700">
+                  <i class="far fa-clock mr-1 text-gray-400"></i>
+                  {data.openingHours}
+                </span>
+              </div>
+
+              <!-- Address -->
+              <div class="border-b border-gray-200 pb-3">
+                <span class="mb-1 block text-sm text-gray-600">Alamat</span>
+                <p class="text-sm font-medium text-gray-700">
+                  <i class="fas fa-map-marker-alt mr-1 text-gray-400"></i>
+                  {data.address}
+                </p>
+              </div>
+
+              <!-- Contact Button -->
+              <a
+                href={waLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="mt-4 block w-full rounded-lg bg-green-600 px-4 py-3 text-center font-semibold text-white transition-colors hover:bg-green-700"
+              >
+                <i class="fab fa-whatsapp mr-2"></i>
+                Hubungi via WhatsApp
+              </a>
+            </div>
+          </Card>
+        </div>
+      </div>
+
+      <!-- Right: Description & Details -->
+      <div class="lg:col-span-2">
+        <!-- Description -->
+        <Card variant="default" padding="p-8" class="mb-6">
+          <article class="prose prose-lg max-w-none">
+            <Content />
+          </article>
+        </Card>
+
+        <!-- Specialties -->
+        <Card variant="default" padding="p-8">
+          <h3 class="mb-4 text-xl font-bold text-gray-800">
+            <i class="fas fa-star mr-2 text-yellow-500"></i>
+            Menu/Produk Unggulan
+          </h3>
+          <div class="grid grid-cols-2 gap-4 sm:grid-cols-3">
+            {
+              data.specialties.map((specialty) => (
+                <div class="flex items-center gap-2 rounded-lg bg-orange-50 p-3 text-gray-700">
+                  <i class="fas fa-check-circle text-orange-600" />
+                  <span>{specialty}</span>
+                </div>
+              ))
+            }
+          </div>
+        </Card>
+      </div>
+    </div>
+  </Section>
+
+  <!-- Back Button -->
+  <Section background="gray">
+    <div class="text-center">
+      <a
+        href="/warung"
+        class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 font-semibold text-gray-700 shadow-md transition-colors hover:bg-gray-50"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Kembali ke Daftar Warung
+      </a>
+    </div>
+  </Section>
+</MainLayout>

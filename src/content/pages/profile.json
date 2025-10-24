@@ -1,0 +1,95 @@
+{
+  "page": "profile",
+  "hero": {
+    "title": "Tentang Dusun Bedalo",
+    "subtitle": "Mengenal Lebih Dekat Sejarah, Visi, dan Warga Kami",
+    "image": "../../assets/images/ngedan.webp",
+    "imageAlt": "Dusun Bedalo"
+  },
+  "sections": [
+    {
+      "id": "sejarah",
+      "title": "Sejarah Singkat",
+      "subtitle": "Jejak Langkah Dusun Bedalo",
+      "content": "Dusun Bedalo adalah salah satu dari 10 dusun yang berada di wilayah Kalurahan Krambilsawit, Kapanewon Saptosari, Kabupaten Gunungkidul. Dusun ini terdiri dari 3 Rukun Tetangga (RT) dan 1 Rukun Warga (RW).\n\nNama 'Bedalo' sendiri memiliki sejarah unik. Menurut cerita turun-temurun, nama ini berasal dari kata 'Bedhol' (pindah) dan 'Loyo' (lemas/lesu). Konon, ini menggambarkan perjuangan para leluhur saat berpindah dan membuka lahan di wilayah ini."
+    },
+    {
+      "id": "demographics",
+      "title": "Demografi Dusun",
+      "subtitle": "Data kependudukan Dusun Bedalo berdasarkan survei terakhir.",
+      "items": [
+        {
+          "icon": "fas fa-users",
+          "title": "Jumlah KK",
+          "value": "120",
+          "description": "",
+          "color": "blue"
+        },
+        {
+          "icon": "fas fa-user-friends",
+          "title": "Jumlah Warga",
+          "value": "450",
+          "description": "",
+          "color": "green"
+        },
+        {
+          "icon": "fas fa-male",
+          "title": "Laki-laki",
+          "value": "230",
+          "description": "",
+          "color": "blue"
+        },
+        {
+          "icon": "fas fa-female",
+          "title": "Perempuan",
+          "value": "220",
+          "description": "",
+          "color": "pink"
+        }
+      ],
+      "livelihood": {
+        "icon": "fas fa-tractor",
+        "title": "Mata Pencaharian Utama",
+        "value": "Petani, Pedagang, Buruh, Wiraswasta",
+        "color": "yellow"
+      }
+    },
+    {
+      "id": "structure",
+      "title": "Struktur Pemerintahan",
+      "subtitle": "Perangkat Dusun Bedalo",
+      "showOfficials": true
+    },
+    {
+      "id": "peta",
+      "title": "Peta Wilayah",
+      "subtitle": "",
+      "mapUrl": "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15797.74797175791!2d110.53610939516627!3d-8.15849807963394!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e7bb35c355f053d%3A0x60c0035080f8369!2sBedalo%2C%20Krambilsawit%2C%20Saptosari%2C%20Gunung%20Kidul%20Regency%2C%20Special%20Region%20of%20Yogyakarta!5e0!3m2!1sen!2sid!4v1692258838583!5m2!1sen!2sid"
+    },
+    {
+      "id": "visi-misi",
+      "title": "Visi & Misi",
+      "content": "",
+      "items": [
+        {
+          "type": "visi",
+          "icon": "fas fa-eye",
+          "title": "Visi",
+          "content": "Terwujudnya masyarakat Dusun Bedalo yang guyub rukun, berbudaya, berdaya saing, dan sejahtera."
+        },
+        {
+          "type": "misi",
+          "icon": "fas fa-bullseye",
+          "title": "Misi",
+          "items": [
+            "Meningkatkan kerukunan dan semangat gotong royong antar warga.",
+            "Melestarikan dan mengembangkan potensi seni dan budaya lokal.",
+            "Mendorong pertumbuhan UMKM dan kreativitas ekonomi warga.",
+            "Meningkatkan kualitas sumber daya manusia melalui pendidikan dan pelatihan.",
+            "Memelihara infrastruktur dan lingkungan dusun yang bersih dan asri."
+          ]
+        }
+      ]
+    }
+  ]
+}

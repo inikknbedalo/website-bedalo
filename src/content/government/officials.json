@@ -1,0 +1,54 @@
+{
+  "officials": [
+    {
+      "id": "kepala-dusun",
+      "name": "Sumindar",
+      "position": "Kepala Dusun",
+      "period": "2020-2026",
+      "photo": "../../assets/images/profil.jpg",
+      "contact": "",
+      "description": "Memimpin dan mengkoordinasikan seluruh kegiatan pemerintahan di Dusun Bedalo",
+      "photoAlt": "Foto Sumindar"
+    },
+    {
+      "id": "ketua-rw",
+      "name": "Walyono",
+      "position": "Ketua RW 10",
+      "period": "2020-2026",
+      "photo": "../../assets/images/profil.jpg",
+      "contact": "",
+      "description": "Mengkoordinasikan kegiatan di tingkat Rukun Warga",
+      "photoAlt": "Foto Walyono"
+    },
+    {
+      "id": "ketua-rt-01",
+      "name": "Sukarman",
+      "position": "Ketua RT 01",
+      "period": "2020-2026",
+      "photo": "../../assets/images/profil.jpg",
+      "contact": "",
+      "description": "Mengurus administrasi dan kegiatan warga di RT 01",
+      "photoAlt": "Foto Sukarman"
+    },
+    {
+      "id": "ketua-rt-02",
+      "name": "Tugiman",
+      "position": "Ketua RT 02",
+      "period": "2020-2026",
+      "photo": "../../assets/images/profil.jpg",
+      "contact": "",
+      "description": "Mengurus administrasi dan kegiatan warga di RT 02",
+      "photoAlt": "Foto Tugiman"
+    },
+    {
+      "id": "ketua-rt-03",
+      "name": "Sugiyanto",
+      "position": "Ketua RT 03",
+      "period": "2020-2026",
+      "photo": "../../assets/images/profil.jpg",
+      "contact": "",
+      "description": "Mengurus administrasi dan kegiatan warga di RT 03",
+      "photoAlt": "Foto Sugiyanto"
+    }
+  ]
+}

@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths } from 'astro';
+import MainLayout from '../../../layouts/MainLayout.astro';
+import { getCollection } from 'astro:content';
+import Banner from '../../../components/sections/Banner.astro';
+import Section from '../../../components/ui/Section.astro';
+import NewsCard from '../../../components/content/NewsCard.astro';
+import Pagination from '../../../components/ui/Pagination.astro';
+import { sortByDate, filterDraft } from '../../../utils/collections';
+import { ARTICLES_PER_PAGE } from '../../../config';
+
+export const getStaticPaths = (async () => {
+  const allBerita = await getCollection('berita');
+  const publishedBerita = sortByDate(filterDraft(allBerita), 'desc');
+  const totalPages = Math.ceil(publishedBerita.length / ARTICLES_PER_PAGE);
+
+  return Array.from({ length: totalPages }, (_, i) => {
+    const page = i + 1;
+    const startIndex = i * ARTICLES_PER_PAGE;
+    const endIndex = startIndex + ARTICLES_PER_PAGE;
+
+    return {
+      params: { page: page.toString() },
+      props: {
+        articles: publishedBerita.slice(startIndex, endIndex),
+        currentPage: page,
+        totalPages,
+      },
+    };
+  });
+}) satisfies GetStaticPaths;
+
+const { articles, currentPage, totalPages } = Astro.props;
+---
+
+<MainLayout title={`Berita - Halaman ${currentPage}`} description="Berita dan update terkini dari Dusun Bedalo">
+  <Banner title="Berita Dusun Bedalo" subtitle="Update terkini dan informasi seputar dusun" />
+
+  <Section background="white">
+    {
+      articles.length > 0 ? (
+        <div class="space-y-8">
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {articles.map((article) => (
+              <NewsCard article={article} />
+            ))}
+          </div>
+          
+          {totalPages > 1 && (
+            <div class="pt-8">
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                basePath="/berita/page"
+              />
+            </div>
+          )}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-gray-600">Belum ada berita tersedia.</p>
+        </div>
+      )
+    }
+  </Section>
+</MainLayout>
