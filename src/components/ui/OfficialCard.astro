@@ -6,8 +6,8 @@ interface Props {
   position: string;
   photo: ImageMetadata;
   photoAlt: string;
-  phone?: string;
-  class?: string;
+  phone?: string | undefined;
+  class?: string | undefined;
 }
 
 const { name, position, photo, photoAlt, phone, class: className = '' } = Astro.props;
