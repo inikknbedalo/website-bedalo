@@ -1,10 +1,12 @@
 # 📊 Dashboard Aspirasi Masyarakat - Implementation Plan
 
 **Date**: October 24, 2024  
-**Version**: 1.1  
+**Version**: 1.2  
 **Status**: Planning Phase  
 **Spreadsheet ID**: `1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM`  
-**Password Hash**: `df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d`
+**Sheet Name**: `aspirasi`  
+**Password Hash**: `df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d`  
+**Session Duration**: 24 hours (1 day)
 
 ---
 
@@ -15,11 +17,13 @@ Create a fully functional dashboard that displays real-time aspirasi (public fee
 
 ### Key Features
 1. ✅ Password-protected access (hardcoded password: `kknbedalo117`)
-2. ✅ Real-time data fetch from Google Sheets
+2. ✅ Real-time data fetch from Google Sheets (sheet: `aspirasi`)
 3. ✅ Loading animations during data fetch
 4. ✅ Interactive charts and statistics
 5. ✅ Responsive design (mobile-friendly)
 6. ✅ No login/signup buttons (simple auth only)
+7. ✅ Refresh button in navbar (no logout button)
+8. ✅ Auto-logout after 24 hours (1 day session)
 
 ---
 
@@ -29,8 +33,10 @@ Create a fully functional dashboard that displays real-time aspirasi (public fee
 - Simple password protection (no database needed)
 - Password: `kknbedalo117` (encrypted/hashed)
 - Session-based (survives page refresh)
-- Auto-logout after 30 minutes of inactivity
+- Auto-logout after 24 hours (1 day)
 - No signup functionality
+- No logout button (automatic expiry only)
+- Refresh button in navbar for manual data reload
 
 ### Implementation Details
 
@@ -126,7 +132,7 @@ const AUTH_CONFIG = {
   // Pre-computed SHA-256 hash of 'kknbedalo117'
   PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d',
   SESSION_KEY: 'dashboard_auth_token',
-  SESSION_DURATION: 30 * 60 * 1000, // 30 minutes in milliseconds
+  SESSION_DURATION: 24 * 60 * 60 * 1000, // 24 hours (1 day) in milliseconds
   LAST_ACTIVITY_KEY: 'dashboard_last_activity',
 };
 
@@ -225,9 +231,8 @@ class DashboardAuth {
     const lastActivity = parseInt(sessionStorage.getItem(AUTH_CONFIG.LAST_ACTIVITY_KEY) || '0');
     const now = Date.now();
     
-    // Check if token exists and session hasn't expired
+    // Check if token exists and session hasn't expired (24 hours)
     if (token && (now - lastActivity < AUTH_CONFIG.SESSION_DURATION)) {
-      this.updateLastActivity();
       return true;
     }
     
@@ -236,27 +241,23 @@ class DashboardAuth {
     return false;
   }
 
-  // Update last activity timestamp
+  // Update last activity timestamp (only on login)
   updateLastActivity() {
     sessionStorage.setItem(AUTH_CONFIG.LAST_ACTIVITY_KEY, Date.now().toString());
   }
 
-  // Start activity monitor (check every minute)
+  // Start activity monitor (check every 5 minutes - less frequent for 24h session)
   startActivityMonitor() {
-    // Update activity on user interactions
-    const events = ['mousedown', 'keydown', 'scroll', 'touchstart'];
-    events.forEach(event => {
-      document.addEventListener(event, () => this.updateLastActivity(), { passive: true });
-    });
-
-    // Check session validity every minute
+    // No need to update activity on interactions - session is fixed at 24 hours
+    
+    // Check session validity every 5 minutes
     this.activityInterval = setInterval(() => {
       if (!this.isAuthenticated()) {
         this.logout();
-        alert('Sesi Anda telah berakhir. Silakan login kembali.');
+        alert('Sesi Anda telah berakhir setelah 24 jam. Silakan login kembali.');
         location.reload();
       }
-    }, 60000); // Check every minute
+    }, 5 * 60 * 1000); // Check every 5 minutes
   }
 
   // Logout
@@ -297,6 +298,74 @@ class DashboardAuth {
     if (window.initializeDashboard) {
       window.initializeDashboard();
     }
+    
+    // Add refresh button handler
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', async () => {
+        // Add refreshing class for animation
+        refreshBtn.classList.add('refreshing');
+        refreshBtn.disabled = true;
+        
+        try {
+          // Reload data from Google Sheets
+          if (window.fetchAspirationsData) {
+            await window.fetchAspirationsData();
+          }
+          
+          // Update last refresh time
+          this.updateLastRefreshTime();
+          
+          // Show success toast
+          this.showToast('Data berhasil dimuat ulang!', 'success');
+        } catch (error) {
+          console.error('Refresh failed:', error);
+          this.showToast('Gagal memuat data. Silakan coba lagi.', 'error');
+        } finally {
+          // Remove animation
+          refreshBtn.classList.remove('refreshing');
+          refreshBtn.disabled = false;
+        }
+      });
+    }
+    
+    // Update last refresh time display
+    this.updateLastRefreshTime();
+  }
+  
+  // Update last refresh time display
+  updateLastRefreshTime() {
+    const timeDisplay = document.getElementById('last-refresh-time');
+    if (timeDisplay) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('id-ID', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      timeDisplay.textContent = timeString;
+    }
+  }
+  
+  // Simple toast notification
+  showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transition-opacity ${
+      type === 'success' ? 'bg-green-500' : 
+      type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    }`;
+    toast.innerHTML = `
+      <div class="flex items-center gap-2">
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
   }
 }
 
@@ -356,7 +425,7 @@ This returns data without requiring API key (works for public sheets).
 // Add to js/config.js
 const DASHBOARD_CONFIG = {
   SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
-  SHEET_NAME: 'Form Responses 1', // Usually the default name
+  SHEET_NAME: 'aspirasi', // Custom sheet name
   API_URL: '', // Will be constructed dynamically
   REFRESH_INTERVAL: 60000, // 1 minute in milliseconds
   MAX_RETRIES: 3,
@@ -1311,12 +1380,17 @@ Before implementation, these steps **CANNOT** be automated and require your dire
 3. Click **"Change to anyone with the link"**
 4. Set permission to **"Viewer"** (NOT Editor!)
 5. Click **"Done"**
+6. **IMPORTANT**: Rename the sheet tab to **"aspirasi"** (bottom-left tab name)
+   - Right-click on sheet tab
+   - Select "Rename"
+   - Type: `aspirasi`
+   - Press Enter
 
 **Verify**: 
 - Open incognito window
 - Paste this URL:
   ```
-  https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json
+  https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json&sheet=aspirasi
   ```
 - You should see JSON data (starts with `google.visualization.Query.setResponse`)
 - If you see "access denied", repeat steps above
@@ -1368,7 +1442,7 @@ Column E: Pesan Aspirasi (entry.1942425125)
 // Dashboard Configuration
 const DASHBOARD_CONFIG = {
   SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
-  SHEET_NAME: 'Form Responses 1', // ⚠️ CHECK YOUR ACTUAL SHEET NAME!
+  SHEET_NAME: 'aspirasi', // ✅ CONFIGURED - must match sheet tab name
   API_URL: '',
   REFRESH_INTERVAL: 60000, // 1 minute
   MAX_RETRIES: 3,
@@ -1379,10 +1453,9 @@ const DASHBOARD_CONFIG = {
 DASHBOARD_CONFIG.API_URL = `https://docs.google.com/spreadsheets/d/${DASHBOARD_CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DASHBOARD_CONFIG.SHEET_NAME)}`;
 ```
 
-**⚠️ IMPORTANT**: Check your actual sheet name!
-- Open spreadsheet
-- Look at bottom-left tab name
-- If it says "Sheet1" or something else, update `SHEET_NAME`
+**✅ CONFIGURED**: Sheet name is set to `aspirasi`
+- Make sure your spreadsheet tab is named exactly **"aspirasi"** (see Step 2)
+- Case-sensitive!
 
 ---
 
@@ -1417,9 +1490,9 @@ PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d
 
 ---
 
-#### 6. ✋ **Remove Navbar Login/Signup Button**
+#### 6. ✋ **Remove Navbar Login/Signup Button & Add Refresh Button**
 
-**Why**: Dashboard uses simple password auth, not user accounts.
+**Why**: Dashboard uses simple password auth, no logout button needed (auto-expires after 24h).
 
 **File**: `dashboard/index.html`
 
@@ -1438,33 +1511,58 @@ PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d
 
 **Replace with**:
 ```html
-<div class="flex items-center space-x-4">
-  <span class="text-sm text-gray-600" id="last-refresh-display">
+<div class="flex items-center space-x-3">
+  <!-- Last Refresh Time -->
+  <span class="text-sm text-gray-600 hidden sm:flex items-center" id="last-refresh-display">
     <i class="fas fa-clock mr-1"></i>
     <span id="last-refresh-time">-</span>
   </span>
+  
+  <!-- Refresh Button -->
   <button
     id="refresh-btn"
-    class="rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700"
+    class="flex items-center gap-2 rounded-md bg-blue-600 px-4 py-2 text-white transition duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
     title="Muat ulang data"
   >
-    <i class="fas fa-sync-alt mr-1"></i> Refresh
+    <i class="fas fa-sync-alt" id="refresh-icon"></i>
+    <span class="hidden sm:inline">Refresh</span>
   </button>
-  <button
-    id="logout-btn"
-    class="rounded-md bg-red-600 px-4 py-2 text-white transition duration-300 hover:bg-red-700"
-    title="Keluar dari dashboard"
-  >
-    <i class="fas fa-sign-out-alt mr-1"></i> Logout
-  </button>
+  
+  <!-- Session Expiry Info (tooltip) -->
+  <div class="relative group">
+    <i class="fas fa-info-circle text-gray-500 cursor-help"></i>
+    <div class="hidden group-hover:block absolute right-0 top-full mt-2 w-64 p-3 bg-gray-800 text-white text-xs rounded-lg shadow-lg z-50">
+      Sesi aktif selama 24 jam sejak login. Tidak perlu logout manual.
+    </div>
+  </div>
 </div>
+
+<style>
+  /* Refresh button animation */
+  #refresh-btn:active #refresh-icon,
+  #refresh-btn.refreshing #refresh-icon {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>
 ```
+
+**Key Changes:**
+- ✅ Only refresh button (no logout button)
+- ✅ Session info tooltip (24-hour notice)
+- ✅ Responsive (icon-only on mobile)
+- ✅ Spin animation on refresh
+- ✅ Last refresh time display
 
 ---
 
-#### 7. ✋ **Add Logout Functionality**
+#### 7. ✋ **Add Refresh Button Functionality**
 
-**Why**: Users need to be able to log out.
+**Why**: Users need manual data reload capability.
 
 **File**: `dashboard/js/auth.js`
 
@@ -1479,18 +1577,75 @@ showDashboard() {
     window.initializeDashboard();
   }
   
-  // Add logout button handler
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      if (confirm('Apakah Anda yakin ingin keluar?')) {
-        this.logout();
-        location.reload();
+  // Add refresh button handler
+  const refreshBtn = document.getElementById('refresh-btn');
+  if (refreshBtn) {
+    refreshBtn.addEventListener('click', async () => {
+      // Add refreshing class for animation
+      refreshBtn.classList.add('refreshing');
+      refreshBtn.disabled = true;
+      
+      try {
+        // Reload data from Google Sheets
+        if (window.fetchAspirationsData) {
+          await window.fetchAspirationsData();
+        }
+        
+        // Update last refresh time
+        updateLastRefreshTime();
+        
+        // Show success toast (optional)
+        showToast('Data berhasil dimuat ulang!', 'success');
+      } catch (error) {
+        console.error('Refresh failed:', error);
+        showToast('Gagal memuat data. Silakan coba lagi.', 'error');
+      } finally {
+        // Remove animation
+        refreshBtn.classList.remove('refreshing');
+        refreshBtn.disabled = false;
       }
     });
   }
+  
+  // Update last refresh time display
+  updateLastRefreshTime();
+}
+
+// Helper function to update last refresh time
+function updateLastRefreshTime() {
+  const timeDisplay = document.getElementById('last-refresh-time');
+  if (timeDisplay) {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('id-ID', { 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
+    timeDisplay.textContent = timeString;
+  }
+}
+
+// Simple toast notification
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 ${
+    type === 'success' ? 'bg-green-500' : 
+    type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+  }`;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.5s';
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
 }
 ```
+
+**No Logout Button:**
+- Session expires automatically after 24 hours
+- User doesn't need manual logout
+- Simpler UX - just close the browser
 
 ---
 
@@ -1502,7 +1657,7 @@ showDashboard() {
 1. Open browser console (F12)
 2. Paste this code:
    ```javascript
-   fetch('https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json&sheet=Form%20Responses%201')
+   fetch('https://docs.google.com/spreadsheets/d/1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM/gviz/tq?tqx=out:json&sheet=aspirasi')
      .then(res => res.text())
      .then(text => {
        console.log('✅ Data fetched successfully!');
@@ -1706,13 +1861,15 @@ showDashboard() {
    - [ ] Wrong password shows error
    - [ ] Correct password (`kknbedalo117`) logs in
    - [ ] Loading spinner appears
-   - [ ] Data loads from Google Sheets
+   - [ ] Data loads from Google Sheets (sheet: aspirasi)
    - [ ] Charts render
    - [ ] Statistics update
-   - [ ] Refresh button works
-   - [ ] Logout button works
+   - [ ] Refresh button works and shows animation
+   - [ ] Last refresh time updates
    - [ ] Session persists on page refresh
+   - [ ] Session expires after 24 hours (test by changing timestamp)
    - [ ] Responsive on mobile (use DevTools)
+   - [ ] Info tooltip shows 24h session message
 
 ---
 
@@ -1722,13 +1879,17 @@ Before proceeding to implementation, verify:
 
 - [ ] Google Form linked to spreadsheet
 - [ ] Spreadsheet ID: `1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM`
+- [ ] Sheet name: `aspirasi` (renamed bottom-left tab)
 - [ ] Spreadsheet is public (Viewer access)
-- [ ] API URL tested in browser (returns JSON)
+- [ ] API URL tested in browser (returns JSON with sheet=aspirasi)
 - [ ] Column names verified and match code
-- [ ] `config.js` updated with DASHBOARD_CONFIG
+- [ ] `config.js` updated with DASHBOARD_CONFIG (SHEET_NAME: 'aspirasi')
 - [ ] `auth.js` has correct PASSWORD_HASH
+- [ ] `auth.js` SESSION_DURATION set to 24 hours
 - [ ] Navbar login button removed
-- [ ] Logout functionality added
+- [ ] Refresh button added (with spin animation)
+- [ ] No logout button (auto-expire only)
+- [ ] Session info tooltip added
 - [ ] All 4 new files created (auth.js, data-fetcher.js, charts.js, dashboard.css)
 - [ ] HTML script order updated
 - [ ] Login screen HTML added
@@ -1736,6 +1897,7 @@ Before proceeding to implementation, verify:
 - [ ] Tested on localhost
 - [ ] Mobile responsive verified (DevTools)
 - [ ] Form submission tested (appears in dashboard)
+- [ ] Refresh button tested (spins and reloads data)
 
 **⚠️ DO NOT SKIP ANY STEPS!** Each one is critical for the dashboard to work.
 
