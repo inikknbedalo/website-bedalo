@@ -219,12 +219,16 @@ website-bedalo/
 
 ### 📊 Project Statistics
 - **Total HTML Pages**: 26
-- **CSS Files**: 2
-- **JavaScript Files**: 5
-- **Image Assets**: 6+
-- **Main Sections**: 8
-- **Product Pages**: 3
-- **Tourism Destinations**: 2
+- **Main Pages**: 11 (index, profil, potensi, pariwisata, galeri, kontak, tentang-kkn, peta-situs, kebijakan-privasi, 404, berita/index)
+- **Product Detail Pages**: 3 (Gula Aren, Keripik Singkong, Gaplek)
+- **Tourism Detail Pages**: 2 (Pantai Ngedan, Pantai Ngluwen)
+- **Accommodation Pages**: 2 (index + sample)
+- **Warung Pages**: 2 (index + detail)
+- **Special Modules**: 2 (Dashboard, Survey)
+- **CSS Files**: 4 (main custom + module-specific)
+- **JavaScript Files**: 5+ (main + page-specific scripts)
+- **Image Assets**: 6+ optimized images (WebP format)
+- **Interactive Features**: 8 (Lightbox, CountUp, Charts, Forms, Maps, Mobile Menu, Animations, Modals)
 
 ---
 
@@ -306,131 +310,723 @@ http-server -p 8000
 ## 📖 Pages Overview
 
 ### 🏠 Homepage (`index.html`)
-The main landing page featuring:
-- **Hero Section**: Full-width banner with Pantai Ngedan image
-- **Village Leader Welcome**: Message from the village head (Kepala Dusun)
-- **Potential Overview**: Cards showcasing UMKM, agriculture, and tourism
-- **Tourism Highlights**: Visual grid of tourist destinations
-- **Featured Gallery**: Quick photo gallery preview
-- **Call-to-Action**: Links to detailed pages
+**Main Entry Point** - The landing page that introduces visitors to Dusun Bedalo
+
+**Content Elements:**
+- **Hero Section**: 
+  - Full-viewport height banner (60vh mobile, 80vh desktop)
+  - Background: Pantai Ngedan beach image
+  - Heading: "Selamat Datang di Dusun Bedalo"
+  - Subheading: "Menjelajahi Keindahan, Kearifan Lokal, dan Potensi Tersembunyi"
+  - CTA button: "Jelajahi Sekarang" (scrolls to profile section)
+  
+- **Profile Section (Sambutan)**:
+  - Profile photo: Village head (Sumindar) with circular frame
+  - Name and title display
+  - Welcome message (2 paragraphs from Kepala Dusun)
+  - Link to full profile page
+  
+- **Potential Overview Section**:
+  - Section heading: "Potensi Unggulan Dusun"
+  - Three feature cards:
+    1. UMKM & Produk Lokal (store icon, blue)
+    2. Pertanian & Perkebunan (seedling icon, green)
+    3. Pariwisata Alam (map-signs icon, purple)
+  - Each card: icon, title, description, "Lihat Selengkapnya" link
+  
+- **Tourism Highlights Section**:
+  - Heading: "Pariwisata & Kekayaan Budaya"
+  - Description paragraph
+  - CTA button to tourism page
+  - 2x2 photo grid (4 images)
+  - Hover effects with scale transform
+  
+- **Gallery Preview Section**:
+  - Heading: "Galeri Momen Dusun Bedalo"
+  - 4-column responsive grid (2 columns on mobile)
+  - GLightbox integration for fullscreen viewing
+  - "Lihat Galeri Lengkap" button
+  
+- **Animations**: AOS fade-up, fade-down, zoom-in effects throughout
 
 ### 👥 Profile Page (`profil.html`)
-Comprehensive village information:
-- Village history and background
-- Vision and mission statements
-- Demographic statistics (with CountUp animations)
-- Organizational structure
-- Leadership team
-- Interactive location map
-- Geographic and administrative data
+**Complete Village Information** - Comprehensive details about Dusun Bedalo
+
+**Content Elements:**
+- **Page Header Banner**:
+  - Gradient background (blue-600 to cyan-700)
+  - Title: "Tentang Dusun Bedalo"
+  - Subtitle: "Mengenal Lebih Dekat Sejarah, Visi, dan Warga Kami"
+  - Hover animation (lift and scale)
+  
+- **Sejarah Section**:
+  - Two-column layout (text + image)
+  - Section heading: "Sejarah Singkat"
+  - Content: Origin story of "Bedalo" name, administrative info
+  - Information about 3 RT and 1 RW structure
+  - Side image: Dusun landscape
+  
+- **Visi & Misi Section**:
+  - Two-card layout
+  - Vision card: Eye icon, vision statement
+  - Mission card: Bullseye icon, 5 bullet points
+  - Both cards: white background with shadow
+  
+- **Struktur Pemerintahan Section**:
+  - Hierarchical display:
+    1. Top: Kepala Dusun (Sumindar) - solo card
+    2. Middle: Ketua RW 10 (Walyono) - solo card
+    3. Bottom: Three RT leaders (Sukarman, Tugiman, Sugiyanto) - 3-column grid
+  - Each card: profile photo (circular), name, position
+  - Hover effects: lift and scale animation
+  
+- **Demografi Section**:
+  - Statistics with CountUp.js animations:
+    1. Jumlah KK: 120 (users icon)
+    2. Jumlah Warga: 450 (user-friends icon)
+    3. Laki-laki: 230 (male icon, blue)
+    4. Perempuan: 220 (female icon, pink)
+  - Additional card: Mata Pencaharian Utama (tractor icon)
+  - 4-column responsive grid (becomes single column on mobile)
+  
+- **Peta Wilayah Section**:
+  - Google Maps embedded iframe
+  - Location: Bedalo, Krambilsawit, Saptosari
+  - Aspect ratio: 16:9
+  - Rounded corners with shadow
 
 ### 🌾 Potential Page (`potensi.html`)
-Showcasing village resources:
-- **UMKM Section**: Local products and handicrafts
-- **Agriculture Section**: Farming and plantation products
-- **Product Cards**: Gula Aren, Keripik Singkong, Gaplek
-- **Contact Information**: How to purchase products
-- **Business Opportunities**: Investment potential
+**Village Resources & Products** - Showcase of local economic potential
+
+**Content Elements:**
+- **Page Header**:
+  - Gradient hero banner
+  - Title: "Potensi Dusun Bedalo"
+  - Description of village resources
+  
+- **UMKM Section** (id="umkm"):
+  - Section heading: "UMKM & Produk Lokal"
+  - Introduction paragraph
+  - Product grid (3 columns):
+    1. Gula Aren Asli
+    2. Keripik Singkong
+    3. Gaplek
+  - Each product card:
+    - Product image
+    - Product name and category tag
+    - Short description
+    - Price indicator
+    - "Lihat Detail" button linking to dedicated page
+  
+- **Pertanian Section** (id="pertanian"):
+  - Section heading: "Pertanian & Perkebunan"
+  - Description of agricultural activities
+  - List of crops: cassava, corn, peanuts, sweet potatoes
+  - Information about palm sugar production
+  - Photo gallery of farming activities
+  
+- **Contact CTA Section**:
+  - How to order products
+  - Contact information display
+  - WhatsApp integration button
+  - Email contact option
+
+**Related Product Detail Pages:**
+- `/potensi/gula-aren-asli.html`: Palm sugar product page
+  - Product photos
+  - Detailed description
+  - Production process
+  - Health benefits
+  - Pricing and order form
+  
+- `/potensi/keripik-singkong.html`: Cassava chips page
+  - Various flavor options
+  - Ingredients list
+  - Packaging options
+  - Bulk order information
+  
+- `/potensi/gaplek.html`: Dried cassava page
+  - Traditional processing method
+  - Uses and recipes
+  - Storage instructions
+  - Wholesale pricing
 
 ### 🏖️ Tourism Page (`pariwisata.html`)
-Tourism destination guide:
-- **Pantai Ngedan**: Beach description, facilities, access
-- **Pantai Ngluwen**: Hidden gem beach information
-- **Photo Galleries**: High-quality destination images
-- **Accommodation Links**: Nearby lodging options
-- **Travel Tips**: Best times to visit, transportation
-- **Activities**: Things to do in the area
+**Tourism Destinations** - Guide to beaches and attractions
+
+**Content Elements:**
+- **Page Hero**:
+  - Title: "Pariwisata & Budaya"
+  - Subtitle about tourism attractions
+  
+- **Destinasi Section** (id="destinasi"):
+  - Section heading: "Destinasi Wisata Unggulan"
+  - Two main destinations featured:
+  
+  1. **Pantai Ngedan Card**:
+     - Hero image gallery
+     - Beach name and location
+     - Description of features
+     - Facilities list (parking, gazebo, restrooms)
+     - Accessibility information
+     - Best time to visit
+     - "Selengkapnya" link to detail page
+     
+  2. **Pantai Ngluwen Card**:
+     - Beach photos
+     - Location details
+     - Unique features description
+     - Activities available
+     - Access route information
+     - Detail page link
+  
+- **Akomodasi Preview**:
+  - Heading: "Tempat Menginap"
+  - Intro text about accommodation options
+  - Link to full accommodation directory
+  
+- **Tips Wisata Section**:
+  - Travel recommendations
+  - What to bring
+  - Local etiquette
+  - Safety guidelines
+
+**Tourism Detail Pages:**
+- `/pariwisata/pantai-ngedan.html`:
+  - Large photo gallery
+  - Detailed description
+  - GPS coordinates
+  - Facilities breakdown
+  - Entry fee information
+  - How to get there (from Yogyakarta)
+  - Nearby attractions
+  - Guest reviews/testimonials
+  
+- `/pariwisata/pantai-ngluwen.html`:
+  - Beach characteristics
+  - Tide information
+  - Photography spots
+  - Difficulty level for access
+  - What makes it special
+  - Conservation efforts
 
 ### 🖼️ Gallery Page (`galeri.html`)
-Visual showcase:
-- Grid layout for photos
-- GLightbox integration for fullscreen viewing
-- Categories: Landscape, Activities, Culture, Events
-- Touch-friendly navigation
-- Share functionality
+**Photo Collection** - Visual documentation of village life
+
+**Content Elements:**
+- **Page Header**:
+  - Title: "Galeri"
+  - Subtitle: "Momen-momen Berharga Dusun Bedalo"
+  
+- **Gallery Grid**:
+  - Masonry-style responsive grid
+  - 4 columns on desktop, 2 on tablet, 1 on mobile
+  - GLightbox integration for each image
+  - Categories represented:
+    - Landscapes (beaches, rice fields, sunsets)
+    - Community activities (meetings, celebrations)
+    - Cultural events (traditional ceremonies)
+    - Infrastructure (roads, buildings, facilities)
+    - Daily life (farming, market, children)
+  
+- **Lightbox Features**:
+  - Fullscreen image viewing
+  - Swipe navigation
+  - Zoom capability
+  - Image counter
+  - Close button
+  - Keyboard shortcuts
+  
+- **Image Optimization**:
+  - Lazy loading
+  - WebP format
+  - Thumbnail generation
+  - Alt text for accessibility
 
 ### 📰 News Page (`berita/index.html`)
-News and articles system:
-- Dynamic article listing
-- Pagination controls
-- Article preview cards
-- Tag-based filtering
-- Publication dates
-- Read more functionality
-- Sample articles included
+**News & Updates** - Articles and announcements system
+
+**Content Elements:**
+- **Page Header**:
+  - Title: "Berita & Artikel"
+  - Search/filter bar (planned)
+  
+- **Featured Article Section**:
+  - Large card for latest/featured news
+  - Featured image
+  - Title and excerpt
+  - Publication date
+  - Author name
+  - Category tag
+  
+- **Article Grid**:
+  - 3-column responsive layout
+  - Each article card contains:
+    - Thumbnail image
+    - Category badge
+    - Article title
+    - Excerpt (2-3 lines)
+    - Publication date
+    - Read time estimate
+    - "Baca Selengkapnya" button
+  
+- **Pagination**:
+  - Page numbers
+  - Previous/Next buttons
+  - Shows current page indicator
+  - JavaScript-based navigation
+  
+- **Sidebar** (on wider screens):
+  - Recent articles widget
+  - Category filter
+  - Tag cloud
+  - Popular posts
+
+**Sample Article** (`artikel-contoh.html`):
+- Full-width featured image
+- Article metadata (date, author, category)
+- Formatted article body
+- Social share buttons
+- Related articles section
+- Comment section (planned)
+
+**Tag System** (`tag/pembangunan.html`):
+- Filter articles by tag
+- Shows all articles with specific tag
+- Tag description
+- Related tags
 
 ### 📧 Contact Page (`kontak.html`)
-Communication hub:
-- **Aspirations Form**: Submit community feedback (Google Forms integration)
-- **Modal Confirmation**: Success/error messages
-- **Contact Directory**: Village officials contact information
-- **Location Map**: Embedded interactive map
-- **Social Media Links**: Instagram, YouTube, TikTok, Facebook, Twitter
-- **Email & Phone**: Direct contact methods
+**Communication Hub** - Multiple contact methods
+
+**Content Elements:**
+- **Page Hero**:
+  - Title: "Hubungi Kami"
+  - Subtitle about communication channels
+  
+- **Aspirasi Form Section** (id="aspirasi"):
+  - Heading: "Sampaikan Aspirasi Anda"
+  - Embedded Google Forms iframe
+  - Form fields:
+    - Nama (Name) - required
+    - Email - required
+    - Nomor Telepon (Phone) - optional
+    - Kategori (Category) - dropdown
+    - Pesan (Message) - textarea, required
+  - Submit button
+  - Success/error modal popup
+  - Form validation
+  
+- **Contact Directory** (id="kontak-perangkat"):
+  - Section heading: "Kontak Perangkat Dusun"
+  - Contact cards for officials:
+    1. Kepala Dusun
+    2. Ketua RW
+    3. Each RT leader
+  - Each card includes:
+    - Name and position
+    - Phone number
+    - WhatsApp quick contact button
+  
+- **Location Section**:
+  - Section heading: "Lokasi Kami"
+  - Address details
+  - Google Maps embedded iframe
+  - Directions link
+  
+- **Social Media Section**:
+  - Heading: "Ikuti Kami"
+  - Social media icons with links:
+    - Instagram
+    - YouTube
+    - TikTok
+    - Facebook
+    - Twitter/X
+  - Icon hover effects
+  
+- **Email & Phone Section**:
+  - Primary email: inikknbedalo@gmail.com
+  - Phone: +62 831-0758-1144
+  - Operating hours (if applicable)
 
 ### 🎓 About KKN Page (`tentang-kkn.html`)
-Team information:
-- KKN program overview
-- Team member profiles
-- Project objectives
-- Activities documentation
-- Achievement highlights
-- Contact information
+**KKN Team Information** - Student community service program
+
+**Content Elements:**
+- **Program Overview**:
+  - Title: "KKN Reguler Angkatan 117"
+  - Institution: UIN Sunan Kalijaga Yogyakarta
+  - Program period/duration
+  - Program objectives
+  
+- **Team Photo Section**:
+  - Group photo of all KKN members
+  - Team caption
+  
+- **Team Members Grid**:
+  - Responsive card layout
+  - Each member card:
+    - Profile photo
+    - Name
+    - Student ID
+    - Major/Faculty
+    - Role in team
+    - Brief bio (optional)
+  
+- **Program Activities**:
+  - List of activities conducted
+  - Timeline of events
+  - Photo documentation
+  - Impact summary
+  
+- **Achievements**:
+  - List of completed projects
+  - Website development mention
+  - Community impact statistics
+  
+- **Acknowledgments**:
+  - Thanks to village officials
+  - Thanks to community members
+  - Thanks to university supervisors
 
 ### 📦 Product Detail Pages
-Individual product showcases:
-- **Gula Aren Asli** (`potensi/gula-aren-asli.html`): Palm sugar product
-- **Keripik Singkong** (`potensi/keripik-singkong.html`): Cassava chips
-- **Gaplek** (`potensi/gaplek.html`): Dried cassava
 
-Each includes:
-- Detailed description
-- Product images
-- Benefits and uses
-- Pricing information
-- Order/contact details
+**Gula Aren Asli** (`potensi/gula-aren-asli.html`):
+- Product hero image
+- Product name and tagline
+- Price: Rp X per kg
+- Product description (2-3 paragraphs)
+- Production process section:
+  - Traditional tapping method
+  - Cooking process
+  - Quality control
+- Benefits section:
+  - Natural sweetener
+  - Low glycemic index
+  - Rich in minerals
+  - Health advantages
+- Packaging options
+- Order form/contact section
+- Related products
+
+**Keripik Singkong** (`potensi/keripik-singkong.html`):
+- Product gallery (multiple images)
+- Available flavors:
+  - Original
+  - Balado
+  - Keju (Cheese)
+  - Bawang (Garlic)
+- Ingredients list
+- Nutrition information
+- Packaging sizes (100g, 250g, 500g)
+- Shelf life information
+- Bulk order discounts
+- Customer testimonials
+- Order contact
+
+**Gaplek** (`potensi/gaplek.html`):
+- Product photos
+- What is Gaplek (educational section)
+- Traditional processing method
+- Uses:
+  - Animal feed
+  - Industrial raw material
+  - Food processing
+- Storage guidelines
+- Quality grades
+- Pricing structure
+- Wholesale inquiries contact
 
 ### 🏨 Accommodation Pages
-Lodging information:
-- **Accommodation Index** (`akomodasi/index.html`): Full listing
-- **Sample Lodging** (`akomodasi/penginapan-contoh-1.html`): Detailed example
-- Features, pricing, amenities
-- Booking information
-- Contact details
 
-### 🏪 Warung Directory (`warung/`)
-Local business listings:
-- Store profiles
-- Products/services offered
-- Contact information
-- Operating hours
-- Location details
+**Accommodation Index** (`akomodasi/index.html`):
+- Page heading: "Akomodasi & Penginapan"
+- Introduction to lodging options
+- Accommodation grid:
+  - Multiple lodging cards
+  - Each card shows:
+    - Property photo
+    - Name of homestay/guesthouse
+    - Price range indicator
+    - Capacity (number of rooms)
+    - Amenities icons
+    - Rating (if available)
+    - Distance from beach
+    - "Lihat Detail" button
+- Filter options:
+  - By price range
+  - By capacity
+  - By amenities
+- Map showing all accommodations
+
+**Sample Lodging Detail** (`akomodasi/penginapan-contoh-1.html`):
+- Property photo gallery
+- Accommodation name
+- Detailed description
+- Features & Amenities:
+  - Room types
+  - Bathroom facilities
+  - Kitchen access
+  - WiFi availability
+  - Parking
+  - Common areas
+- Pricing details:
+  - Per night rates
+  - Weekly/monthly rates
+  - Peak season pricing
+- Booking information:
+  - How to book
+  - Payment methods
+  - Cancellation policy
+- Contact details:
+  - Owner name and phone
+  - WhatsApp booking
+  - Email address
+- Location map
+- House rules
+- Guest reviews section
+
+### 🏪 Warung Directory
+
+**Warung Index** (`warung/index.html`):
+- Page title: "Warung & Usaha Lokal"
+- Introduction to local businesses
+- Business directory grid:
+  - Multiple warung cards
+  - Each card contains:
+    - Shop/stall photo
+    - Business name
+    - Type of business/category
+    - Products/services offered
+    - Operating hours
+    - Contact info
+    - "Lihat Detail" link
+
+**Warung Detail** (`warung/warung.html`):
+- Business name and logo/photo
+- Owner information
+- Business description
+- Product/service catalog:
+  - Items sold
+  - Price list
+  - Specialties
+- Operating hours:
+  - Daily schedule
+  - Special holiday hours
+- Location:
+  - Address
+  - Directions
+  - Map embed
+- Contact methods:
+  - Phone number
+  - WhatsApp
+  - Social media
+- Payment accepted:
+  - Cash
+  - Digital payments (if applicable)
+- Photos of products/shop
 
 ### 📊 Dashboard (`dashboard/index.html`)
-Analytics and monitoring:
-- **Community Aspirations Statistics**
-- **Chart.js Visualizations**:
-  - Line charts for trends
-  - Doughnut charts for categories
-  - Bar charts for comparisons
-- Time-based filtering
-- Real-time data updates (requires backend integration)
-- Export capabilities
+**Analytics & Data Visualization** - Community aspirations monitoring
+
+**Content Elements:**
+- **Page Header**:
+  - Title: "Dashboard Aspirasi Masyarakat"
+  - Date range selector
+  - Refresh data button
+  
+- **Statistics Overview**:
+  - Key metrics cards:
+    1. Total aspirations submitted
+    2. Aspirations in progress
+    3. Completed aspirations
+    4. Average response time
+  - Each card: icon, number (animated), label
+  
+- **Charts Section**:
+  1. **Line Chart**:
+     - Title: "Trend Aspirasi per Bulan"
+     - X-axis: Months
+     - Y-axis: Number of aspirations
+     - Shows submission trends over time
+     
+  2. **Doughnut Chart**:
+     - Title: "Aspirasi per Kategori"
+     - Categories: Infrastructure, Economy, Education, Health, etc.
+     - Shows percentage distribution
+     - Interactive legend
+     
+  3. **Bar Chart**:
+     - Title: "Status Penyelesaian"
+     - Status categories: Submitted, In Review, In Progress, Completed
+     - Horizontal bars with counts
+  
+- **Recent Aspirations Table**:
+  - Columns: Date, Name, Category, Subject, Status
+  - Sortable columns
+  - Pagination
+  - View detail button per row
+  
+- **Filter Panel**:
+  - Date range picker
+  - Category filter dropdown
+  - Status filter
+  - RT/RW filter
+  - Apply/Reset buttons
+  
+- **Chart.js Implementation**:
+  - Responsive charts
+  - Tooltips on hover
+  - Animation on load
+  - Color-coded by category
 
 ### 📝 Survey Module (`survei/index.html`)
-Digitalization survey:
-- Multi-step survey form
-- Progress tracking
-- Data collection for digital literacy
-- Community engagement tool
-- Results visualization
+**Digital Literacy Survey** - Community digitalization assessment
+
+**Content Elements:**
+- **Survey Header**:
+  - Title: "Survei Digitalisasi Masyarakat"
+  - Purpose explanation
+  - Estimated completion time
+  - Privacy notice
+  
+- **Progress Indicator**:
+  - Step counter (e.g., "Step 1 of 5")
+  - Progress bar (visual percentage)
+  - Section labels
+  
+- **Survey Sections**:
+  1. **Personal Information**:
+     - Name (required)
+     - Age range (dropdown)
+     - Gender (radio buttons)
+     - RT/RW (dropdown)
+     - Occupation (dropdown)
+     
+  2. **Device Ownership**:
+     - Smartphone ownership (yes/no)
+     - Computer/laptop ownership
+     - Internet access (yes/no)
+     - Internet source (WiFi/cellular data)
+     
+  3. **Digital Skills**:
+     - Can use smartphone (scale 1-5)
+     - Can browse internet
+     - Can use social media
+     - Can use messaging apps
+     - Can use email
+     
+  4. **Internet Usage**:
+     - Frequency of internet use
+     - Primary online activities
+     - Hours per day online
+     - Barriers to internet use
+     
+  5. **Digital Services**:
+     - Awareness of e-government services
+     - Use of online banking
+     - Use of e-commerce
+     - Interest in digital training
+  
+- **Navigation**:
+  - "Next" button (advances to next section)
+  - "Previous" button (returns to previous section)
+  - "Submit" button (final step)
+  - Form validation before advancing
+  
+- **Completion**:
+  - Thank you message
+  - Summary of responses
+  - Option to view results (aggregate)
+  - Return to home button
+  
+- **Data Handling**:
+  - Client-side validation
+  - Data submitted to backend/Google Forms
+  - Response stored for analysis
+  - Privacy compliant
+
+### 🗺️ Sitemap Page (`peta-situs.html`)
+**Site Navigation Map** - Hierarchical list of all pages
+
+**Content Structure:**
+- Page title: "Peta Situs"
+- Organized hierarchical list:
+  - Beranda (/)
+  - Profil (/profil.html)
+    - Sejarah
+    - Visi & Misi
+    - Struktur Pemerintahan
+    - Demografi
+    - Peta Wilayah
+  - Potensi (/potensi.html)
+    - UMKM
+    - Pertanian
+    - Product pages (3 links)
+  - Pariwisata (/pariwisata.html)
+    - Pantai Ngedan
+    - Pantai Ngluwen
+  - Galeri (/galeri.html)
+  - Berita (/berita/)
+    - Articles
+    - Tags
+  - Kontak (/kontak.html)
+  - Akomodasi (/akomodasi/)
+  - Warung (/warung/)
+  - Survei (/survei/)
+  - Dashboard (/dashboard/)
+  - Tentang KKN (/tentang-kkn.html)
+  - Kebijakan Privasi (/kebijakan-privasi.html)
+- Each link is clickable
+- Organized by main sections
+
+### 🔒 Privacy Policy (`kebijakan-privasi.html`)
+**Privacy & Data Protection** - Legal information
+
+**Content Sections:**
+- Page title: "Kebijakan Privasi"
+- Last updated date
+- Introduction
+- Information collected:
+  - Personal information (names, contacts)
+  - Usage data
+  - Cookies
+- How information is used:
+  - Service improvement
+  - Communication
+  - Analytics
+- Data protection:
+  - Security measures
+  - Data retention
+  - Third-party services
+- User rights:
+  - Access to data
+  - Correction requests
+  - Data deletion
+- Contact for privacy concerns
+- Policy updates notification
 
 ### 🚫 Error Page (`404.html`)
-Custom 404 page:
-- Friendly error message
-- Navigation links
-- Return to homepage button
-- Consistent branding
+**Custom Error Page** - User-friendly 404 handler
+
+**Content Elements:**
+- Large 404 number/graphic
+- Error message: "Halaman Tidak Ditemukan"
+- Friendly explanation text
+- Helpful suggestions:
+  - Check URL for typos
+  - Use navigation menu
+  - Return to homepage
+- "Kembali ke Beranda" button (blue, prominent)
+- Search box (optional)
+- Links to main pages:
+  - Profil
+  - Potensi
+  - Pariwisata
+  - Kontak
+- Consistent header/footer
+- Same styling as main site
+- Responsive design
 
 ---
 
@@ -1116,6 +1712,8 @@ We envision this website as a catalyst for Dusun Bedalo's continued growth and d
 
 ---
 
-*Last Updated: October 2024*
+*Last Updated: October 24, 2025*
+
+*README fully updated with comprehensive page content details*
 
 </div>
