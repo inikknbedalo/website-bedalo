@@ -43,7 +43,7 @@ const enabledPlatforms = platforms.filter(p => p.enabled);
   </div>
 </div>
 
-<script is:inline define:vars={{ title, url, platforms: enabledPlatforms }}>
+<script define:vars={{ title, url, platforms: enabledPlatforms }}>
   document.querySelectorAll('[data-share]').forEach((button) => {
     button.addEventListener('click', () => {
       const type = button.getAttribute('data-share');
@@ -54,13 +54,17 @@ const enabledPlatforms = platforms.filter(p => p.enabled);
       if (!platform) return;
       
       if (type === 'copy') {
-        navigator.clipboard.writeText(fullUrl).then(() => {
-          const feedback = document.getElementById('copy-feedback');
-          feedback.classList.remove('hidden');
-          setTimeout(() => {
-            feedback.classList.add('hidden');
-          }, 3000);
-        });
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(fullUrl).then(() => {
+            const feedback = document.getElementById('copy-feedback');
+            if (feedback) {
+              feedback.classList.remove('hidden');
+              setTimeout(() => {
+                feedback.classList.add('hidden');
+              }, 3000);
+            }
+          });
+        }
       } else {
         const shareUrl = platform.urlTemplate
           .replace('{url}', encodeURIComponent(fullUrl))
