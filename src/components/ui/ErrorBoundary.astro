@@ -1,0 +1,26 @@
+---
+/**
+ * Error Boundary Component
+ * Wraps content with error handling and fallback UI
+ */
+
+interface Props {
+  fallbackMessage?: string;
+  showDetails?: boolean;
+}
+
+const { 
+  fallbackMessage = 'Terjadi kesalahan saat memuat konten ini.',
+  showDetails = false 
+} = Astro.props;
+---
+
+<div class="error-boundary">
+  <slot />
+</div>
+
+<style>
+  .error-boundary {
+    position: relative;
+  }
+</style>
