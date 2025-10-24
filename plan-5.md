@@ -466,6 +466,18 @@ Final verification checklist:
 - [ ] SEO improved
 - [ ] Maintainability improved
 
+### Task 11.4: Code Quality Checks
+- Run: `npm run lint` - should pass with no errors
+- Run: `npm run format:check` - should pass
+- Run: `npm run check` - TypeScript check passes
+- Fix any errors found
+- **Commit:** "fix: resolve all lint and type errors"
+
+### Task 11.5: Format All Code
+- Run: `npm run format` to format all files
+- Verify consistent code style
+- **Commit:** "style: format all files with Prettier"
+
 ---
 
 ## Phase 12: Handoff & Training (Optional)
@@ -504,6 +516,11 @@ Migration is complete when:
 - [x] Chart.js dashboard functional (via npm)
 - [x] Tailwind CSS via npm (not CDN)
 - [x] Only Google Fonts & Font Awesome via CDN
+- [x] ESLint configured with astro plugin
+- [x] Prettier configured with astro plugin
+- [x] All lint checks pass (`npm run lint`)
+- [x] All format checks pass (`npm run format:check`)
+- [x] Prefetching enabled and working
 - [x] Dark mode works site-wide
 - [x] Astro Image optimization everywhere
 - [x] Lighthouse scores: 95+/95+/95+/100

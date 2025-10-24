@@ -474,12 +474,15 @@ Before moving to Plan 5:
 - [ ] Custom 404 page
 - [ ] All images use Astro Image component
 - [ ] All internal links working
+- [ ] Prefetching works (data-astro-prefetch on links)
 - [ ] Active navigation highlighting
 - [ ] Content verified against static-site/
 - [ ] Responsive on all devices
 - [ ] Dark mode works on all pages
 - [ ] Accessibility score 95+
 - [ ] Performance score 95+
+- [ ] `npm run lint` passes (no ESLint errors)
+- [ ] `npm run format:check` passes
 - [ ] All pages committed atomically
 - [ ] Only Google Fonts & Font Awesome use CDN
 

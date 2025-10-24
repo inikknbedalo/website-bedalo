@@ -59,6 +59,38 @@
 - Import global CSS in BaseLayout
 - **Commit:** "feat(tailwind): add Tailwind CSS integration"
 
+### Task 1.4: Install ESLint and Prettier
+- Run: `npm install --save-dev eslint prettier`
+- Run: `npm install --save-dev eslint-plugin-astro @typescript-eslint/parser`
+- Run: `npm install --save-dev prettier-plugin-astro`
+- Run: `npm install --save-dev eslint-plugin-jsx-a11y` (for accessibility)
+- **Commit:** "chore(deps): add ESLint and Prettier"
+
+### Task 1.5: Configure ESLint
+Create `eslint.config.js`:
+- Import `eslint-plugin-astro`
+- Use recommended config: `...eslintPluginAstro.configs.recommended`
+- Add JSX A11y config: `...eslintPluginAstro.configs['jsx-a11y-recommended']`
+- Configure parser options for TypeScript in .astro files
+- Add custom rules as needed
+- **Commit:** "chore(eslint): configure ESLint with Astro plugin"
+
+### Task 1.6: Configure Prettier
+Create `.prettierrc.mjs`:
+- Add `prettier-plugin-astro` to plugins
+- Override parser for `.astro` files
+- Set custom formatting options (if needed)
+- Create `.prettierignore` file
+- **Commit:** "chore(prettier): configure Prettier with Astro plugin"
+
+### Task 1.7: Add Lint Scripts to package.json
+- Add `"lint"`: `"eslint . --ext .js,.ts,.astro"`
+- Add `"lint:fix"`: `"eslint . --ext .js,.ts,.astro --fix"`
+- Add `"format"`: `"prettier --write \"**/*.{js,ts,astro,json,md}\"`
+- Add `"format:check"`: `"prettier --check \"**/*.{js,ts,astro,json,md}\"`
+- Test all scripts work
+- **Commit:** "chore(scripts): add lint and format scripts"
+
 ---
 
 ## Phase 2: Content Collections Architecture
@@ -179,6 +211,38 @@ Also create: laki-laki (230), perempuan (220)
 
 ---
 
+## Phase 2.6: Astro Best Practices Configuration
+
+### Task 2.6.1: Enable Prefetching
+Update `astro.config.mjs`:
+- Enable: `prefetch: true`
+- Set default strategy: `defaultStrategy: 'viewport'`
+- Configure: `prefetchAll: true` for all internal links
+- This prefetches pages when they enter viewport (performance boost)
+- **Commit:** "feat(config): enable viewport prefetching"
+
+### Task 2.6.2: Configure Image Optimization
+Update `astro.config.mjs`:
+- Set `image.service`: use default Sharp service
+- Configure `image.domains`: authorize remote domains if needed
+- Configure `image.remotePatterns`: for external images (if any)
+- **Commit:** "feat(config): configure image optimization"
+
+### Task 2.6.3: Build Optimizations
+Update `astro.config.mjs`:
+- Set `build.inlineStylesheets`: `'auto'` for optimal CSS delivery
+- Set `compressHTML`: true (default, but explicit)
+- Configure `vite.build.rollupOptions` if needed
+- **Commit:** "feat(config): add build optimizations"
+
+### Task 2.6.4: Configure Output and Adapter
+- Set `output: 'static'` (default for static site)
+- Add Cloudflare Pages adapter (if deploying there): `npx astro add cloudflare`
+- Or configure for other platforms as needed
+- **Commit:** "feat(config): configure output and adapter"
+
+---
+
 ## Phase 3: Base Layouts & Components
 
 ### Task 3.1: Create BaseLayout
@@ -204,6 +268,7 @@ File: `src/components/layout/Navbar.astro`
 - Active page highlighting
 - Theme toggle slot
 - Accessible: ARIA labels, keyboard nav
+- **Add prefetch to links**: `<a href="/potensi" data-astro-prefetch>`
 - **Commit:** "feat(navbar): create responsive navbar from config"
 
 ### Task 3.3: Create Footer Component  
@@ -329,6 +394,13 @@ File: `src/components/ui/OptimizedImage.astro`
 Before moving to Plan 2:
 - [ ] Astro 5 initialized with TypeScript strict
 - [ ] Tailwind CSS added via `npx astro add` (npm, not CDN)
+- [ ] ESLint installed and configured with `eslint-plugin-astro`
+- [ ] Prettier installed and configured with `prettier-plugin-astro`
+- [ ] ESLint accessibility rules (`jsx-a11y`) enabled
+- [ ] Lint and format scripts in package.json
+- [ ] Prefetching enabled in astro.config.mjs
+- [ ] Image optimization configured
+- [ ] Build optimizations applied
 - [ ] 9 collections defined with Zod schemas
 - [ ] Config collection populated from original site
 - [ ] Pages collection has home.json and profile.json
@@ -337,18 +409,21 @@ Before moving to Plan 2:
 - [ ] BaseLayout created with SEO and dark mode
 - [ ] BaseLayout uses Google Fonts & Font Awesome via CDN only
 - [ ] Navbar fetches nav from config collection
+- [ ] Navbar links use data-astro-prefetch
 - [ ] Footer fetches data from config collection
 - [ ] MainLayout combines all layout pieces
 - [ ] Dark mode system fully functional
 - [ ] Image optimization structure ready
 - [ ] All tasks committed atomically
+- [ ] `npm run lint` passes
+- [ ] `npm run format:check` passes
 - [ ] `npm run dev` works without errors
 - [ ] `npm run check` passes
 - [ ] `npm run build` succeeds
 - [ ] Zero hardcoded content in any .astro file
 - [ ] No unnecessary CDN scripts (only fonts & Font Awesome)
 
-**Estimated Time:** 3-4 hours
+**Estimated Time:** 4-5 hours (was 3-4, now includes ESLint/Prettier setup)
 
 **Next:** Plan 2 - Content migration from HTML to collections
 

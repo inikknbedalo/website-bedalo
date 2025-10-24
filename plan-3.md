@@ -46,8 +46,10 @@ File: `src/components/sections/Hero.astro`
 - Props: title, subtitle, image, cta (text, href), overlay
 - Full-width hero with background image
 - Centered content with gradient overlay
-- CTA button
+- CTA button with `data-astro-prefetch` on href
 - Dark mode overlay adjustments
+- **Reference:** Hero patterns in `static-site/index.html`
+- **Commit:** "feat(sections): create Hero component"
 - **Reference:** Extract pattern from `static-site/index.html` hero
 - **Commit:** "feat(sections): create Hero component"
 
