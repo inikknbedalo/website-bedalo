@@ -1,0 +1,93 @@
+---
+/**
+ * Footer Social Media Links
+ * Displays social media icons with links
+ */
+interface SocialMedia {
+  instagram?: string;
+  youtube?: string;
+  tiktok?: string;
+  facebook?: string;
+  twitter?: string;
+}
+
+interface Props {
+  social: SocialMedia;
+}
+
+const { social } = Astro.props;
+---
+
+<div class="mt-8 border-t border-slate-700 pt-8 text-center">
+  <div class="flex flex-wrap justify-center gap-x-6 gap-y-4">
+    {
+      social.instagram && (
+        <a
+          href={social.instagram}
+          aria-label="Instagram"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+        >
+          <i class="fa-brands fa-instagram text-2xl" aria-hidden="true" />
+        </a>
+      )
+    }
+    {
+      social.youtube && (
+        <a
+          href={social.youtube}
+          aria-label="YouTube"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+        >
+          <i class="fa-brands fa-youtube text-2xl" aria-hidden="true" />
+        </a>
+      )
+    }
+    {
+      social.tiktok && (
+        <a
+          href={social.tiktok}
+          aria-label="TikTok"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+        >
+          <i class="fa-brands fa-tiktok text-2xl" aria-hidden="true" />
+        </a>
+      )
+    }
+    {
+      social.facebook && (
+        <a
+          href={social.facebook}
+          aria-label="Facebook"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+        >
+          <i class="fa-brands fa-facebook text-2xl" aria-hidden="true" />
+        </a>
+      )
+    }
+    {
+      social.twitter && (
+        <a
+          href={social.twitter}
+          aria-label="Twitter"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-slate-400 transition-all duration-300 hover:scale-110 hover:text-blue-400"
+        >
+          <i class="fa-brands fa-twitter text-2xl" aria-hidden="true" />
+        </a>
+      )
+    }
+  </div>
+
+  <p class="mt-6 text-sm text-slate-400">
+    &copy; {new Date().getFullYear()} Dusun Bedalo. Hak Cipta Dilindungi.
+  </p>
+</div>
