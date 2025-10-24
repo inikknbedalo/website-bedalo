@@ -50,20 +50,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isNaN(endVal)) return;
 
     try {
-      if (typeof CountUp === "undefined") {
+      // CountUp.js UMD exposes as window.countUp.CountUp
+      const CountUpConstructor = window.countUp?.CountUp || window.CountUp;
+      
+      if (!CountUpConstructor) {
         el.textContent = endVal.toLocaleString("id-ID");
         return;
       }
 
-      const countUp = new CountUp(el, endVal, {
+      const counter = new CountUpConstructor(el, endVal, {
         startVal: 0,
         duration: CONFIG.COUNTUP_DURATION_SEC,
         useGrouping: true,
-        separator: ",",
+        separator: ".",
+        decimal: ",",
       });
       
-      if (!countUp.error) {
-        countUp.start();
+      if (!counter.error) {
+        counter.start();
       } else {
         el.textContent = endVal.toLocaleString("id-ID");
       }
