@@ -1,4 +1,6 @@
 ---
+import { getEntry } from 'astro:content';
+
 interface Props {
   type?: 'Organization' | 'Article' | 'Product' | 'Place' | 'LocalBusiness';
   data?: Record<string, unknown>;
@@ -6,18 +8,28 @@ interface Props {
 
 const { type = 'Organization', data = {} } = Astro.props;
 
+// Load site config for organization data
+const siteConfigEntry = await getEntry('config', 'site');
+
+if (!siteConfigEntry || !('site' in siteConfigEntry.data)) {
+  throw new Error('Site configuration not found');
+}
+
+const siteConfig = siteConfigEntry.data;
+const orgData = siteConfig.seo?.organization;
+
 let schema: Record<string, unknown> = {
-  '@context': 'https://schema.org',
+  '@context': siteConfig.seo?.schemaContext || 'https://schema.org',
 };
 
 if (type === 'Organization') {
   schema = {
     ...schema,
     '@type': 'Organization',
-    name: 'Dusun Bedalo',
-    url: 'https://bedalo.pages.dev',
-    logo: 'https://bedalo.pages.dev/assets/images/logo.png',
-    description: 'Website resmi Dusun Bedalo, Krambilsawit, Saptosari, Gunungkidul',
+    name: orgData?.name || 'Dusun Bedalo',
+    url: orgData?.url || siteConfig.site.url,
+    logo: orgData?.logo || `${siteConfig.site.url}/assets/images/logo.png`,
+    description: siteConfig.site.description,
     address: {
       '@type': 'PostalAddress',
       addressLocality: 'Saptosari',
@@ -41,10 +53,10 @@ if (type === 'Organization') {
     },
     publisher: {
       '@type': 'Organization',
-      name: 'Dusun Bedalo',
+      name: orgData?.name || 'Dusun Bedalo',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://bedalo.pages.dev/assets/images/logo.png',
+        url: orgData?.logo || `${siteConfig.site.url}/assets/images/logo.png`,
       },
     },
     ...data,
