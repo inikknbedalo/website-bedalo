@@ -1,0 +1,311 @@
+// Authentication Configuration
+const AUTH_CONFIG = {
+  PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d',
+  SESSION_KEY: 'dashboard_auth_token',
+  SESSION_DURATION: 24 * 60 * 60 * 1000,
+  LAST_ACTIVITY_KEY: 'dashboard_last_activity',
+};
+
+// Simple authentication without classes
+const DashboardAuth = {
+  // Check authentication on page load
+  init() {
+    console.log('[AUTH] Initializing...');
+    
+    if (this.isAuthenticated()) {
+      console.log('[AUTH] Already authenticated, showing dashboard');
+      this.showDashboard();
+    } else {
+      console.log('[AUTH] Not authenticated, showing login');
+      this.showLogin();
+    }
+  },
+
+  // Hash password using SHA-256
+  async hashPassword(password) {
+    const encoder = new TextEncoder();
+    const data = encoder.encode(password);
+    const hash = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hash));
+    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    return hashHex;
+  },
+
+  // Verify password
+  async verifyPassword(password) {
+    const hash = await this.hashPassword(password);
+    return hash === AUTH_CONFIG.PASSWORD_HASH;
+  },
+
+  // Handle login submission
+  async handleLogin(event) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    console.log('[AUTH] Login attempt started');
+    
+    const passwordInput = document.getElementById('password');
+    const loginButton = document.getElementById('login-button');
+    const errorDiv = document.getElementById('login-error');
+    
+    if (!passwordInput || !loginButton || !errorDiv) {
+      console.error('[AUTH] Missing form elements');
+      return false;
+    }
+    
+    const password = passwordInput.value.trim();
+    if (!password) {
+      console.log('[AUTH] Empty password');
+      errorDiv.textContent = 'Masukkan password';
+      errorDiv.classList.remove('hidden');
+      return false;
+    }
+    
+    // Show loading
+    loginButton.disabled = true;
+    loginButton.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Memverifikasi...';
+    errorDiv.classList.add('hidden');
+    
+    try {
+      console.log('[AUTH] Verifying password...');
+      const isValid = await this.verifyPassword(password);
+      console.log('[AUTH] Verification result:', isValid);
+      
+      // Clear password
+      passwordInput.value = '';
+      
+      if (isValid) {
+        console.log('[AUTH] ✓ Login successful');
+        
+        // Store session
+        const token = this.generateToken();
+        sessionStorage.setItem(AUTH_CONFIG.SESSION_KEY, token);
+        sessionStorage.setItem(AUTH_CONFIG.LAST_ACTIVITY_KEY, Date.now().toString());
+        console.log('[AUTH] Session stored');
+        
+        // Show success briefly
+        loginButton.innerHTML = '<i class="fas fa-check mr-2"></i> Berhasil!';
+        loginButton.classList.remove('bg-blue-600');
+        loginButton.classList.add('bg-green-600');
+        
+        // Wait a moment then show dashboard
+        setTimeout(() => {
+          console.log('[AUTH] Showing dashboard...');
+          this.showDashboard();
+        }, 300);
+        
+      } else {
+        console.log('[AUTH] ✗ Invalid password');
+        errorDiv.textContent = 'Password salah. Silakan coba lagi.';
+        errorDiv.classList.remove('hidden');
+        loginButton.disabled = false;
+        loginButton.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+        passwordInput.focus();
+      }
+    } catch (error) {
+      console.error('[AUTH] Error:', error);
+      errorDiv.textContent = 'Terjadi kesalahan: ' + error.message;
+      errorDiv.classList.remove('hidden');
+      loginButton.disabled = false;
+      loginButton.innerHTML = '<i class="fas fa-sign-in-alt mr-2"></i> Login';
+    }
+    
+    return false;
+  },
+
+  // Generate random token
+  generateToken() {
+    return Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
+  },
+
+  // Check if authenticated
+  isAuthenticated() {
+    const token = sessionStorage.getItem(AUTH_CONFIG.SESSION_KEY);
+    const lastActivity = parseInt(sessionStorage.getItem(AUTH_CONFIG.LAST_ACTIVITY_KEY) || '0');
+    const now = Date.now();
+    
+    if (token && (now - lastActivity < AUTH_CONFIG.SESSION_DURATION)) {
+      return true;
+    }
+    
+    // Session expired
+    this.logout();
+    return false;
+  },
+
+  // Logout
+  logout() {
+    sessionStorage.removeItem(AUTH_CONFIG.SESSION_KEY);
+    sessionStorage.removeItem(AUTH_CONFIG.LAST_ACTIVITY_KEY);
+  },
+
+  // Show login screen
+  showLogin() {
+    console.log('[AUTH] showLogin called');
+    
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardContent = document.getElementById('dashboard-content');
+    
+    if (!loginScreen || !dashboardContent) {
+      console.error('[AUTH] Elements not found');
+      return;
+    }
+    
+    loginScreen.classList.remove('hidden');
+    dashboardContent.classList.add('hidden');
+    
+    console.log('[AUTH] Login screen visible');
+    
+    // Clean URL
+    if (window.location.search || window.location.hash) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
+    // Setup event listeners
+    this.setupLoginListeners();
+  },
+
+  // Setup login event listeners
+  setupLoginListeners() {
+    const loginForm = document.getElementById('login-form');
+    const loginButton = document.getElementById('login-button');
+    const toggleBtn = document.getElementById('toggle-password');
+    const passwordInput = document.getElementById('password');
+    
+    if (loginForm && !loginForm.dataset.initialized) {
+      console.log('[AUTH] Setting up login listeners');
+      
+      // Form submit
+      loginForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        DashboardAuth.handleLogin(e);
+      });
+      
+      // Button click
+      if (loginButton) {
+        loginButton.addEventListener('click', (e) => {
+          e.preventDefault();
+          DashboardAuth.handleLogin(e);
+        });
+      }
+      
+      // Toggle password visibility
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', () => {
+          const type = passwordInput.type === 'password' ? 'text' : 'password';
+          passwordInput.type = type;
+          const icon = toggleBtn.querySelector('i');
+          icon.classList.toggle('fa-eye');
+          icon.classList.toggle('fa-eye-slash');
+        });
+      }
+      
+      loginForm.dataset.initialized = 'true';
+      console.log('[AUTH] Listeners attached');
+    }
+  },
+
+  // Show dashboard
+  showDashboard() {
+    console.log('[AUTH] showDashboard called');
+    
+    const loginScreen = document.getElementById('login-screen');
+    const dashboardContent = document.getElementById('dashboard-content');
+    
+    if (!loginScreen || !dashboardContent) {
+      console.error('[AUTH] Dashboard elements not found!');
+      return;
+    }
+    
+    // Hide login, show dashboard
+    loginScreen.classList.add('hidden');
+    dashboardContent.classList.remove('hidden');
+    
+    console.log('[AUTH] ✓ Login hidden, dashboard visible');
+    
+    // Initialize dashboard
+    if (typeof window.initializeDashboard === 'function') {
+      console.log('[AUTH] Initializing dashboard...');
+      window.initializeDashboard();
+    } else {
+      console.warn('[AUTH] initializeDashboard function not found');
+    }
+    
+    // Setup refresh button
+    this.setupRefreshButton();
+    
+    // Update last refresh time
+    this.updateLastRefreshTime();
+  },
+
+  // Setup refresh button
+  setupRefreshButton() {
+    const refreshBtn = document.getElementById('refresh-btn');
+    if (refreshBtn && !refreshBtn.dataset.initialized) {
+      refreshBtn.addEventListener('click', async () => {
+        refreshBtn.classList.add('refreshing');
+        refreshBtn.disabled = true;
+        
+        try {
+          if (window.dataFetcher && window.dataFetcher.fetchData) {
+            await window.dataFetcher.fetchData();
+          }
+          DashboardAuth.updateLastRefreshTime();
+          DashboardAuth.showToast('Data berhasil dimuat ulang!', 'success');
+        } catch (error) {
+          console.error('Refresh failed:', error);
+          DashboardAuth.showToast('Gagal memuat data.', 'error');
+        } finally {
+          refreshBtn.classList.remove('refreshing');
+          refreshBtn.disabled = false;
+        }
+      });
+      refreshBtn.dataset.initialized = 'true';
+    }
+  },
+  
+  // Update last refresh time display
+  updateLastRefreshTime() {
+    const timeDisplay = document.getElementById('last-refresh-time');
+    if (timeDisplay) {
+      const now = new Date();
+      const timeString = now.toLocaleTimeString('id-ID', { 
+        hour: '2-digit', 
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      timeDisplay.textContent = timeString;
+    }
+  },
+  
+  // Simple toast notification
+  showToast(message, type = 'info') {
+    const toast = document.createElement('div');
+    toast.className = `fixed top-4 right-4 px-6 py-3 rounded-lg shadow-lg text-white z-50 transition-opacity ${
+      type === 'success' ? 'bg-green-500' : 
+      type === 'error' ? 'bg-red-500' : 'bg-blue-500'
+    }`;
+    toast.innerHTML = `
+      <div class="flex items-center gap-2">
+        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+        <span>${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+  }
+};
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  console.log('[AUTH] DOM ready, initializing...');
+  DashboardAuth.init();
+});

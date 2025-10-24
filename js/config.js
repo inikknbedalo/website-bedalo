@@ -38,12 +38,26 @@ const SITE_CONFIG = {
   },
 };
 
+// Dashboard Configuration
+const DASHBOARD_CONFIG = {
+  SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
+  SHEET_NAME: 'aspirasi',
+  API_URL: '',
+  REFRESH_INTERVAL: 60000, // 1 minute
+  MAX_RETRIES: 3,
+  RETRY_DELAY: 2000,
+};
+
+// Construct API URL
+DASHBOARD_CONFIG.API_URL = `https://docs.google.com/spreadsheets/d/${DASHBOARD_CONFIG.SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DASHBOARD_CONFIG.SHEET_NAME)}`;
+
 // Make config globally available (for non-module environments)
 if (typeof window !== "undefined") {
   window.SITE_CONFIG = SITE_CONFIG;
+  window.DASHBOARD_CONFIG = DASHBOARD_CONFIG;
 }
 
 // Export for ES modules
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = SITE_CONFIG;
+  module.exports = { SITE_CONFIG, DASHBOARD_CONFIG };
 }
