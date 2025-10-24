@@ -1,6 +1,3 @@
-/* Tailwind Custom Component Classes - Vanilla HTML */
-/* NO Font Awesome fonts - using CDN instead */
-
 @layer base {
   html {
     scroll-behavior: smooth;
