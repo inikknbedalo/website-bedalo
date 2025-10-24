@@ -6,7 +6,7 @@ const rowsPerPage = 5;
 
 // Initialize dashboard (called by auth after login)
 window.initializeDashboard = async function() {
-  console.log('Initializing dashboard...');
+  // console.log('Initializing dashboard...');
   
   // Fetch initial data
   try {
@@ -19,13 +19,13 @@ window.initializeDashboard = async function() {
       window.dataFetcher.startAutoRefresh();
     }
   } catch (error) {
-    console.error('Failed to initialize dashboard:', error);
+    // console.error('Failed to initialize dashboard:', error);
   }
 };
 
 // Update dashboard with new data (called by data-fetcher)
 window.updateDashboard = function(data) {
-  console.log('Updating dashboard with data:', data.length, 'records');
+  // console.log('Updating dashboard with data:', data.length, 'records');
   
   processedData = processData(data);
   filteredData = [...processedData];
@@ -46,7 +46,7 @@ window.updateDashboard = function(data) {
 function processData(data) {
   if (!Array.isArray(data)) return [];
   
-  console.log('Processing data, first item:', data[0]);
+  // console.log('Processing data, first item:', data[0]);
   
   return data
     .map((item) => {
@@ -316,7 +316,7 @@ function filterAndSearchData() {
   const searchTerm = searchInput.value.toLowerCase().trim();
   const selectedSubject = filterSelect.value;
   
-  console.log('Filtering - Search:', searchTerm, 'Subject:', selectedSubject);
+  // console.log('Filtering - Search:', searchTerm, 'Subject:', selectedSubject);
   
   // Start with all processed data
   filteredData = processedData.filter((item) => {
@@ -338,7 +338,7 @@ function filterAndSearchData() {
     return matchesSearch && matchesSubject;
   });
   
-  console.log('Filtered results:', filteredData.length, 'items');
+  // console.log('Filtered results:', filteredData.length, 'items');
   
   // Reset to first page and display
   currentPage = 1;
@@ -360,7 +360,7 @@ function populateFilterOptions(data) {
   // Sort subjects alphabetically
   uniqueSubjects.sort();
   
-  console.log('Populating filter with subjects:', uniqueSubjects);
+  // console.log('Populating filter with subjects:', uniqueSubjects);
   
   // Add options
   uniqueSubjects.forEach((subject) => {
@@ -373,7 +373,7 @@ function populateFilterOptions(data) {
 
 // Setup event listeners for filter and search
 document.addEventListener("DOMContentLoaded", () => {
-  console.log('Setting up filter event listeners...');
+  // console.log('Setting up filter event listeners...');
   
   const searchInput = document.getElementById("search-input");
   const filterSelect = document.getElementById("filter-select");
@@ -381,28 +381,28 @@ document.addEventListener("DOMContentLoaded", () => {
   
   if (searchInput) {
     searchInput.addEventListener("input", () => {
-      console.log('Search input changed');
+      // console.log('Search input changed');
       filterAndSearchData();
     });
-    console.log('✓ Search input listener attached');
+    // console.log('✓ Search input listener attached');
   }
   
   if (filterSelect) {
     filterSelect.addEventListener("change", () => {
-      console.log('Filter select changed to:', filterSelect.value);
+      // console.log('Filter select changed to:', filterSelect.value);
       filterAndSearchData();
     });
-    console.log('✓ Filter select listener attached');
+    // console.log('✓ Filter select listener attached');
   }
   
   if (resetFiltersButton) {
     resetFiltersButton.addEventListener("click", () => {
-      console.log('Reset filters clicked');
+      // console.log('Reset filters clicked');
       if (searchInput) searchInput.value = "";
       if (filterSelect) filterSelect.value = "";
       filterAndSearchData();
     });
-    console.log('✓ Reset button listener attached');
+    // console.log('✓ Reset button listener attached');
   }
   
   // Hardcoded data fallback array (keeping for reference)
