@@ -1,0 +1,82 @@
+{
+  "title": "Survei Digitalisasi Bedalo",
+  "description": "Panduan, checklist, dan jadwal untuk tim survei KKN",
+  "databaseUrl": "https://docs.google.com/spreadsheets/d/1THGeYhivhE9zUZaW6KuiknF41-oQdDPM1rqI9rg8-Kg/edit?usp=sharing",
+  "teams": [
+    {
+      "id": 1,
+      "name": "Tim 1: Koordinator & Stakeholder",
+      "color": "gray",
+      "description": "Wawancara tokoh kunci (Dukuh, RW, RT), menjadi pusat informasi, dan bertanggung jawab atas development & finalisasi website.",
+      "forms": [
+        {
+          "title": "Form A: Stakeholder Kunci",
+          "url": "https://forms.gle/39xXy6qZMmXgXy556",
+          "color": "gray"
+        },
+        {
+          "title": "Form A: Informasi Dusun",
+          "url": "https://forms.gle/jkjhB5Kxoi93V8cb9",
+          "color": "gray"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Tim Pantai: Akomodasi, Jasa, Wisata & Infra",
+      "color": "cyan",
+      "description": "Gabungan Tim 2 & 5. Mendata homestay, jasa, memetakan daya tarik wisata, akses jalan, & tes konektivitas. Wajib mencatat koordinat GPS.",
+      "forms": [
+        {
+          "title": "Form B: Akomodasi",
+          "url": "https://forms.gle/qW4JDaG1xquSEMUD9",
+          "color": "blue"
+        },
+        {
+          "title": "Form E: Jasa",
+          "url": "https://forms.gle/my3vWKMwUFHfNA1E9",
+          "color": "yellow"
+        },
+        {
+          "title": "Form F: Wisata",
+          "url": "https://forms.gle/yJdWyn3E4kUpyArr9",
+          "color": "purple"
+        },
+        {
+          "title": "Form G: Infrastruktur",
+          "url": "https://forms.gle/3CxpisqoxyxajFsAA",
+          "color": "indigo"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Tim Warung: Kuliner, Kerajinan & Produk Lokal",
+      "color": "orange",
+      "description": "Gabungan Tim 3 & 4. Mendata warung, cafe, pengrajin, dan produk lokal. Dokumentasikan menu/produk unggulan dan proses pembuatan jika ada.",
+      "forms": [
+        {
+          "title": "Form C: Kuliner",
+          "url": "https://forms.gle/RHBbXkNWooPqaGbi7",
+          "color": "red"
+        },
+        {
+          "title": "Form D: Kerajinan & Produk",
+          "url": "https://forms.gle/ZcrbFtMuPzDiJFXB6",
+          "color": "green"
+        }
+      ]
+    }
+  ],
+  "colorClasses": {
+    "gray": "border-gray-800 text-gray-800",
+    "cyan": "border-cyan-800 text-cyan-800",
+    "orange": "border-orange-800 text-orange-800",
+    "blue": "bg-blue-600 hover:bg-blue-700",
+    "yellow": "bg-yellow-600 hover:bg-yellow-700",
+    "purple": "bg-purple-600 hover:bg-purple-700",
+    "indigo": "bg-indigo-600 hover:bg-indigo-700",
+    "red": "bg-red-600 hover:bg-red-700",
+    "green": "bg-green-600 hover:bg-green-700"
+  }
+}

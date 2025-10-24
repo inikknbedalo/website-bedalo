@@ -56,5 +56,21 @@
       "href": "/kontak",
       "primary": true
     }
-  ]
+  ],
+  "constants": {
+    "pagination": {
+      "articlesPerPage": 6,
+      "itemsPerPage": 10
+    }
+  },
+  "seo": {
+    "organization": {
+      "name": "Dusun Bedalo",
+      "type": "Organization",
+      "url": "https://bedalo.pages.dev",
+      "logo": "https://bedalo.pages.dev/assets/images/logo.png"
+    },
+    "defaultImage": "https://bedalo.pages.dev/assets/images/ngedan.webp",
+    "schemaContext": "https://schema.org"
+  }
 }

@@ -1,0 +1,78 @@
+{
+  "page": "privacy-policy",
+  "title": "Kebijakan Privasi",
+  "subtitle": "Komitmen kami terhadap privasi Anda di Website Dusun Bedalo.",
+  "lastUpdated": "2025-10-23",
+  "sections": [
+    {
+      "id": "intro",
+      "title": "Pengantar",
+      "icon": "fas fa-info-circle",
+      "iconColor": "blue-600",
+      "content": [
+        "Terima kasih telah mengunjungi website Dusun Bedalo. Kami menghargai privasi Anda. Kebijakan Privasi ini menjelaskan informasi apa yang mungkin kami kumpulkan melalui website ini dan bagaimana informasi tersebut digunakan, khususnya terkait Formulir Aspirasi.",
+        "Website ini bersifat statis dan informatif, sehingga kami tidak secara aktif mengumpulkan data pribadi pengunjung selain yang dikirimkan secara sukarela melalui formulir yang tersedia."
+      ]
+    },
+    {
+      "id": "data-collection",
+      "title": "Informasi yang Dikumpulkan",
+      "icon": "fas fa-database",
+      "iconColor": "green-600",
+      "content": [
+        "Satu-satunya cara kami mengumpulkan informasi pribadi adalah melalui **Formulir Aspirasi** di halaman [Kontak](/kontak#aspirasi). Informasi yang Anda masukkan secara sukarela, yaitu:"
+      ],
+      "list": [
+        "Nama Lengkap",
+        "Informasi Kontak (No. Telepon / Email)",
+        "Subjek Pesan",
+        "Isi Pesan Aspirasi"
+      ],
+      "note": "**Penting:** Website ini tidak menggunakan cookies analitik atau pelacakan lain yang mengidentifikasi Anda secara pribadi saat Anda hanya menjelajah halaman."
+    },
+    {
+      "id": "data-usage",
+      "title": "Penggunaan Informasi",
+      "icon": "fas fa-tasks",
+      "iconColor": "yellow-600",
+      "content": [
+        "Informasi dari Formulir Aspirasi digunakan secara eksklusif untuk tujuan berikut:"
+      ],
+      "list": [
+        "Menerima, meninjau, dan menanggapi pertanyaan atau masukan Anda.",
+        "Meneruskan aspirasi Anda kepada perangkat dusun atau pihak terkait untuk ditindaklanjuti.",
+        "Menghubungi Anda kembali jika diperlukan klarifikasi mengenai aspirasi yang disampaikan."
+      ],
+      "note": "Kami menjamin bahwa data pribadi Anda **tidak akan dijual, disewakan, atau dibagikan** kepada pihak ketiga untuk kepentingan pemasaran atau komersial lainnya."
+    },
+    {
+      "id": "data-security",
+      "title": "Keamanan & Penyimpanan Data",
+      "icon": "fas fa-lock",
+      "iconColor": "red-600",
+      "content": [
+        "Formulir Aspirasi di website ini dirancang untuk mengirimkan data langsung ke sistem eksternal (misalnya, Google Forms) dan **tidak disimpan di server hosting website ini**. Keamanan data Anda setelah dikirimkan akan mengikuti kebijakan platform penerima tersebut (misalnya, Google).",
+        "Meskipun kami berupaya menjaga keamanan, harap dipahami bahwa tidak ada transmisi data online yang 100% aman."
+      ]
+    },
+    {
+      "id": "external-links",
+      "title": "Tautan Eksternal",
+      "icon": "fas fa-external-link-alt",
+      "iconColor": "purple-600",
+      "content": [
+        "Website ini mungkin menyertakan tautan ke situs web lain (seperti Google Maps untuk peta lokasi atau media sosial). Kebijakan privasi ini tidak berlaku untuk situs-situs tersebut. Kami menganjurkan Anda untuk membaca kebijakan privasi masing-masing situs yang Anda kunjungi."
+      ]
+    },
+    {
+      "id": "changes-contact",
+      "title": "Perubahan & Kontak",
+      "icon": "fas fa-history",
+      "iconColor": "gray-600",
+      "content": [
+        "Kebijakan Privasi ini dapat kami perbarui dari waktu ke waktu. Setiap perubahan akan diposting di halaman ini.",
+        "Jika Anda memiliki pertanyaan tentang kebijakan ini, silakan hubungi kami melalui halaman [Kontak](/kontak)."
+      ]
+    }
+  ]
+}

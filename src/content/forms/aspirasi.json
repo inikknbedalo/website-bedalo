@@ -1,0 +1,62 @@
+{
+  "formId": "aspirasi",
+  "formType": "google-forms",
+  "formAction": "https://docs.google.com/forms/u/0/d/e/1FAIpQLSfWaCgBA-cNraUbTmOGjlmrZQ-99edYMdUSkbA-kQBtZm6QOw/formResponse",
+  "title": "Formulir Aspirasi Warga",
+  "description": "Kami sangat terbuka untuk menerima aspirasi, kritik, dan saran dari seluruh warga demi kemajuan Dusun Bedalo.",
+  "fields": [
+    {
+      "id": "nama",
+      "name": "entry.2116275708",
+      "label": "Nama Lengkap",
+      "type": "text",
+      "placeholder": "Masukkan nama Anda",
+      "required": true
+    },
+    {
+      "id": "kontak",
+      "name": "entry.175133211",
+      "label": "No. Telepon / Email",
+      "type": "text",
+      "placeholder": "Agar kami bisa menghubungi Anda kembali",
+      "required": true
+    },
+    {
+      "id": "subjek",
+      "name": "entry.1266128475",
+      "label": "Subjek",
+      "type": "select",
+      "placeholder": "-- Pilih Subjek --",
+      "required": true,
+      "options": [
+        "Perbaikan Jalan",
+        "Fasilitas Umum",
+        "Keamanan",
+        "Kebersihan",
+        "Kegiatan Pemuda",
+        "Lainnya"
+      ]
+    },
+    {
+      "id": "pesan",
+      "name": "entry.1942425125",
+      "label": "Pesan Aspirasi",
+      "type": "textarea",
+      "placeholder": "Tuliskan pesan, ide, atau masukan Anda di sini...",
+      "rows": 5,
+      "required": true
+    }
+  ],
+  "successMessage": {
+    "icon": "fas fa-check-circle text-6xl text-green-500",
+    "title": "Terima Kasih!",
+    "message": "Aspirasi Anda telah berhasil dikirim.",
+    "buttonText": "Tutup"
+  },
+  "errorMessage": {
+    "icon": "fas fa-exclamation-circle text-6xl text-red-500",
+    "title": "Terjadi Kesalahan",
+    "message": "Mohon coba lagi beberapa saat.",
+    "buttonText": "Tutup"
+  }
+}

@@ -7,15 +7,22 @@ import Card from '../components/ui/Card.astro';
 import Button from '../components/ui/Button.astro';
 import OfficialCard from '../components/ui/OfficialCard.astro';
 
-const siteConfig = await getEntry('config', 'site');
+const siteConfigEntry = await getEntry('config', 'site');
 const governmentData = await getEntry('government', 'officials');
+const formData = await getEntry('forms', 'aspirasi');
 
-if (!siteConfig) {
+if (!siteConfigEntry || !('site' in siteConfigEntry.data)) {
   throw new Error('Site config not found');
 }
 
-const { contact } = siteConfig.data;
+if (!formData || !('formId' in formData.data)) {
+  throw new Error('Form config not found');
+}
+
+const siteConfig = siteConfigEntry.data;
+const { contact } = siteConfig;
 const officials = governmentData?.data.officials || [];
+const form = formData.data;
 ---
 
 <MainLayout title="Kontak" description="Hubungi Dusun Bedalo">
@@ -122,83 +129,61 @@ const officials = governmentData?.data.officials || [];
             Punya Ide atau Masukan?
           </h2>
           <p class="mt-4 leading-relaxed text-gray-600">
-            Kami sangat terbuka untuk menerima aspirasi, kritik, dan saran
-            dari seluruh warga demi kemajuan Dusun Bedalo. Silakan
-            sampaikan melalui formulir berikut.
+            {form.description}
           </p>
         </div>
         <div class="w-full lg:w-2/3">
           <Card variant="default" padding="p-8" class="shadow-2xl">
             <h3 class="mb-6 text-center text-2xl font-bold text-gray-800">
-              Formulir Aspirasi Warga
+              {form.title}
             </h3>
             <form
               id="aspirasi-form"
-              action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSfWaCgBA-cNraUbTmOGjlmrZQ-99edYMdUSkbA-kQBtZm6QOw/formResponse"
+              action={form.formAction}
               method="POST"
               target="hidden_iframe"
               class="space-y-4"
             >
-              <div>
-                <label for="nama" class="mb-2 block text-sm font-bold text-gray-700">
-                  Nama Lengkap
-                </label>
-                <input
-                  type="text"
-                  id="nama"
-                  name="entry.2116275708"
-                  placeholder="Masukkan nama Anda"
-                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label for="kontak" class="mb-2 block text-sm font-bold text-gray-700">
-                  No. Telepon / Email
-                </label>
-                <input
-                  type="text"
-                  id="kontak"
-                  name="entry.175133211"
-                  placeholder="Agar kami bisa menghubungi Anda kembali"
-                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
-                  required
-                />
-              </div>
-              <div>
-                <label for="subjek" class="mb-2 block text-sm font-bold text-gray-700">
-                  Subjek
-                </label>
-                <select
-                  id="subjek"
-                  name="entry.1266128475"
-                  class="w-full appearance-none rounded border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
-                  required
-                >
-                  <option value="" disabled selected>
-                    -- Pilih Subjek --
-                  </option>
-                  <option value="Perbaikan Jalan">Perbaikan Jalan</option>
-                  <option value="Fasilitas Umum">Fasilitas Umum</option>
-                  <option value="Keamanan">Keamanan</option>
-                  <option value="Kebersihan">Kebersihan</option>
-                  <option value="Kegiatan Pemuda">Kegiatan Pemuda</option>
-                  <option value="Lainnya">Lainnya</option>
-                </select>
-              </div>
-              <div>
-                <label for="pesan" class="mb-2 block text-sm font-bold text-gray-700">
-                  Pesan Aspirasi
-                </label>
-                <textarea
-                  id="pesan"
-                  name="entry.1942425125"
-                  rows="5"
-                  placeholder="Tuliskan pesan, ide, atau masukan Anda di sini..."
-                  class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
-                  required
-                ></textarea>
-              </div>
+              {form.fields.map((field) => (
+                <div>
+                  <label for={field.id} class="mb-2 block text-sm font-bold text-gray-700">
+                    {field.label}
+                  </label>
+                  {field.type === 'textarea' ? (
+                    <textarea
+                      id={field.id}
+                      name={field.name}
+                      rows={field.rows || 5}
+                      placeholder={field.placeholder}
+                      class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                      required={field.required}
+                    ></textarea>
+                  ) : field.type === 'select' ? (
+                    <select
+                      id={field.id}
+                      name={field.name}
+                      class="w-full appearance-none rounded border border-gray-300 bg-white px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                      required={field.required}
+                    >
+                      <option value="" disabled selected>
+                        {field.placeholder}
+                      </option>
+                      {field.options?.map((option) => (
+                        <option value={option}>{option}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      type={field.type}
+                      id={field.id}
+                      name={field.name}
+                      placeholder={field.placeholder}
+                      class="w-full appearance-none rounded border border-gray-300 px-3 py-2 leading-tight text-gray-700 shadow focus:border-blue-500 focus:shadow-outline focus:outline-none"
+                      required={field.required}
+                    />
+                  )}
+                </div>
+              ))}
               <div class="text-center">
                 <Button type="submit" variant="primary" class="w-full transform px-8 py-3 transition duration-300 hover:scale-105">
                   <i class="fas fa-paper-plane"></i>
@@ -225,7 +210,7 @@ const officials = governmentData?.data.officials || [];
 
 <iframe name="hidden_iframe" id="hidden_iframe" class="hidden" title="Hidden form submission iframe" aria-hidden="true"></iframe>
 
-<script>
+<script define:vars={{ successMsg: form.successMessage }}>
   const form = document.getElementById('aspirasi-form') as HTMLFormElement;
   const modal = document.getElementById('status-modal') as HTMLElement;
   const modalContent = document.getElementById('modal-content') as HTMLElement;
@@ -234,12 +219,12 @@ const officials = governmentData?.data.officials || [];
     setTimeout(() => {
       modalContent.innerHTML = `
         <div class="mb-4">
-          <i class="fas fa-check-circle text-6xl text-green-500"></i>
+          <i class="${successMsg.icon}"></i>
         </div>
-        <h3 class="mb-2 text-xl font-bold text-gray-800">Terima Kasih!</h3>
-        <p class="mb-6 text-gray-600">Aspirasi Anda telah berhasil dikirim.</p>
+        <h3 class="mb-2 text-xl font-bold text-gray-800">${successMsg.title}</h3>
+        <p class="mb-6 text-gray-600">${successMsg.message}</p>
         <button id="close-modal" class="rounded-full bg-blue-600 px-6 py-2 font-bold text-white transition duration-300 hover:bg-blue-700">
-          Tutup
+          ${successMsg.buttonText}
         </button>
       `;
       modal.classList.remove('hidden');

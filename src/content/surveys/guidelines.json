@@ -1,0 +1,32 @@
+{
+  "guidelines": [
+    {
+      "id": "gps",
+      "icon": "fas fa-map-marker-alt",
+      "iconColor": "red-600",
+      "title": "GPS Coordinates",
+      "description": "Wajib mencatat koordinat GPS untuk setiap lokasi wisata, akomodasi, dan UMKM."
+    },
+    {
+      "id": "documentation",
+      "icon": "fas fa-camera",
+      "iconColor": "blue-600",
+      "title": "Dokumentasi Visual",
+      "description": "Ambil foto berkualitas baik untuk setiap objek survei (minimal 3-5 foto per lokasi)."
+    },
+    {
+      "id": "interview",
+      "icon": "fas fa-users",
+      "iconColor": "green-600",
+      "title": "Wawancara",
+      "description": "Lakukan wawancara singkat dengan pemilik/pengelola untuk informasi detail."
+    },
+    {
+      "id": "verification",
+      "icon": "fas fa-check-circle",
+      "iconColor": "purple-600",
+      "title": "Verifikasi Data",
+      "description": "Pastikan semua data sudah terisi lengkap dan akurat sebelum submit form."
+    }
+  ]
+}

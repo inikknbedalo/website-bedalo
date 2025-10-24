@@ -1,0 +1,21 @@
+{
+  "page": "404",
+  "title": "Halaman Tidak Ditemukan",
+  "message": "Maaf, halaman yang Anda cari tidak ditemukan atau mungkin telah dipindahkan.",
+  "icon": "fas fa-exclamation-triangle",
+  "iconColor": "yellow-500",
+  "actions": [
+    {
+      "label": "Kembali ke Beranda",
+      "href": "/",
+      "icon": "fas fa-home",
+      "variant": "primary"
+    },
+    {
+      "label": "Lihat Peta Situs",
+      "href": "/peta-situs",
+      "icon": "fas fa-sitemap",
+      "variant": "secondary"
+    }
+  ]
+}

@@ -28,6 +28,17 @@ if (!stats) {
     description: stat.description ?? undefined,
   })) || [];
 }
+
+// Get UI config
+const uiConfigEntry = await getEntry('config', 'ui');
+const animations = (uiConfigEntry && 'animations' in uiConfigEntry.data) 
+  ? uiConfigEntry.data.animations 
+  : {
+      countUpDuration: 2.5,
+      intersectionThreshold: 0.5,
+      useEasing: true,
+      useGrouping: true,
+    };
 ---
 
 <Section>
@@ -50,6 +61,9 @@ if (!stats) {
             <p
               class="count-up-number text-3xl font-bold text-gray-800"
               data-value={stat.value}
+              data-duration={animations.countUpDuration}
+              data-use-easing={animations.useEasing}
+              data-use-grouping={animations.useGrouping}
             >
               {stat.value}
               {stat.suffix || ''}
@@ -74,12 +88,16 @@ if (!stats) {
           if (entry.isIntersecting) {
             const element = entry.target as HTMLElement;
             const value = element.getAttribute('data-value');
+            const duration = parseFloat(element.getAttribute('data-duration') || '2.5');
+            const useEasing = element.getAttribute('data-use-easing') === 'true';
+            const useGrouping = element.getAttribute('data-use-grouping') === 'true';
+            
             if (value) {
               const numValue = parseInt(value, 10);
               const countUp = new CountUp(element, numValue, {
-                duration: 2.5,
-                useEasing: true,
-                useGrouping: true,
+                duration,
+                useEasing,
+                useGrouping,
                 suffix: element.textContent?.replace(value, '') || '',
               });
 
@@ -92,7 +110,7 @@ if (!stats) {
           }
         });
       },
-      { threshold: 0.5 }
+      { threshold: parseFloat(document.querySelector('.count-up-number')?.getAttribute('data-threshold') || '0.5') }
     );
 
     elements.forEach((el) => observer.observe(el));

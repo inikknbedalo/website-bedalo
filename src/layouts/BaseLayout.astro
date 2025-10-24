@@ -9,22 +9,30 @@ interface Props {
   canonicalURL?: string;
 }
 
-const siteConfig = await getEntry('config', 'site');
+const siteConfigEntry = await getEntry('config', 'site');
+const resourcesConfigEntry = await getEntry('config', 'resources');
 
-if (!siteConfig) {
+if (!siteConfigEntry || !('site' in siteConfigEntry.data)) {
   throw new Error('Site configuration not found');
 }
+
+if (!resourcesConfigEntry || !('fonts' in resourcesConfigEntry.data)) {
+  throw new Error('Resources configuration not found');
+}
+
+const siteConfig = siteConfigEntry.data;
+const resources = resourcesConfigEntry.data;
 
 const {
   title: defaultTitle,
   description: defaultDescription,
   url: siteUrl,
-} = siteConfig.data.site;
+} = siteConfig.site;
 
 const {
   title = defaultTitle,
   description = defaultDescription,
-  image = `${siteUrl}/assets/images/ngedan.webp`,
+  image = siteConfig.seo?.defaultImage || `${siteUrl}/assets/images/ngedan.webp`,
   canonicalURL = Astro.url.pathname,
 } = Astro.props;
 
@@ -37,11 +45,11 @@ const canonical = new URL(canonicalURL, siteUrl).href;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#2563eb" />
+    <meta name="theme-color" content={resources.theme.primaryColor} />
 
     <!-- SEO Meta Tags -->
     <meta name="description" content={description} />
-    <meta name="author" content={siteConfig.data.site.author} />
+    <meta name="author" content={siteConfig.site.author} />
     <link rel="canonical" href={canonical} />
 
     <!-- Open Graph / Facebook -->
@@ -50,7 +58,7 @@ const canonical = new URL(canonicalURL, siteUrl).href;
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={image} />
-    <meta property="og:locale" content={siteConfig.data.site.locale} />
+    <meta property="og:locale" content={siteConfig.site.locale} />
     <meta property="og:site_name" content={defaultTitle} />
 
     <!-- Twitter Card -->
@@ -63,30 +71,39 @@ const canonical = new URL(canonicalURL, siteUrl).href;
     <title>{fullTitle}</title>
 
     <!-- Favicons -->
-    <link rel="icon" type="image/svg+xml" href="/icon.svg" />
-    <link rel="icon" type="image/x-icon" href="/icon.svg" />
-    <link rel="apple-touch-icon" href="/icon.svg" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href={resources.theme.favicon} />
+    <link rel="icon" type="image/x-icon" href={resources.theme.favicon} />
+    <link rel="apple-touch-icon" href={resources.theme.appleTouchIcon} />
+    <link rel="manifest" href={resources.theme.manifest} />
 
     <!-- Preconnect for Performance -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+    {resources.fonts.map((font) =>
+      font.preconnect.map((url) => (
+        <link rel="preconnect" href={url} crossorigin={url.includes('gstatic') ? true : undefined} />
+      ))
+    )}
+    {resources.cdns.map((cdn) => (
+      <link rel="preconnect" href={cdn.preconnect} />
+    ))}
 
-    <!-- Google Fonts (CDN) -->
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
+    <!-- Fonts -->
+    {resources.fonts.map((font) => (
+      <link
+        href={font.url}
+        rel="stylesheet"
+      />
+    ))}
 
-    <!-- Font Awesome 6.7.1 (CDN) -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css"
-      integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
+    <!-- CDN Resources -->
+    {resources.cdns.map((cdn) => (
+      <link
+        rel="stylesheet"
+        href={cdn.url}
+        integrity={cdn.integrity || undefined}
+        crossorigin="anonymous"
+        referrerpolicy="no-referrer"
+      />
+    ))}
   </head>
   <body class="bg-gray-50">
     <slot />

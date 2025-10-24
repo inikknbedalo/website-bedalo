@@ -1,0 +1,58 @@
+{
+  "schedule": [
+    {
+      "day": 1,
+      "title": "Hari Pertama",
+      "color": "blue",
+      "sessions": [
+        {
+          "time": "09:45 – 10:00",
+          "title": "Briefing Pagi",
+          "description": "Finalisasi area, cek kesiapan alat & form. (Semua Tim)"
+        },
+        {
+          "time": "10:00 – 12:00",
+          "title": "Sesi Survei 1",
+          "description": "Tim 1: Menemui tokoh kunci | Tim Warung: Mendata kuliner | Tim Pantai: Memetakan jalan"
+        },
+        {
+          "time": "12:00 – 13:00",
+          "title": "Istirahat",
+          "description": "Makan siang & input data sementara"
+        },
+        {
+          "time": "13:00 – 15:00",
+          "title": "Sesi Survei 2",
+          "description": "Tim 1: Input data, koordinasi | Tim Warung: Mendatangi UMKM | Tim Pantai: Fokus pada spot wisata"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "title": "Hari Kedua",
+      "color": "green",
+      "sessions": [
+        {
+          "time": "09:00 – 09:30",
+          "title": "Evaluasi Hari 1",
+          "description": "Review data & pembagian area tersisa"
+        },
+        {
+          "time": "09:30 – 12:00",
+          "title": "Sesi Survei 3",
+          "description": "Tim 1: Follow up tokoh kunci | Tim Warung: Validasi data | Tim Pantai: Mencari rute alternatif"
+        },
+        {
+          "time": "12:00 – 13:00",
+          "title": "Istirahat",
+          "description": "Makan siang & finalisasi data"
+        },
+        {
+          "time": "13:00 – 15:00",
+          "title": "Finalisasi",
+          "description": "Tim 1: Finalisasi website | Semua Tim: Kompilasi & review akhir"
+        }
+      ]
+    }
+  ]
+}

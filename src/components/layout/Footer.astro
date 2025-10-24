@@ -1,13 +1,14 @@
 ---
 import { getEntry } from 'astro:content';
 
-const siteConfig = await getEntry('config', 'site');
+const siteConfigEntry = await getEntry('config', 'site');
 
-if (!siteConfig) {
+if (!siteConfigEntry || !('site' in siteConfigEntry.data)) {
   throw new Error('Site configuration not found');
 }
 
-const { site, contact, social } = siteConfig.data;
+const siteConfig = siteConfigEntry.data;
+const { site, contact, social } = siteConfig;
 ---
 
 <footer class="bg-slate-900 text-slate-300">

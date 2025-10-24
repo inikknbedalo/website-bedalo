@@ -1,0 +1,32 @@
+{
+  "platforms": [
+    {
+      "name": "facebook",
+      "label": "Facebook",
+      "icon": "fab fa-facebook-f",
+      "urlTemplate": "https://www.facebook.com/sharer/sharer.php?u={url}",
+      "enabled": true
+    },
+    {
+      "name": "twitter",
+      "label": "Twitter",
+      "icon": "fab fa-twitter",
+      "urlTemplate": "https://twitter.com/intent/tweet?url={url}&text={text}",
+      "enabled": true
+    },
+    {
+      "name": "whatsapp",
+      "label": "WhatsApp",
+      "icon": "fab fa-whatsapp",
+      "urlTemplate": "https://wa.me/?text={text}%20{url}",
+      "enabled": true
+    },
+    {
+      "name": "telegram",
+      "label": "Telegram",
+      "icon": "fab fa-telegram",
+      "urlTemplate": "https://t.me/share/url?url={url}&text={text}",
+      "enabled": true
+    }
+  ]
+}

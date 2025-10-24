@@ -1,0 +1,13 @@
+{
+  "animations": {
+    "countUpDuration": 2.5,
+    "intersectionThreshold": 0.5,
+    "useEasing": true,
+    "useGrouping": true
+  },
+  "transitions": {
+    "defaultDuration": 300,
+    "hoverScale": 1.05,
+    "hoverTranslateY": -4
+  }
+}

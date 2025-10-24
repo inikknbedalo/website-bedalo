@@ -1,25 +1,30 @@
+import { getEntry } from 'astro:content';
+
 /**
  * Dashboard Configuration
  * Configuration for the Aspirasi Dashboard (Community Feedback Dashboard)
+ * Now loaded from content collections
  */
 
+// Load config from content collection
+const dashboardConfigEntry = await getEntry('config', 'dashboard');
+
+if (!dashboardConfigEntry || !('spreadsheetId' in dashboardConfigEntry.data)) {
+  throw new Error('Dashboard configuration not found');
+}
+
+const config = dashboardConfigEntry.data;
+
 export const DASHBOARD_CONFIG = {
-  // Google Sheets Configuration
-  SPREADSHEET_ID: '1QnXBFw9wDpe4tAy99ALbY04RUl1VY_DD491sC7LFXKM',
-  SHEET_NAME: 'aspirasi',
-  
-  // Refresh Settings
-  REFRESH_INTERVAL: 5 * 60 * 1000, // 5 minutes in milliseconds
-  MAX_RETRIES: 3,
-  RETRY_DELAY: 2000, // 2 seconds
-  
-  // Authentication
-  PASSWORD_HASH: 'df639246eff9e232a0d366efbf55739b5c93550c1173b043a49ea84620db249d', // SHA-256 hash
-  SESSION_KEY: 'dashboard_auth',
-  SESSION_DURATION: 24 * 60 * 60 * 1000, // 24 hours
-  
-  // Pagination
-  ITEMS_PER_PAGE: 10,
+  SPREADSHEET_ID: config.spreadsheetId,
+  SHEET_NAME: config.sheetName,
+  REFRESH_INTERVAL: config.refreshInterval,
+  MAX_RETRIES: config.maxRetries,
+  RETRY_DELAY: config.retryDelay,
+  PASSWORD_HASH: config.passwordHash,
+  SESSION_KEY: config.sessionKey,
+  SESSION_DURATION: config.sessionDuration,
+  ITEMS_PER_PAGE: config.itemsPerPage,
 } as const;
 
 // Construct API URL (Google Sheets Visualization API)
@@ -32,3 +37,4 @@ export const FULL_DASHBOARD_CONFIG = {
 } as const;
 
 export type DashboardConfig = typeof FULL_DASHBOARD_CONFIG;
+

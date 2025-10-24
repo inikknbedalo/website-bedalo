@@ -1,5 +1,5 @@
 import { defineCollection, z } from 'astro:content';
-import { glob, file } from 'astro/loaders';
+import { glob } from 'astro/loaders';
 
 // Collection 1: News articles
 const berita = defineCollection({
@@ -96,113 +96,235 @@ const warung = defineCollection({
 // Collection 6: Site configuration (JSON)
 const config = defineCollection({
   loader: glob({ pattern: '*.json', base: './src/content/config' }),
-  schema: z.object({
-    site: z.object({
-      title: z.string(),
-      description: z.string(),
-      url: z.string().url(),
-      author: z.string(),
-      locale: z.string().default('id_ID'),
+  schema: z.union([
+    // site.json schema
+    z.object({
+      site: z.object({
+        title: z.string(),
+        description: z.string(),
+        url: z.string().url(),
+        author: z.string(),
+        locale: z.string().default('id_ID'),
+      }),
+      contact: z.object({
+        phone: z.string(),
+        whatsapp: z.string().optional(),
+        email: z.string().email(),
+        address: z.string(),
+        maps: z.string().url().optional(),
+      }),
+      social: z.object({
+        instagram: z.string().url().optional(),
+        youtube: z.string().url().optional(),
+        tiktok: z.string().url().optional(),
+        facebook: z.string().url().optional(),
+        twitter: z.string().url().optional(),
+      }),
+      navigation: z.array(
+        z.object({
+          label: z.string(),
+          href: z.string(),
+          primary: z.boolean().default(false),
+        })
+      ),
+      constants: z.object({
+        pagination: z.object({
+          articlesPerPage: z.number().default(6),
+          itemsPerPage: z.number().default(10),
+        }),
+      }).optional(),
+      seo: z.object({
+        organization: z.object({
+          name: z.string(),
+          type: z.string(),
+          url: z.string().url(),
+          logo: z.string().url(),
+        }),
+        defaultImage: z.string().url(),
+        schemaContext: z.string().url(),
+      }).optional(),
     }),
-    contact: z.object({
-      phone: z.string(),
-      whatsapp: z.string().optional(),
-      email: z.string().email(),
-      address: z.string(),
-      maps: z.string().url().optional(),
+    // dashboard.json schema
+    z.object({
+      spreadsheetId: z.string(),
+      sheetName: z.string(),
+      refreshInterval: z.number(),
+      maxRetries: z.number(),
+      retryDelay: z.number(),
+      passwordHash: z.string(),
+      sessionKey: z.string(),
+      sessionDuration: z.number(),
+      itemsPerPage: z.number(),
     }),
-    social: z.object({
-      instagram: z.string().url().optional(),
-      youtube: z.string().url().optional(),
-      tiktok: z.string().url().optional(),
-      facebook: z.string().url().optional(),
-      twitter: z.string().url().optional(),
+    // resources.json schema
+    z.object({
+      fonts: z.array(
+        z.object({
+          name: z.string(),
+          url: z.string().url(),
+          weights: z.array(z.number()),
+          preconnect: z.array(z.string().url()),
+        })
+      ),
+      cdns: z.array(
+        z.object({
+          name: z.string(),
+          url: z.string().url(),
+          version: z.string(),
+          preconnect: z.string().url(),
+          integrity: z.string().optional(),
+        })
+      ),
+      theme: z.object({
+        primaryColor: z.string(),
+        favicon: z.string(),
+        appleTouchIcon: z.string(),
+        manifest: z.string(),
+      }),
     }),
-    navigation: z.array(
-      z.object({
-        label: z.string(),
-        href: z.string(),
-        primary: z.boolean().default(false),
-      })
-    ),
-  }),
+    // ui.json schema
+    z.object({
+      animations: z.object({
+        countUpDuration: z.number(),
+        intersectionThreshold: z.number(),
+        useEasing: z.boolean(),
+        useGrouping: z.boolean(),
+      }),
+      transitions: z.object({
+        defaultDuration: z.number(),
+        hoverScale: z.number(),
+        hoverTranslateY: z.number(),
+      }),
+    }),
+    // sharing.json schema
+    z.object({
+      platforms: z.array(
+        z.object({
+          name: z.string(),
+          label: z.string(),
+          icon: z.string(),
+          urlTemplate: z.string(),
+          enabled: z.boolean(),
+        })
+      ),
+    }),
+  ]),
 });
 
 // Collection 7: Page-specific content (JSON)
 const pages = defineCollection({
   loader: glob({ pattern: '**/*.json', base: './src/content/pages' }),
-  schema: ({ image }) => z.object({
-    page: z.string(),
-    hero: z.object({
-      title: z.string(),
-      subtitle: z.string(),
-      image: image(),
-      imageAlt: z.string(),
-      cta: z.object({
-        text: z.string(),
-        href: z.string(),
-      }).optional(),
-    }).optional(),
-    welcome: z.object({
-      title: z.string(),
-      content: z.string(),
-      profile: z.object({
-        name: z.string(),
+  schema: ({ image }) => z.union([
+    // Standard page schema
+    z.object({
+      page: z.string(),
+      hero: z.object({
         title: z.string(),
-        photo: image(),
-        photoAlt: z.string(),
-        link: z.string(),
+        subtitle: z.string(),
+        image: image(),
+        imageAlt: z.string(),
+        cta: z.object({
+          text: z.string(),
+          href: z.string(),
+        }).optional(),
       }).optional(),
-    }).optional(),
-    intro: z.object({
-      content: z.string(),
-      image: image().optional(),
-      imageAlt: z.string().optional(),
-    }).optional(),
-    team: z.object({
-      title: z.string(),
-      members: z.array(z.object({
-        name: z.string(),
-        major: z.string(),
-        photo: image(),
-        photoAlt: z.string(),
-      })),
-    }).optional(),
-    gallery: z.object({
-      images: z.array(z.object({
-        src: image(),
-        alt: z.string(),
-        category: z.string().optional(),
-      })),
-    }).optional(),
-    categories: z.array(z.string()).optional(),
-    sections: z.array(z.object({
-      id: z.string(),
-      title: z.string(),
-      subtitle: z.string().optional(),
-      content: z.string().optional(),
-      items: z.array(z.any()).optional(),
-      cta: z.object({
-        text: z.string(),
-        href: z.string(),
+      welcome: z.object({
+        title: z.string(),
+        content: z.string(),
+        profile: z.object({
+          name: z.string(),
+          title: z.string(),
+          photo: image(),
+          photoAlt: z.string(),
+          link: z.string(),
+        }).optional(),
       }).optional(),
-      images: z.array(z.union([
-        image(),
-        z.object({
+      intro: z.object({
+        content: z.string(),
+        title: z.string().optional(),
+        subtitle: z.string().optional(),
+        image: image().optional(),
+        imageAlt: z.string().optional(),
+      }).optional(),
+      team: z.object({
+        title: z.string(),
+        members: z.array(z.object({
+          name: z.string(),
+          major: z.string(),
+          photo: image(),
+          photoAlt: z.string(),
+        })),
+      }).optional(),
+      gallery: z.object({
+        images: z.array(z.object({
           src: image(),
           alt: z.string(),
           category: z.string().optional(),
-        })
-      ])).optional(),
-      imageAlts: z.array(z.string()).optional(),
-      showOfficials: z.boolean().optional(),
-      videos: z.array(z.object({
-        url: z.string(),
+        })),
+      }).optional(),
+      categories: z.array(z.string()).optional(),
+      sections: z.array(z.object({
+        id: z.string(),
         title: z.string(),
-        thumbnail: z.string(),
+        subtitle: z.string().optional(),
+        content: z.string().optional(),
+        items: z.array(z.any()).optional(),
+        cta: z.object({
+          text: z.string(),
+          href: z.string(),
+        }).optional(),
+        images: z.array(z.union([
+          image(),
+          z.object({
+            src: image(),
+            alt: z.string(),
+            category: z.string().optional(),
+          })
+        ])).optional(),
+        imageAlts: z.array(z.string()).optional(),
+        showOfficials: z.boolean().optional(),
+        videos: z.array(z.object({
+          url: z.string(),
+          title: z.string(),
+          thumbnail: z.string(),
+        })).optional(),
       })).optional(),
-    })).optional(),
-  }),
+    }),
+    // Privacy policy schema
+    z.object({
+      page: z.literal('privacy-policy'),
+      title: z.string(),
+      subtitle: z.string(),
+      lastUpdated: z.string(),
+      sections: z.array(
+        z.object({
+          id: z.string(),
+          title: z.string(),
+          icon: z.string(),
+          iconColor: z.string(),
+          content: z.array(z.string()),
+          list: z.array(z.string()).optional(),
+          note: z.string().optional(),
+        })
+      ),
+    }),
+    // 404 page schema
+    z.object({
+      page: z.literal('404'),
+      title: z.string(),
+      message: z.string(),
+      icon: z.string(),
+      iconColor: z.string(),
+      actions: z.array(
+        z.object({
+          label: z.string(),
+          href: z.string(),
+          icon: z.string(),
+          variant: z.enum(['primary', 'secondary']),
+        })
+      ),
+    }),
+  ]),
 });
 
 // Collection 8: Government officials (JSON)
@@ -241,6 +363,100 @@ const statistics = defineCollection({
   }),
 });
 
+// Collection 10: Forms (JSON)
+const forms = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/forms' }),
+  schema: z.object({
+    formId: z.string(),
+    formType: z.enum(['google-forms', 'custom']),
+    formAction: z.string().url(),
+    title: z.string(),
+    description: z.string(),
+    fields: z.array(
+      z.object({
+        id: z.string(),
+        name: z.string(),
+        label: z.string(),
+        type: z.enum(['text', 'email', 'tel', 'textarea', 'select', 'radio', 'checkbox']),
+        placeholder: z.string().optional(),
+        rows: z.number().optional(),
+        required: z.boolean().default(false),
+        options: z.array(z.string()).optional(),
+      })
+    ),
+    successMessage: z.object({
+      icon: z.string(),
+      title: z.string(),
+      message: z.string(),
+      buttonText: z.string(),
+    }),
+    errorMessage: z.object({
+      icon: z.string(),
+      title: z.string(),
+      message: z.string(),
+      buttonText: z.string(),
+    }).optional(),
+  }),
+});
+
+// Collection 11: Surveys (JSON)
+const surveys = defineCollection({
+  loader: glob({ pattern: '*.json', base: './src/content/surveys' }),
+  schema: z.union([
+    // teams.json schema
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      databaseUrl: z.string().url(),
+      teams: z.array(
+        z.object({
+          id: z.number(),
+          name: z.string(),
+          color: z.string(),
+          description: z.string(),
+          forms: z.array(
+            z.object({
+              title: z.string(),
+              url: z.string().url(),
+              color: z.string(),
+            })
+          ),
+        })
+      ),
+      colorClasses: z.record(z.string()).optional(),
+    }),
+    // schedule.json schema
+    z.object({
+      schedule: z.array(
+        z.object({
+          day: z.number(),
+          title: z.string(),
+          color: z.string(),
+          sessions: z.array(
+            z.object({
+              time: z.string(),
+              title: z.string(),
+              description: z.string(),
+            })
+          ),
+        })
+      ),
+    }),
+    // guidelines.json schema
+    z.object({
+      guidelines: z.array(
+        z.object({
+          id: z.string(),
+          icon: z.string(),
+          iconColor: z.string(),
+          title: z.string(),
+          description: z.string(),
+        })
+      ),
+    }),
+  ]),
+});
+
 export const collections = {
   berita,
   potensi,
@@ -251,4 +467,6 @@ export const collections = {
   pages,
   government,
   statistics,
+  forms,
+  surveys,
 };
