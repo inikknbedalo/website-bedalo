@@ -1,6 +1,7 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
 import { getEntry, getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import Hero from '../components/sections/Hero.astro';
 import WelcomeSection from '../components/sections/WelcomeSection.astro';
 import StatsGrid from '../components/sections/StatsGrid.astro';
@@ -14,7 +15,7 @@ import { sortByDate, filterDraft } from '../utils/collections';
 
 const homeContent = await getEntry('pages', 'home');
 
-if (!homeContent) {
+if (!homeContent || !('page' in homeContent.data) || homeContent.data.page !== 'home') {
   throw new Error('Home page content not found');
 }
 
@@ -24,10 +25,22 @@ const { hero, welcome, sections } = homeContent.data;
 const allBerita = await getCollection('berita');
 const recentBerita = sortByDate(filterDraft(allBerita), 'desc').slice(0, 3);
 
-// Extract section data
-const potensiSection = sections.find((s) => s.id === 'potensi');
-const pariwisataSection = sections.find((s) => s.id === 'pariwisata');
-const galeriSection = sections.find((s) => s.id === 'galeri');
+interface HomeSection {
+  id: string;
+  title?: string;
+  content?: string;
+  items?: Array<{
+    icon: string;
+    title: string;
+    description: string;
+    link: string;
+  }>;
+}
+
+// Extract section data with proper types
+const potensiSection = sections.find((s: HomeSection) => s.id === 'potensi') as HomeSection | undefined;
+const pariwisataSection = sections.find((s: HomeSection) => s.id === 'pariwisata') as HomeSection | undefined;
+const galeriSection = sections.find((s: HomeSection) => s.id === 'galeri') as HomeSection | undefined;
 ---
 
 <MainLayout title="Beranda">
@@ -59,7 +72,7 @@ const galeriSection = sections.find((s) => s.id === 'galeri');
           </p>
         </div>
         <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {potensiSection.items.map((item) => (
+          {potensiSection?.items?.map((item: { icon: string; title: string; description: string; link: string }) => (
             <FeatureCard
               icon={item.icon}
               title={item.title}
