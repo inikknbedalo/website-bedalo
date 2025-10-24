@@ -1,11 +1,20 @@
 ---
 import MainLayout from '../layouts/MainLayout.astro';
+import { getEntry } from 'astro:content';
 import Card from '../components/ui/Card.astro';
+
+const pageContent = await getEntry('pages', 'privacy-policy');
+
+if (!pageContent || !('page' in pageContent.data) || pageContent.data.page !== 'privacy-policy') {
+  throw new Error('Privacy policy content not found');
+}
+
+const { title, subtitle, lastUpdated, sections } = pageContent.data;
 ---
 
 <MainLayout 
-  title="Kebijakan Privasi | Website Dusun Bedalo" 
-  description="Pahami bagaimana Website Dusun Bedalo menangani informasi pribadi Anda, khususnya melalui Formulir Aspirasi."
+  title={`${title} | Website Dusun Bedalo`} 
+  description={subtitle}
 >
   <!-- Hero Section -->
   <section class="py-12 md:py-16">
@@ -15,13 +24,13 @@ import Card from '../components/ui/Card.astro';
         data-aos="fade-up"
       >
         <h1 class="mb-3 text-3xl font-bold md:text-4xl">
-          Kebijakan Privasi
+          {title}
         </h1>
         <p class="text-lg text-slate-200">
-          Komitmen kami terhadap privasi Anda di Website Dusun Bedalo.
+          {subtitle}
         </p>
         <p class="mt-2 text-xs text-slate-300">
-          Terakhir diperbarui: 23 Oktober 2025
+          Terakhir diperbarui: {lastUpdated}
         </p>
       </div>
     </div>
@@ -30,204 +39,34 @@ import Card from '../components/ui/Card.astro';
   <!-- Policy Content -->
   <section class="pb-12 md:pb-16">
     <div class="container mx-auto max-w-5xl px-6">
-      <!-- Pengantar -->
-      <Card 
-        variant="hover" 
-        class="mb-8 border border-gray-100"
-        data-aos="fade-up"
-      >
-        <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-          <i class="fas fa-info-circle text-2xl text-blue-600"></i>
-          Pengantar
-        </h2>
-        <div class="prose max-w-none text-slate-600">
-          <p>
-            Terima kasih telah mengunjungi website Dusun Bedalo. Kami
-            menghargai privasi Anda. Kebijakan Privasi ini menjelaskan
-            informasi apa yang mungkin kami kumpulkan melalui website ini
-            dan bagaimana informasi tersebut digunakan, khususnya terkait
-            Formulir Aspirasi.
-          </p>
-          <p>
-            Website ini bersifat statis dan informatif, sehingga kami tidak
-            secara aktif mengumpulkan data pribadi pengunjung selain yang
-            dikirimkan secara sukarela melalui formulir yang tersedia.
-          </p>
-        </div>
-      </Card>
-
-      <!-- Two Column Grid -->
-      <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-        <!-- Informasi yang Dikumpulkan -->
+      {sections.map((section, index) => (
         <Card 
           variant="hover" 
-          class="border border-gray-100"
+          class="mb-8 border border-gray-100"
           data-aos="fade-up"
-          data-aos-delay="50"
+          data-aos-delay={index * 50}
         >
           <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-            <i class="fas fa-database text-2xl text-green-600"></i>
-            Informasi yang Dikumpulkan
+            <i class:list={[section.icon, 'text-2xl', `text-${section.iconColor}`]}></i>
+            {section.title}
           </h2>
           <div class="prose max-w-none text-slate-600">
-            <p>
-              Satu-satunya cara kami mengumpulkan informasi pribadi adalah
-              melalui <strong>Formulir Aspirasi</strong> di halaman
-              <a href="/kontak#aspirasi" class="text-blue-600 underline hover:text-blue-800">Kontak</a>. Informasi yang
-              Anda masukkan secara sukarela, yaitu:
-            </p>
-            <ul class="mt-2 space-y-1 pl-5">
-              <li>Nama Lengkap</li>
-              <li>Informasi Kontak (No. Telepon / Email)</li>
-              <li>Subjek Pesan</li>
-              <li>Isi Pesan Aspirasi</li>
-            </ul>
-            <p class="mt-3">
-              <strong>Penting:</strong> Website ini tidak menggunakan
-              cookies analitik atau pelacakan lain yang mengidentifikasi
-              Anda secara pribadi saat Anda hanya menjelajah halaman.
-            </p>
+            {section.content.map((paragraph) => (
+              <p set:html={paragraph}></p>
+            ))}
+            {section.list && (
+              <ul class="mt-2 space-y-1 pl-5">
+                {section.list.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            )}
+            {section.note && (
+              <p class="mt-3" set:html={section.note}></p>
+            )}
           </div>
         </Card>
-
-        <!-- Penggunaan Informasi -->
-        <Card 
-          variant="hover" 
-          class="border border-gray-100"
-          data-aos="fade-up"
-          data-aos-delay="100"
-        >
-          <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-            <i class="fas fa-tasks text-2xl text-yellow-600"></i>
-            Penggunaan Informasi
-          </h2>
-          <div class="prose max-w-none text-slate-600">
-            <p>
-              Informasi dari Formulir Aspirasi digunakan secara eksklusif
-              untuk tujuan berikut:
-            </p>
-            <ul class="mt-2 space-y-1 pl-5">
-              <li>
-                Menerima, meninjau, dan menanggapi pertanyaan atau masukan
-                Anda.
-              </li>
-              <li>
-                Meneruskan aspirasi Anda kepada perangkat dusun atau pihak
-                terkait untuk ditindaklanjuti.
-              </li>
-              <li>
-                Menghubungi Anda kembali jika diperlukan klarifikasi
-                mengenai aspirasi yang disampaikan.
-              </li>
-            </ul>
-            <p class="mt-3">
-              Kami menjamin bahwa data pribadi Anda
-              <strong>tidak akan dijual, disewakan, atau dibagikan</strong>
-              kepada pihak ketiga untuk kepentingan pemasaran atau komersial
-              lainnya.
-            </p>
-          </div>
-        </Card>
-
-        <!-- Keamanan & Penyimpanan Data -->
-        <Card 
-          variant="hover" 
-          class="border border-gray-100"
-          data-aos="fade-up"
-          data-aos-delay="150"
-        >
-          <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-            <i class="fas fa-lock text-2xl text-red-600"></i>
-            Keamanan & Penyimpanan Data
-          </h2>
-          <div class="prose max-w-none text-slate-600">
-            <p>
-              Formulir Aspirasi di website ini dirancang untuk mengirimkan
-              data langsung ke sistem eksternal (misalnya, Google Forms) dan
-              <strong>tidak disimpan di server hosting website ini</strong>.
-              Keamanan data Anda setelah dikirimkan akan mengikuti kebijakan
-              platform penerima tersebut (misalnya, Google).
-            </p>
-            <p class="mt-3">
-              Meskipun kami berupaya menjaga keamanan, harap dipahami bahwa
-              tidak ada transmisi data online yang 100% aman.
-            </p>
-          </div>
-        </Card>
-
-        <!-- Tautan Eksternal -->
-        <Card 
-          variant="hover" 
-          class="border border-gray-100"
-          data-aos="fade-up"
-          data-aos-delay="200"
-        >
-          <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-            <i class="fas fa-external-link-alt text-2xl text-purple-600"></i>
-            Tautan Eksternal
-          </h2>
-          <div class="prose max-w-none text-slate-600">
-            <p>
-              Website ini mungkin menyertakan tautan ke situs web lain
-              (seperti Google Maps untuk peta lokasi atau media sosial).
-              Kebijakan privasi ini tidak berlaku untuk situs-situs
-              tersebut. Kami menganjurkan Anda untuk membaca kebijakan
-              privasi masing-masing situs yang Anda kunjungi.
-            </p>
-          </div>
-        </Card>
-
-        <!-- Perubahan & Kontak -->
-        <Card 
-          variant="hover" 
-          class="border border-gray-100 md:col-span-2"
-          data-aos="fade-up"
-          data-aos-delay="250"
-        >
-          <h2 class="mb-4 flex items-center gap-3 text-xl font-bold text-gray-900">
-            <i class="fas fa-history text-2xl text-gray-600"></i>
-            Perubahan & Kontak
-          </h2>
-          <div class="prose max-w-none text-slate-600">
-            <p>
-              Kebijakan Privasi ini dapat kami perbarui dari waktu ke waktu.
-              Setiap perubahan akan diposting di halaman ini.
-            </p>
-            <p class="mt-3">
-              Jika Anda memiliki pertanyaan tentang kebijakan ini, silakan
-              hubungi kami melalui halaman
-              <a href="/kontak" class="text-blue-600 underline hover:text-blue-800">Kontak</a>.
-            </p>
-          </div>
-        </Card>
-      </div>
+      ))}
     </div>
   </section>
 </MainLayout>
-
-<style>
-  .prose {
-    color: #475569;
-  }
-  .prose p {
-    margin-bottom: 0.75em;
-  }
-  .prose ul {
-    margin-top: 0.5em;
-    margin-bottom: 0.75em;
-    list-style-position: outside;
-  }
-  .prose li::marker {
-    color: #64748b;
-  }
-  .prose a {
-    color: #2563eb;
-    text-decoration: underline;
-  }
-  .prose a:hover {
-    color: #1d4ed8;
-  }
-  .prose strong {
-    color: #334155;
-  }
-</style>
