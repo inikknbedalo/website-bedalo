@@ -1,78 +1,81 @@
-import { defineCollection, z } from 'astro:content';
-import { glob } from 'astro/loaders';
-import { beritaSchema, potensiSchema, pariwisataSchema } from './schemas';
+import { defineCollection, z } from "astro:content";
+import { glob } from "astro/loaders";
+import { beritaSchema, potensiSchema, pariwisataSchema } from "./schemas";
 
 // Collection 1: News articles
 const berita = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/berita' }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/berita" }),
   schema: beritaSchema,
 });
 
 // Collection 2: Products/Potential (UMKM)
 const potensi = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/potensi' }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/potensi" }),
   schema: potensiSchema,
 });
 
 // Collection 3: Tourism destinations
 const pariwisata = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/pariwisata' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    location: z.string(),
-    facilities: z.array(z.string()).optional(),
-    activities: z.array(z.string()).optional(),
-    entrance: z.string().optional(),
-    openingHours: z.string().optional(),
-    image: image(),
-    imageAlt: z.string(),
-    gallery: z.array(image()).optional(),
-    galleryAlts: z.array(z.string()).optional(),
-    featured: z.boolean().default(false),
-    draft: z.boolean().default(false),
-  }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/pariwisata" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      location: z.string(),
+      facilities: z.array(z.string()).optional(),
+      activities: z.array(z.string()).optional(),
+      entrance: z.string().optional(),
+      openingHours: z.string().optional(),
+      image: image(),
+      imageAlt: z.string(),
+      gallery: z.array(image()).optional(),
+      galleryAlts: z.array(z.string()).optional(),
+      featured: z.boolean().default(false),
+      draft: z.boolean().default(false),
+    }),
 });
 
 // Collection 4: Accommodations
 const akomodasi = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/akomodasi' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    type: z.enum(['homestay', 'penginapan', 'hotel', 'villa']),
-    address: z.string(),
-    contact: z.string(),
-    price: z.string(),
-    facilities: z.array(z.string()).optional(),
-    capacity: z.number().optional(),
-    image: image(),
-    imageAlt: z.string(),
-    draft: z.boolean().default(false),
-  }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/akomodasi" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      type: z.enum(["homestay", "penginapan", "hotel", "villa"]),
+      address: z.string(),
+      contact: z.string(),
+      price: z.string(),
+      facilities: z.array(z.string()).optional(),
+      capacity: z.number().optional(),
+      image: image(),
+      imageAlt: z.string(),
+      draft: z.boolean().default(false),
+    }),
 });
 
 // Collection 5: Local stores/restaurants (Warung)
 const warung = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/warung' }),
-  schema: ({ image }) => z.object({
-    title: z.string(),
-    description: z.string(),
-    type: z.enum(['warung', 'restoran', 'kafe', 'toko']),
-    owner: z.string(),
-    address: z.string(),
-    contact: z.string().optional(),
-    openingHours: z.string().optional(),
-    specialties: z.array(z.string()).optional(),
-    image: image(),
-    imageAlt: z.string(),
-    draft: z.boolean().default(false),
-  }),
+  loader: glob({ pattern: "**/*.md", base: "./src/content/warung" }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      description: z.string(),
+      type: z.enum(["warung", "restoran", "kafe", "toko"]),
+      owner: z.string(),
+      address: z.string(),
+      contact: z.string().optional(),
+      openingHours: z.string().optional(),
+      specialties: z.array(z.string()).optional(),
+      image: image(),
+      imageAlt: z.string(),
+      draft: z.boolean().default(false),
+    }),
 });
 
 // Collection 6: Site configuration (JSON)
 const config = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/config' }),
+  loader: glob({ pattern: "*.json", base: "./src/content/config" }),
   schema: z.union([
     // site.json schema
     z.object({
@@ -81,7 +84,7 @@ const config = defineCollection({
         description: z.string(),
         url: z.string().url(),
         author: z.string(),
-        locale: z.string().default('id_ID'),
+        locale: z.string().default("id_ID"),
       }),
       contact: z.object({
         phone: z.string(),
@@ -102,24 +105,28 @@ const config = defineCollection({
           label: z.string(),
           href: z.string(),
           primary: z.boolean().default(false),
-        })
+        }),
       ),
-      constants: z.object({
-        pagination: z.object({
-          articlesPerPage: z.number().default(6),
-          itemsPerPage: z.number().default(10),
-        }),
-      }).optional(),
-      seo: z.object({
-        organization: z.object({
-          name: z.string(),
-          type: z.string(),
-          url: z.string().url(),
-          logo: z.string().url(),
-        }),
-        defaultImage: z.string().url(),
-        schemaContext: z.string().url(),
-      }).optional(),
+      constants: z
+        .object({
+          pagination: z.object({
+            articlesPerPage: z.number().default(6),
+            itemsPerPage: z.number().default(10),
+          }),
+        })
+        .optional(),
+      seo: z
+        .object({
+          organization: z.object({
+            name: z.string(),
+            type: z.string(),
+            url: z.string().url(),
+            logo: z.string().url(),
+          }),
+          defaultImage: z.string().url(),
+          schemaContext: z.string().url(),
+        })
+        .optional(),
     }),
     // dashboard.json schema
     z.object({
@@ -140,7 +147,7 @@ const config = defineCollection({
           url: z.string().url(),
           weights: z.array(z.number()),
           preconnect: z.array(z.string().url()),
-        })
+        }),
       ),
       cdns: z.array(
         z.object({
@@ -149,7 +156,7 @@ const config = defineCollection({
           version: z.string(),
           preconnect: z.string().url(),
           integrity: z.string().optional(),
-        })
+        }),
       ),
       theme: z.object({
         primaryColor: z.string(),
@@ -181,7 +188,7 @@ const config = defineCollection({
           icon: z.string(),
           urlTemplate: z.string(),
           enabled: z.boolean(),
-        })
+        }),
       ),
     }),
   ]),
@@ -189,142 +196,176 @@ const config = defineCollection({
 
 // Collection 7: Page-specific content (JSON)
 const pages = defineCollection({
-  loader: glob({ pattern: '**/*.json', base: './src/content/pages' }),
-  schema: ({ image }) => z.union([
-    // Standard page schema
-    z.object({
-      page: z.string(),
-      hero: z.object({
+  loader: glob({ pattern: "**/*.json", base: "./src/content/pages" }),
+  schema: ({ image }) =>
+    z.union([
+      // 404 page schema
+      z.object({
+        page: z.literal("404"),
+        title: z.string(),
+        message: z.string(),
+        icon: z.string(),
+        iconColor: z.string(),
+        actions: z.array(
+          z.object({
+            label: z.string(),
+            href: z.string(),
+            icon: z.string(),
+            variant: z.enum(["primary", "secondary"]),
+          }),
+        ),
+      }),
+      // Privacy policy schema
+      z.object({
+        page: z.literal("privacy-policy"),
         title: z.string(),
         subtitle: z.string(),
-        image: image(),
-        imageAlt: z.string(),
-        cta: z.object({
-          text: z.string(),
-          href: z.string(),
-        }).optional(),
-      }).optional(),
-      welcome: z.object({
-        title: z.string(),
-        content: z.string(),
-        profile: z.object({
-          name: z.string(),
-          title: z.string(),
-          photo: image(),
-          photoAlt: z.string(),
-          link: z.string(),
-        }).optional(),
-      }).optional(),
-      intro: z.object({
-        content: z.string(),
-        title: z.string().optional(),
-        subtitle: z.string().optional(),
-        image: image().optional(),
-        imageAlt: z.string().optional(),
-      }).optional(),
-      team: z.object({
-        title: z.string(),
-        members: z.array(z.object({
-          name: z.string(),
-          major: z.string(),
-          photo: image(),
-          photoAlt: z.string(),
-        })),
-      }).optional(),
-      gallery: z.object({
-        images: z.array(z.object({
-          src: image(),
-          alt: z.string(),
-          category: z.string().optional(),
-        })),
-      }).optional(),
-      categories: z.array(z.string()).optional(),
-      sections: z.array(z.object({
-        id: z.string(),
-        title: z.string(),
-        subtitle: z.string().optional(),
-        content: z.string().optional(),
-        items: z.array(z.any()).optional(),
-        cta: z.object({
-          text: z.string(),
-          href: z.string(),
-        }).optional(),
-        images: z.array(z.union([
-          image(),
+        lastUpdated: z.string(),
+        sections: z.array(
           z.object({
-            src: image(),
-            alt: z.string(),
-            category: z.string().optional(),
+            id: z.string(),
+            title: z.string(),
+            icon: z.string(),
+            iconColor: z.string(),
+            content: z.array(z.string()),
+            list: z.array(z.string()).optional(),
+            note: z.string().optional(),
+          }),
+        ),
+      }),
+      // Standard page schema
+      z.object({
+        page: z.string(),
+        hero: z
+          .object({
+            title: z.string(),
+            subtitle: z.string(),
+            image: image(),
+            imageAlt: z.string(),
+            cta: z
+              .object({
+                text: z.string(),
+                href: z.string(),
+              })
+              .optional(),
           })
-        ])).optional(),
-        imageAlts: z.array(z.string()).optional(),
-        showOfficials: z.boolean().optional(),
-        videos: z.array(z.object({
-          url: z.string(),
-          title: z.string(),
-          thumbnail: z.string(),
-        })).optional(),
-      })).optional(),
-    }),
-    // Privacy policy schema
-    z.object({
-      page: z.literal('privacy-policy'),
-      title: z.string(),
-      subtitle: z.string(),
-      lastUpdated: z.string(),
-      sections: z.array(
-        z.object({
-          id: z.string(),
-          title: z.string(),
-          icon: z.string(),
-          iconColor: z.string(),
-          content: z.array(z.string()),
-          list: z.array(z.string()).optional(),
-          note: z.string().optional(),
-        })
-      ),
-    }),
-    // 404 page schema
-    z.object({
-      page: z.literal('404'),
-      title: z.string(),
-      message: z.string(),
-      icon: z.string(),
-      iconColor: z.string(),
-      actions: z.array(
-        z.object({
-          label: z.string(),
-          href: z.string(),
-          icon: z.string(),
-          variant: z.enum(['primary', 'secondary']),
-        })
-      ),
-    }),
-  ]),
+          .optional(),
+        welcome: z
+          .object({
+            title: z.string(),
+            content: z.string(),
+            profile: z
+              .object({
+                name: z.string(),
+                title: z.string(),
+                photo: image(),
+                photoAlt: z.string(),
+                link: z.string(),
+              })
+              .optional(),
+          })
+          .optional(),
+        intro: z
+          .object({
+            content: z.string(),
+            title: z.string().optional(),
+            subtitle: z.string().optional(),
+            image: image().optional(),
+            imageAlt: z.string().optional(),
+          })
+          .optional(),
+        team: z
+          .object({
+            title: z.string(),
+            members: z.array(
+              z.object({
+                name: z.string(),
+                major: z.string(),
+                photo: image(),
+                photoAlt: z.string(),
+              }),
+            ),
+          })
+          .optional(),
+        gallery: z
+          .object({
+            images: z.array(
+              z.object({
+                src: image(),
+                alt: z.string(),
+                category: z.string().optional(),
+              }),
+            ),
+          })
+          .optional(),
+        categories: z.array(z.string()).optional(),
+        sections: z
+          .array(
+            z.object({
+              id: z.string(),
+              title: z.string(),
+              subtitle: z.string().optional(),
+              content: z.string().optional(),
+              items: z.array(z.any()).optional(),
+              cta: z
+                .object({
+                  text: z.string(),
+                  href: z.string(),
+                })
+                .optional(),
+              images: z
+                .array(
+                  z.union([
+                    image(),
+                    z.object({
+                      src: image(),
+                      alt: z.string(),
+                      category: z.string().optional(),
+                    }),
+                  ]),
+                )
+                .optional(),
+              imageAlts: z.array(z.string()).optional(),
+              showOfficials: z.boolean().optional(),
+              videos: z
+                .array(
+                  z.object({
+                    url: z.string(),
+                    title: z.string(),
+                    thumbnail: z.string(),
+                  }),
+                )
+                .optional(),
+            }),
+          )
+          .optional(),
+      }),
+    ]),
 });
 
 // Collection 8: Government officials (JSON)
 const government = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/government' }),
-  schema: ({ image }) => z.object({
-    officials: z.array(
-      z.object({
-        id: z.string(),
-        name: z.string(),
-        position: z.string(),
-        period: z.string().optional(),
-        photo: image(),
-        photoAlt: z.string(),
-        contact: z.string().optional(),
-        description: z.string().optional(),
-      })
-    ),
-  }),
+  loader: glob({ pattern: "*.json", base: "./src/content/government" }),
+  schema: ({ image }) =>
+    z.object({
+      officials: z.array(
+        z.object({
+          id: z.string(),
+          name: z.string(),
+          position: z.string(),
+          period: z.string().optional(),
+          photo: image(),
+          photoAlt: z.string(),
+          contact: z.string().optional(),
+          description: z.string().optional(),
+        }),
+      ),
+    }),
 });
 
 // Collection 9: Statistics (JSON)
 const statistics = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/statistics' }),
+  loader: glob({ pattern: "*.json", base: "./src/content/statistics" }),
   schema: z.object({
     stats: z.array(
       z.object({
@@ -334,17 +375,17 @@ const statistics = defineCollection({
         suffix: z.string().optional(),
         icon: z.string(),
         description: z.string().optional(),
-      })
+      }),
     ),
   }),
 });
 
 // Collection 10: Forms (JSON)
 const forms = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/forms' }),
+  loader: glob({ pattern: "*.json", base: "./src/content/forms" }),
   schema: z.object({
     formId: z.string(),
-    formType: z.enum(['google-forms', 'custom']),
+    formType: z.enum(["google-forms", "custom"]),
     formAction: z.string().url(),
     title: z.string(),
     description: z.string(),
@@ -353,12 +394,20 @@ const forms = defineCollection({
         id: z.string(),
         name: z.string(),
         label: z.string(),
-        type: z.enum(['text', 'email', 'tel', 'textarea', 'select', 'radio', 'checkbox']),
+        type: z.enum([
+          "text",
+          "email",
+          "tel",
+          "textarea",
+          "select",
+          "radio",
+          "checkbox",
+        ]),
         placeholder: z.string().optional(),
         rows: z.number().optional(),
         required: z.boolean().default(false),
         options: z.array(z.string()).optional(),
-      })
+      }),
     ),
     successMessage: z.object({
       icon: z.string(),
@@ -366,18 +415,20 @@ const forms = defineCollection({
       message: z.string(),
       buttonText: z.string(),
     }),
-    errorMessage: z.object({
-      icon: z.string(),
-      title: z.string(),
-      message: z.string(),
-      buttonText: z.string(),
-    }).optional(),
+    errorMessage: z
+      .object({
+        icon: z.string(),
+        title: z.string(),
+        message: z.string(),
+        buttonText: z.string(),
+      })
+      .optional(),
   }),
 });
 
 // Collection 11: Surveys (JSON)
 const surveys = defineCollection({
-  loader: glob({ pattern: '*.json', base: './src/content/surveys' }),
+  loader: glob({ pattern: "*.json", base: "./src/content/surveys" }),
   schema: z.union([
     // teams.json schema
     z.object({
@@ -395,9 +446,9 @@ const surveys = defineCollection({
               title: z.string(),
               url: z.string().url(),
               color: z.string(),
-            })
+            }),
           ),
-        })
+        }),
       ),
       colorClasses: z.record(z.string()).optional(),
     }),
@@ -413,9 +464,9 @@ const surveys = defineCollection({
               time: z.string(),
               title: z.string(),
               description: z.string(),
-            })
+            }),
           ),
-        })
+        }),
       ),
     }),
     // guidelines.json schema
@@ -427,7 +478,7 @@ const surveys = defineCollection({
           iconColor: z.string(),
           title: z.string(),
           description: z.string(),
-        })
+        }),
       ),
     }),
   ]),
